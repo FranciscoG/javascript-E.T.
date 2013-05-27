@@ -10,16 +10,42 @@ var KEY     = { ESC:27, SPACE:32, LEFT:37, UP:38, RIGHT:39, DOWN:40  },
     dx      = width  / nx,
     dy      = height / ny,
     playing = false,
-    dstep, dt, length, moves, dir, growth, head, tail, food;
+    dstep, dt, length, moves, dir, growth, head, tail, food, currentDir, stage, visAid;
     
 var worldMap = {
-	stage1: {name: "forest", 	up:2, down:4 , left:3, right:5},
-	stage2: {name: "tall twins", up:1 , down:6 , left:5, right:3},
-	stage3: {name: "4 diamonds", up:1 , down:6 , left:2, right:4},
-	stage4: {name: "arrows", 	up:1 , down:6 , left:3, right:5},
-	stage5: {name: "frogger", 	up:1 , down:6 , left:4, right:2},
-	stage6: {name: "D.C.", 		up:2 , down:4 , left:5, right:3}
+	stage1: {
+		name: "forest", 	
+		up:2, down:4, left:3, right:5
+	},
+	stage2: {
+		name: "tall twins", 
+		up:1, down:6, left:5, right:3
+	},
+	stage3: {
+		name: "4 diamonds", 
+		up:1, down:6, left:2, right:4
+	},
+	stage4: {
+		name: "arrows", 	
+		up:1, down:6, left:3, right:5
+	},
+	stage5: {
+		name: "frogger", 	
+		up:1, down:6, left:4, right:2
+	},
+	stage6: {
+		name: "D.C.", 		
+		up:2, down:4, left:5, right:3
+	}
 }    
+
+var sides = {
+    T:   0,
+    R:   43,
+    B:   32,
+    L:   0
+ };
+
 
 function reset() {
   dstep  = 0.06,  //the speed of the snake (seconds per step)
@@ -29,9 +55,11 @@ function reset() {
   head   = tail = { x: 40, y: 5 }; //the snakes head. and tail
   length = 1; //the length of the snake (we use this as the current score).
   growth = 10; //the amount to grow after eating some food.
-  while(--growth) //the coordinates of a single food object.
-    increase();
   food = unoccupied();
+  currentDir = dir;
+  stage = worldMap.stage4;
+  visAid = document.getElementById("stage4");
+  visAid.style.backgroundColor="yellow";
 };
 
 //Our game loop is a traditional update/draw loop using setTimeout
@@ -85,7 +113,7 @@ function onkeydown(ev) {
 function move(where) {
   var previous = moves.length ? moves[moves.length-1] : dir;
   if ((where != previous) && (where != DIR.OPPOSITE[previous]))
-    moves.push(where);
+    moves.push(where); currentDir = where;
 };
 
 function play() { reset(); playing = true;  };
@@ -110,14 +138,14 @@ function update(idt) {
       dt = dt - dstep;
       increase(moves.shift());
       decrease();
-
+			snakeExits(head);
       if (snakeOccupies(head, true)) {
         lose();
       }
       else if (foodOccupies(head)) {
         growth += 10;
         food = unoccupied();
-      }
+      } 
     }
   }
 };
@@ -207,6 +235,10 @@ function decrease() {
 Collision Detection
 
 The remaining code is some simple collision detection logic.
+
+ if head equal side && movement is happening && directions not changging 
+ the if direction == up then checkStage() updateMapLocation() 
+* 
 */
 
 function occupies(a, b) {
@@ -225,6 +257,36 @@ function snakeOccupies(pos, ignoreHead) {
   } while (segment = segment.next);
   return false;
 };
+
+function snakeExits(pos){
+	if (pos.y === sides.T && currentDir === 0) {
+		console.log("exited at top");
+		changeStage(stage.up);
+		console.log('now in the: '+stage.name);
+	}
+	if (pos.x === sides.R && currentDir === 3) {
+		console.log("exited at right");
+		changeStage(stage.right);
+		console.log('now in the: '+stage.name);
+	}
+	if (pos.y === sides.B && currentDir === 1) {
+		console.log("exited at bottom");
+		changeStage(stage.down);
+		console.log('now in the: '+stage.name);
+	}
+	if (pos.x === sides.L && currentDir === 2) {
+		console.log("exited at left");
+		changeStage(stage.left)
+		console.log('now in the: '+stage.name);
+	}
+	
+	function changeStage(dir){
+		visAid.style.backgroundColor="#6f9440";
+		visAid = document.getElementById("stage"+dir);
+  	visAid.style.backgroundColor="yellow";
+		stage = worldMap["stage"+dir];
+	}
+}
 
 function unoccupied() {
   var pos = {};

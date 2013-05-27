@@ -6,11 +6,19 @@ body, html {
 }
         	
 .container {
-	width:660px; 
-	margin:0 auto;
-	padding-bottom:100px;
+	width:100%;
 }
-
+.left_side {
+	float:left;
+	width:330px;
+	height:100%;
+	height: 100%;
+	padding:10px;
+}
+.game_area {
+	float:left;
+	padding:10px;
+}
 #canvas { 
 	border:1px solid black;
 }
@@ -21,8 +29,8 @@ body, html {
 }
 
 .stage {
-	width:100px;
-	height:80px;
+	width:80px;
+	height:60px;
 	border:solid 1px #111;
 	background-color:#6f9440;
 }
@@ -30,13 +38,8 @@ body, html {
 	color:#fff;
 	font-size:18px;
 	text-align: center;
-	padding-top:10px;
-}
-
-#stage1 {
-	background-color:#04410b;
-	margin-left:202px;
-	border-bottom:none;
+	padding-top:20px;
+	margin:0;
 }
 
 .wells .stage {
@@ -48,13 +51,34 @@ body, html {
 #stage5 {
 	border-left:none;
 }
-#stage6 {
-	background-color:#584fda;
-	margin-left:202px;
-	border-top:none;
+
+#stage1, #stage6 {
+	margin-left:162px;
+}
+#stage1 {
+	background-color:#04410b;
+	border-bottom:none;
 }
 
-
+#stage6 {
+	background-color:#584fda;
+	border-top:none;
+}
+#stage6 p {
+	padding-top:0;
+	padding-bottom:20px;
+	text-decoration:underline;
+	/* Safari */
+	-webkit-transform: rotate(180deg);
+	/* Firefox */
+	-moz-transform: rotate(180deg);
+	/* IE */
+	-ms-transform: rotate(180deg);
+	/* Opera */
+	-o-transform: rotate(180deg);
+	/* Internet Explorer */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+}
 
 /*
  * Clearfix: contain floats
@@ -86,3 +110,7 @@ body, html {
 .clearfix {
     *zoom: 1;
 }
+
+
+
+
