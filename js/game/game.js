@@ -1,5 +1,4 @@
-
-var KEY     = { ESC:27, SPACE:32, LEFT:37, UP:38, RIGHT:39, DOWN:40  },
+var KEY     = { ESC:27, SPACE:32, LEFT:37, UP:38, RIGHT:39, DOWN:40, A:65, W:87, D:68, S:83}, 
     DIR     = { UP:0, DOWN:1, LEFT:2, RIGHT:3, OPPOSITE:[1, 0, 3, 2] },
     canvas  = document.getElementById('canvas'),
     width   = canvas.width  = canvas.offsetWidth,
@@ -10,39 +9,39 @@ var KEY     = { ESC:27, SPACE:32, LEFT:37, UP:38, RIGHT:39, DOWN:40  },
     dx      = width  / nx,
     dy      = height / ny,
     playing = false,
-    dstep, dt, length, moves, dir, growth, head, tail, food, currentDir, stage, visAid;
+    dstep, dt, length, moves, dir, growth, head, tail, food, currentDir, stage, visAid, moving,color;
     
 var worldMap = {
 	stage1: {
-		name: "forest", 	
+		name: "forest", bgcolor:"#04410b",	
 		up:2, down:4, left:3, right:5
 	},
 	stage2: {
-		name: "tall twins", 
+		name: "tall twins", bgcolor:"#6f9440",	
 		up:1, down:6, left:5, right:3
 	},
 	stage3: {
-		name: "4 diamonds", 
+		name: "4 diamonds", bgcolor:"#6f9440",	
 		up:1, down:6, left:2, right:4
 	},
 	stage4: {
-		name: "arrows", 	
+		name: "arrows", bgcolor:"#6f9440", 	
 		up:1, down:6, left:3, right:5
 	},
 	stage5: {
-		name: "frogger", 	
+		name: "frogger", bgcolor:"#6f9440",		
 		up:1, down:6, left:4, right:2
 	},
 	stage6: {
-		name: "D.C.", 		
+		name: "D.C.", bgcolor:"#584fda",	 		
 		up:2, down:4, left:5, right:3
 	}
 }    
 
-var sides = {
+var sides = {//x,y positions of the sides
     T:   0,
-    R:   43,
-    B:   32,
+    R:   nx-1,
+    B:   ny-1,
     L:   0
  };
 
@@ -60,6 +59,8 @@ function reset() {
   stage = worldMap.stage4;
   visAid = document.getElementById("stage4");
   visAid.style.backgroundColor="yellow";
+  color = "#6f9440";
+  canvas.style.backgroundColor = color;
 };
 
 //Our game loop is a traditional update/draw loop using setTimeout
@@ -99,6 +100,10 @@ function onkeydown(ev) {
       case KEY.RIGHT:  move(DIR.RIGHT); handled = true; break;
       case KEY.UP:     move(DIR.UP);    handled = true; break;
       case KEY.DOWN:   move(DIR.DOWN);  handled = true; break;
+      case KEY.A:   	 move(DIR.LEFT);  handled = true; break;
+      case KEY.D:  		 move(DIR.RIGHT); handled = true; break;
+      case KEY.W:      move(DIR.UP);    handled = true; break;
+      case KEY.S:   	 move(DIR.DOWN);  handled = true; break;
       case KEY.ESC:    lose();          handled = true; break;
     }
   }
@@ -114,6 +119,7 @@ function move(where) {
   var previous = moves.length ? moves[moves.length-1] : dir;
   if ((where != previous) && (where != DIR.OPPOSITE[previous]))
     moves.push(where); currentDir = where;
+    increase(where);
 };
 
 function play() { reset(); playing = true;  };
@@ -136,16 +142,8 @@ function update(idt) {
     dt = dt + idt;
     if (dt > dstep) {
       dt = dt - dstep;
-      increase(moves.shift());
-      decrease();
+      //increase(moves.shift());
 			snakeExits(head);
-      if (snakeOccupies(head, true)) {
-        lose();
-      }
-      else if (foodOccupies(head)) {
-        growth += 10;
-        food = unoccupied();
-      } 
     }
   }
 };
@@ -166,18 +164,8 @@ it should be ok.
 function draw(ctx) {
   ctx.clearRect(0, 0, width, height);
   ctx.globalAlpha = playing ? 1.0 : 0.5;
-  ctx.fillStyle = 'green';
-  ctx.fillRect(food.x * dx, food.y * dy, dx, dy);
   ctx.fillStyle = 'black';
   ctx.fillRect(head.x * dx, head.y * dy, dx, dy);
-  var segment = head, n = 0;
-  while(segment = segment.next) {
-    ctx.fillStyle = '#1080F0';
-    ctx.fillRect(segment.x * dx + 1, segment.y * dy + 1, dx - 2, dy - 2);
-  }
-  ctx.fillStyle = 'green';
-  ctx.font = 'bold 18pt arial';
-  ctx.fillText(length.toString(), 10, 30);
 };
 
 /*
@@ -188,7 +176,6 @@ We made the snake 'step' during update by increasing its head and decreasing its
 */
 
 function push(segment) {
-  length++;
   if (head) {
     head.prev = segment;
     segment.next = head;
@@ -196,13 +183,6 @@ function push(segment) {
   head = segment;
 };
 
-function pop() {
-  length--;
-  if (tail.prev) {
-    tail = tail.prev;
-    tail.next = null;
-  }
-};
 
 /*
 Increasing the head, we need to account for change of direction, 
@@ -221,24 +201,9 @@ function increase(changeDir) {
 };
 
 /*
-Decreasing the tail is trivial, if we are growing then do nothing, 
-otherwise pop off the tail.
-*/
-function decrease() {
-  if (growth)
-    growth--;
-  else
-    pop();
-};
-
-/*
 Collision Detection
 
 The remaining code is some simple collision detection logic.
-
- if head equal side && movement is happening && directions not changging 
- the if direction == up then checkStage() updateMapLocation() 
-* 
 */
 
 function occupies(a, b) {
@@ -258,33 +223,32 @@ function snakeOccupies(pos, ignoreHead) {
   return false;
 };
 
-function snakeExits(pos){
+function snakeExits(pos){ //TODO: compare current position with last so get more accurate exiting stage position
 	if (pos.y === sides.T && currentDir === 0) {
-		console.log("exited at top");
 		changeStage(stage.up);
-		console.log('now in the: '+stage.name);
 	}
 	if (pos.x === sides.R && currentDir === 3) {
-		console.log("exited at right");
 		changeStage(stage.right);
-		console.log('now in the: '+stage.name);
 	}
 	if (pos.y === sides.B && currentDir === 1) {
-		console.log("exited at bottom");
 		changeStage(stage.down);
-		console.log('now in the: '+stage.name);
 	}
 	if (pos.x === sides.L && currentDir === 2) {
-		console.log("exited at left");
 		changeStage(stage.left)
-		console.log('now in the: '+stage.name);
 	}
 	
 	function changeStage(dir){
-		visAid.style.backgroundColor="#6f9440";
+		//the following lines are used mainly to update the small map on the left
+		if (stage.name === "forest") color = "#04410b";
+		else if (stage.name === "D.C.") color = "#584fda";
+		else color = "#6f9440";
+		visAid.style.backgroundColor=color;
 		visAid = document.getElementById("stage"+dir);
   	visAid.style.backgroundColor="yellow";
+  	
+  	//this is for the actual game and can remain
 		stage = worldMap["stage"+dir];
+		canvas.style.backgroundColor=stage.bgcolor;
 	}
 }
 
