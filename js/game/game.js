@@ -39,10 +39,10 @@ var worldMap = {
 }    
 
 var sides = {//x,y positions of the sides
-    T:   0,
-    R:   nx-1,
-    B:   ny-1,
-    L:   0
+    T:   ny-1, //actually just entering from the bottom means you exited the top
+    R:   0,
+    B:   0,
+    L:   nx-1
  };
 
 
@@ -120,6 +120,7 @@ function move(where) {
   if ((where != previous) && (where != DIR.OPPOSITE[previous]))
     moves.push(where); currentDir = where;
     increase(where);
+    snakeExits(head);
 };
 
 function play() { reset(); playing = true;  };
@@ -142,8 +143,6 @@ function update(idt) {
     dt = dt + idt;
     if (dt > dstep) {
       dt = dt - dstep;
-      //increase(moves.shift());
-			snakeExits(head);
     }
   }
 };
@@ -223,7 +222,7 @@ function snakeOccupies(pos, ignoreHead) {
   return false;
 };
 
-function snakeExits(pos){ //TODO: compare current position with last so get more accurate exiting stage position
+function snakeExits(pos){ 
 	if (pos.y === sides.T && currentDir === 0) {
 		changeStage(stage.up);
 	}
@@ -234,7 +233,7 @@ function snakeExits(pos){ //TODO: compare current position with last so get more
 		changeStage(stage.down);
 	}
 	if (pos.x === sides.L && currentDir === 2) {
-		changeStage(stage.left)
+		changeStage(stage.left);
 	}
 	
 	function changeStage(dir){
