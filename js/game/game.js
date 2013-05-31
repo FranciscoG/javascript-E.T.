@@ -14,7 +14,7 @@ var KEY     = { ESC:27, SPACE:32, LEFT:37, UP:38, RIGHT:39, DOWN:40, A:65, W:87,
 var worldMap = {
 	stage1: {
 		name: "forest", bgcolor:"#04410b",	
-		up:2, down:4, left:3, right:5
+		up:2, down:4, left:3, right:5  //when you are in stage1, up takes you to stage2, down to stage4, etc.
 	},
 	stage2: {
 		name: "tall twins", bgcolor:"#6f9440",	
@@ -47,7 +47,7 @@ var sides = {//x,y positions of the sides
 
 
 function reset() {
-  dstep  = 0.06,  //the speed of the snake (seconds per step)
+  dstep  = 0.06;  //the speed of the snake (seconds per step)
   dt     = 0; //seconds since the last update.
   moves  = []; //an array allows multiple moves in a single frame.
   dir    = DIR.LEFT; //the current direction of the snakes head.
@@ -57,10 +57,19 @@ function reset() {
   food = unoccupied();
   currentDir = dir;
   stage = worldMap.stage4;
-  visAid = document.getElementById("stage4");
-  visAid.style.backgroundColor="yellow";
   color = "#6f9440";
   canvas.style.backgroundColor = color;
+  resetStage();
+};
+
+function resetStage() { // reset the map on the left
+  var stageToReset;
+	for (var i=1; i<7;i++) { 
+  	stageToReset = document.getElementById("stage"+i);
+  	stageToReset.style.backgroundColor=worldMap["stage"+i]["bgcolor"];
+  }
+  visAid = document.getElementById("stage4");
+  visAid.style.backgroundColor="yellow";
 };
 
 //Our game loop is a traditional update/draw loop using setTimeout
