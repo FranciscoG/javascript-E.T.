@@ -1,57 +1,106 @@
-var KEY     = { ESC:27, SPACE:32, LEFT:37, UP:38, RIGHT:39, DOWN:40, A:65, W:87, D:68, S:83}, 
-    DIR     = { UP:0, DOWN:1, LEFT:2, RIGHT:3, OPPOSITE:[1, 0, 3, 2] },
-    canvas  = document.getElementById('canvas'),
-    width   = canvas.width  = canvas.offsetWidth,
-    height  = canvas.height = canvas.offsetHeight,
-    ctx     = canvas.getContext('2d'),
-    nx      = 44,
-    ny      = 33,
-    dx      = width  / nx,
-    dy      = height / ny,
-    playing = false,
-    dstep, dt, length, moves, dir, growth, head, tail, food, currentDir, stage, visAid, moving,color;
-    
-var worldMap = {
-	stage1: {
-		name: "forest", bgcolor:"#04410b",	
-		up:2, down:4, left:3, right:5  //when you are in stage1, up takes you to stage2, down to stage4, etc.
-	},
-	stage2: {
-		name: "tall twins", bgcolor:"#6f9440",	
-		up:1, down:6, left:5, right:3
-	},
-	stage3: {
-		name: "4 diamonds", bgcolor:"#6f9440",	
-		up:1, down:6, left:2, right:4
-	},
-	stage4: {
-		name: "arrows", bgcolor:"#6f9440", 	
-		up:1, down:6, left:3, right:5
-	},
-	stage5: {
-		name: "frogger", bgcolor:"#6f9440",		
-		up:1, down:6, left:4, right:2
-	},
-	stage6: {
-		name: "D.C.", bgcolor:"#584fda",	 		
-		up:2, down:4, left:5, right:3
-	}
-}    
+var KEY = {
+    ESC: 27,
+    SPACE: 32,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    A: 65,
+    W: 87,
+    D: 68,
+    S: 83
+  },
+  DIR = {
+    UP: 0,
+    DOWN: 1,
+    LEFT: 2,
+    RIGHT: 3,
+    OPPOSITE: [1, 0, 3, 2]
+  },
+  canvas = document.getElementById('canvas'),
+  width = canvas.width = canvas.offsetWidth,
+  height = canvas.height = canvas.offsetHeight,
+  ctx = canvas.getContext('2d'),
+  nx = 44,
+  ny = 33,
+  dx = width / nx,
+  dy = height / ny,
+  playing = false,
+  dstep, dt, length, moves, dir, growth, head, tail, food, currentDir, stage, visAid, moving, color;
 
-var sides = {//x,y positions of the sides
-    T:   ny-1, //actually just entering from the bottom means you exited the top
-    R:   0,
-    B:   0,
-    L:   nx-1
- };
+var worldMap = {
+  stage1: {
+    name: "forest",
+    bgcolor: "#04410b",
+    up: 2,
+    down: 4,
+    left: 3,
+    right: 7 //into top center well from the log/frogger stage
+  },
+  stage2: {
+    name: "tall twins",
+    bgcolor: "#6f9440",
+    up: 1,
+    down: 6,
+    left: 5,
+    right: 3
+  },
+  stage3: {
+    name: "4 diamonds",
+    bgcolor: "#6f9440",
+    up: 1,
+    down: 6,
+    left: 2,
+    right: 4
+  },
+  stage4: {
+    name: "arrows",
+    bgcolor: "#6f9440",
+    up: 1,
+    down: 6,
+    left: 3,
+    right: 5
+  },
+  stage5: {
+    name: "frogger", // log screen
+    bgcolor: "#6f9440",
+    up: 1,
+    down: 6,
+    left: 4,
+    right: 2
+  },
+  stage6: {
+    name: "D.C.",
+    bgcolor: "#584fda",
+    up: 2,
+    down: 4,
+    left: 7, // Leaving from the left side always lands E.T. in the bottom center well on the Log Screen.
+    right: 3
+  },
+  stage7: {
+    nname: "Well",
+    bgcolor: "red",
+    up: 5
+  }
+}
+
+var sides = { //x,y positions of the sides
+  T: ny - 1, //actually just entering from the bottom means you exited the top
+  R: 0,
+  B: 0,
+  L: nx - 1
+};
 
 
 function reset() {
-  dstep  = 0.06;  //the speed of the snake (seconds per step)
-  dt     = 0; //seconds since the last update.
-  moves  = []; //an array allows multiple moves in a single frame.
-  dir    = DIR.LEFT; //the current direction of the snakes head.
-  head   = tail = { x: 40, y: 5 }; //the snakes head. and tail
+  dstep = 0.06; //the speed of the snake (seconds per step)
+  dt = 0; //seconds since the last update.
+  moves = []; //an array allows multiple moves in a single frame.
+  dir = DIR.LEFT; //the current direction of the snakes head.
+  head = tail = {
+    x: 40,
+    y: 5
+  }; //the snakes head. and tail
   length = 1; //the length of the snake (we use this as the current score).
   growth = 10; //the amount to grow after eating some food.
   food = unoccupied();
@@ -64,18 +113,21 @@ function reset() {
 
 function resetStage() { // reset the map on the left
   var stageToReset;
-	for (var i=1; i<7;i++) { 
-  	stageToReset = document.getElementById("stage"+i);
-  	stageToReset.style.backgroundColor=worldMap["stage"+i]["bgcolor"];
+  for (var i = 1; i < 7; i++) {
+    stageToReset = document.getElementById("stage" + i);
+    stageToReset.style.backgroundColor = worldMap["stage" + i]["bgcolor"];
   }
   visAid = document.getElementById("stage4");
-  visAid.style.backgroundColor="yellow";
+  visAid.style.backgroundColor = "yellow";
 };
 
 //Our game loop is a traditional update/draw loop using setTimeout
-function timestamp() { return new Date().getTime(); };
+function timestamp() {
+  return new Date().getTime();
+};
 
 var start, last = timestamp();
+
 function frame() {
   start = timestamp();
   update((start - last) / 1000.0);
@@ -104,19 +156,45 @@ document.addEventListener('keydown', onkeydown, false);
 function onkeydown(ev) {
   var handled = false;
   if (playing) {
-    switch(ev.keyCode) {
-      case KEY.LEFT:   move(DIR.LEFT);  handled = true; break;
-      case KEY.RIGHT:  move(DIR.RIGHT); handled = true; break;
-      case KEY.UP:     move(DIR.UP);    handled = true; break;
-      case KEY.DOWN:   move(DIR.DOWN);  handled = true; break;
-      case KEY.A:   	 move(DIR.LEFT);  handled = true; break;
-      case KEY.D:  		 move(DIR.RIGHT); handled = true; break;
-      case KEY.W:      move(DIR.UP);    handled = true; break;
-      case KEY.S:   	 move(DIR.DOWN);  handled = true; break;
-      case KEY.ESC:    lose();          handled = true; break;
+    switch (ev.keyCode) {
+      case KEY.LEFT:
+        move(DIR.LEFT);
+        handled = true;
+        break;
+      case KEY.RIGHT:
+        move(DIR.RIGHT);
+        handled = true;
+        break;
+      case KEY.UP:
+        move(DIR.UP);
+        handled = true;
+        break;
+      case KEY.DOWN:
+        move(DIR.DOWN);
+        handled = true;
+        break;
+      case KEY.A:
+        move(DIR.LEFT);
+        handled = true;
+        break;
+      case KEY.D:
+        move(DIR.RIGHT);
+        handled = true;
+        break;
+      case KEY.W:
+        move(DIR.UP);
+        handled = true;
+        break;
+      case KEY.S:
+        move(DIR.DOWN);
+        handled = true;
+        break;
+      case KEY.ESC:
+        lose();
+        handled = true;
+        break;
     }
-  }
-  else if (ev.keyCode == KEY.SPACE) {
+  } else if (ev.keyCode == KEY.SPACE) {
     play();
     handled = true;
   }
@@ -125,15 +203,22 @@ function onkeydown(ev) {
 };
 
 function move(where) {
-  var previous = moves.length ? moves[moves.length-1] : dir;
+  var previous = moves.length ? moves[moves.length - 1] : dir;
   if ((where != previous) && (where != DIR.OPPOSITE[previous]))
-    moves.push(where); currentDir = where;
-    increase(where);
-    snakeExits(head);
+    moves.push(where);
+  currentDir = where;
+  increase(where);
+  snakeExits(head);
 };
 
-function play() { reset(); playing = true;  };
-function lose() {          playing = false; };
+function play() {
+  reset();
+  playing = true;
+};
+
+function lose() {
+  playing = false;
+};
 
 /*
 Updating the Game
@@ -199,12 +284,32 @@ other side of the play field.
 */
 
 function increase(changeDir) {
-  dir  = (typeof changeDir != 'undefined') ? changeDir : dir;
-  switch(dir) {
-    case DIR.LEFT:  push({x: head.x == 0    ? nx-1 : head.x-1, y: head.y                           }); break;
-    case DIR.RIGHT: push({x: head.x == nx-1 ? 0    : head.x+1, y: head.y                           }); break;
-    case DIR.UP:    push({x: head.x,                           y: head.y == 0    ? ny-1 : head.y-1 }); break;
-    case DIR.DOWN:  push({x: head.x,                           y: head.y == ny-1 ? 0    : head.y+1 }); break;
+  dir = (typeof changeDir != 'undefined') ? changeDir : dir;
+  switch (dir) {
+    case DIR.LEFT:
+      push({
+        x: head.x == 0 ? nx - 1 : head.x - 1,
+        y: head.y
+      });
+      break;
+    case DIR.RIGHT:
+      push({
+        x: head.x == nx - 1 ? 0 : head.x + 1,
+        y: head.y
+      });
+      break;
+    case DIR.UP:
+      push({
+        x: head.x,
+        y: head.y == 0 ? ny - 1 : head.y - 1
+      });
+      break;
+    case DIR.DOWN:
+      push({
+        x: head.x,
+        y: head.y == ny - 1 ? 0 : head.y + 1
+      });
+      break;
   }
 };
 
@@ -231,40 +336,44 @@ function snakeOccupies(pos, ignoreHead) {
   return false;
 };
 
-function snakeExits(pos){ 
-	if (pos.y === sides.T && currentDir === 0) {
-		changeStage(stage.up);
-	}
-	if (pos.x === sides.R && currentDir === 3) {
-		changeStage(stage.right);
-	}
-	if (pos.y === sides.B && currentDir === 1) {
-		changeStage(stage.down);
-	}
-	if (pos.x === sides.L && currentDir === 2) {
-		changeStage(stage.left);
-	}
-	
-	function changeStage(dir){
-		//the following lines are used mainly to update the small map on the left
-		if (stage.name === "forest") color = "#04410b";
-		else if (stage.name === "D.C.") color = "#584fda";
-		else color = "#6f9440";
-		visAid.style.backgroundColor=color;
-		visAid = document.getElementById("stage"+dir);
-  	visAid.style.backgroundColor="yellow";
-  	
-  	//this is for the actual game and can remain
-		stage = worldMap["stage"+dir];
-		canvas.style.backgroundColor=stage.bgcolor;
-	}
+function snakeExits(pos) {
+  if (pos.y === sides.T && currentDir === 0) {
+    changeStage(stage.up);
+  }
+  if (pos.x === sides.R && currentDir === 3) {
+    changeStage(stage.right);
+  }
+  if (pos.y === sides.B && currentDir === 1) {
+    changeStage(stage.down);
+  }
+  if (pos.x === sides.L && currentDir === 2) {
+    changeStage(stage.left);
+  }
+
+  function changeStage(dir) {
+    //the following lines are used mainly to update the small map on the left
+    if (stage.name === "forest") {
+      color = "#04410b";
+    } else if (stage.name === "D.C.") {
+      color = "#584fda";
+    } else {
+      color = "#6f9440";
+    }
+    visAid.style.backgroundColor = color;
+    visAid = document.getElementById("stage" + dir);
+    visAid.style.backgroundColor = "yellow";
+
+    //this is for the actual game and can remain
+    stage = worldMap["stage" + dir];
+    canvas.style.backgroundColor = stage.bgcolor;
+  }
 }
 
 function unoccupied() {
   var pos = {};
   do {
-    pos.x = Math.round(random(0, nx-1));
-    pos.y = Math.round(random(0, ny-1));
+    pos.x = Math.round(random(0, nx - 1));
+    pos.y = Math.round(random(0, ny - 1));
   } while (foodOccupies(pos) || snakeOccupies(pos));
   return pos;
 };

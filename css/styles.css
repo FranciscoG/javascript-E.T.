@@ -64,6 +64,11 @@ body, html {
 	background-color:#584fda;
 	border-top:none;
 }
+
+.well {
+	background-color: red;
+}
+
 #stage6 p {
 	padding-top:0;
 	padding-bottom:20px;
