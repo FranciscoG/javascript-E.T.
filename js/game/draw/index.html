@@ -4,58 +4,40 @@
         <meta charset="utf-8">
        
         <title>Sprite Test</title>
-        
     </head>
     <body>
+      <canvas id="cv" width="160" height="192"></canvas>
 
       <script src="drawer.js"></script>
+      <script src="../sprites.js"></script>
       <script>
 
-        var ETWalkSprite_A0 = [
-          "FE", // |XXXXXXX.|
-          "FF", // |XXXXXXXX|
-          "C3", // |XX....XX|
-          "0F", // |....XXXX|
-          "FF", // |XXXXXXXX|
-          "3F", // |..XXXXXX|
-          "2B", // |..X.X.XX|
-          "E7", // |XXX..XXX|
-        ];
-
-        var ETWalkSprite_A0_bin = [
-          "11111110",
-          "11111111",
-          "11000011",
-          "00001111",
-          "11111111",
-          "00111111",
-          "00101011",
-          "11100111",
-        ];
-
-        var ETExtensionSprite_B3 = [
-          "BF", // |X.XXXXXX|
-          "FF", // |XXXXXXXX|
-          "03", // |......XX|
-          "03", // |......XX|
-          "03", // |......XX|
-          "03", // |......XX|
-          "03", // |......XX|
-          "1F", // |...XXXXX|
-          "BF", // |X.XXXXXX|
-          "3F", // |..XXXXXX|
-          "63", // |.XX...XX|
-          "00", // |........|
-          "00", // |........|
-        ];
-        
         var options = {
-          canvasId: "spriteTest",
-          hex: true
+          hex: true,
+          color: "#fce08c"
         };
 
-        SpriteDrawer(options, ETWalkSprite_A0);
+        var ET1 = SpriteDrawer(options, ETExtensionSprite_B3);
+        var ET2 = SpriteDrawer(options, ETWalkSprite_A0);
+        var ET3 = SpriteDrawer(options, ETWalkSprite_B0);
 
+        var cv = document.getElementById('cv');
+        var ctx = cv.getContext("2d");
+        ctx.fillStyle = "#000";
+
+        var scale = 2;
+
+        cv.width = cv.width * scale;
+        cv.height = cv.height * scale;
+
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        
+        ctx.scale(scale * 2,scale * 2) // only scales what's placed on the canvas
+        ctx.webkitImageSmoothingEnabled = false;
+        ctx.mozImageSmoothingEnabled = false;
+        ctximageSmoothingEnabled = false;
+        
+        ctx.drawImage(ET2, 20, 20);
 
       </script>
 

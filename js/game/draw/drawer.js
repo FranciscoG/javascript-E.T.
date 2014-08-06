@@ -11,10 +11,8 @@ function SpriteDrawer(options, sprite) {
   _opts.hex = _opts.hex || false; // set to True to convert Hex to Binary
   _opts.color = _opts.color || "#696969"; // hex color, default to gray
 
-  // create the canvas off screen in a documentFragment and work in there
-  var docFragment = document.createDocumentFragment();
   var canvas = document.createElement('canvas');
-  // Atari Player Sprites were 8 x 8
+  // Atari Player Sprites were 8 pixel wide.  no height limit
   canvas.width = "8";
   canvas.height = sprite.length;
   var ctx = canvas.getContext("2d");
@@ -44,10 +42,7 @@ function SpriteDrawer(options, sprite) {
   }
   ctx.putImageData(imgData, 0, 0);
 
-  docFragment.appendChild(canvas);
-  document.body.appendChild(docFragment);
-
-  return imgData;
+  return canvas;
 };
 
 
@@ -73,6 +68,11 @@ var hex2bin = function(hex) {
   return bin;
 };
 
+/**
+ * Convert a Hex Color to RGB array
+ * @param  {string} hex   a full hex color string includeing the hash.  example: "#99af34"
+ * @return {object}       an array containing RGB info [R,G,B]
+ */
 var hex2rgb = function(hex) {
   var hx = hex.substr(1);
   var parts = hx.match(/[0-9A-Za-z]{2}/g);
@@ -81,11 +81,3 @@ var hex2rgb = function(hex) {
   });
   return parts;
 };
-
-/*
-
-(\.byte\s\$)([0-9A-Za-z]{2})(\s)(;)
-
-"\2", //
-
- */
