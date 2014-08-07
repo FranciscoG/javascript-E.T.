@@ -13,8 +13,6 @@ function SpriteDrawer(options, sprite) {
 
   var canvas = document.createElement('canvas');
   // Atari Player Sprites were 8 pixel wide.  no height limit
-  canvas.width = "8";
-  canvas.height = sprite.length;
   var ctx = canvas.getContext("2d");
 
   if (_opts.hex) {
@@ -22,6 +20,9 @@ function SpriteDrawer(options, sprite) {
       sprite[i] = hex2bin(arr[i]);
     });
   }
+
+  canvas.width = sprite[0].length;
+  canvas.height = sprite.length;
 
   var _n = 0;
   sprite = sprite.join("").split("");
