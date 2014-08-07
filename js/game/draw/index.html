@@ -17,9 +17,15 @@
           color: "#fce08c"
         };
 
-        var ET1 = SpriteDrawer(options, ETExtensionSprite_B3);
-        var ET2 = SpriteDrawer(options, ETWalkSprite_A0);
-        var ET3 = SpriteDrawer(options, ETWalkSprite_B0);
+        ET_walk = [
+          SpriteDrawer(options, ETWalkSprite_A0),
+          SpriteDrawer(options, ETWalkSprite_A1),
+          SpriteDrawer(options, ETWalkSprite_A2),
+
+          SpriteDrawer(options, ETWalkSprite_B0),
+          SpriteDrawer(options, ETWalkSprite_B1),
+          SpriteDrawer(options, ETWalkSprite_B2)
+        ];
 
         var cv = document.getElementById('cv');
         var ctx = cv.getContext("2d");
@@ -29,15 +35,68 @@
 
         cv.width = cv.width * scale;
         cv.height = cv.height * scale;
-
-        ctx.fillRect(0, 0, cv.width, cv.height);
-        
         ctx.scale(scale * 2,scale * 2) // only scales what's placed on the canvas
         ctx.webkitImageSmoothingEnabled = false;
         ctx.mozImageSmoothingEnabled = false;
         ctximageSmoothingEnabled = false;
+
+        /**************************************************
+          Walking Player animation sprite
+        */
+
+        var _i = 3;
+        function draw(){
+          ctx.fillRect(0, 0, cv.width, cv.height);
+          ctx.drawImage(ET_walk[_i], 20, 20);
+          _i++;
+          if (_i > 5) {_i = 3;}
+        };
+
+        var framesToSkip = 5, counter = 0;
+
+        function loop() {
+
+          if (counter < framesToSkip) {
+              counter++;
+              requestAnimationFrame(loop);
+              return;
+          }
+
+          draw();
+
+          counter = 0;
+          requestAnimationFrame(loop);
+        }
+        //loop();
+
+        /**************************************************
+          Title Screen ET
+        */
         
-        ctx.drawImage(ET2, 20, 20);
+        ET_title = [
+          SpriteDrawer(options, TitleETGraphics_1),
+          SpriteDrawer(options, TitleETGraphics_2),
+          SpriteDrawer(options, TitleETGraphics_3),
+          SpriteDrawer(options, TitleETGraphics_4),
+          SpriteDrawer(options, TitleETGraphics_5),
+          SpriteDrawer(options, TitleETGraphics_0)
+        ];
+
+        function showTitle(){
+          ctx.fillRect(0, 0, cv.width, cv.height);
+          ctx.translate(80, 90);
+          ctx.rotate(3.14);
+          ctx.drawImage(ET_title[0], 8, 20);
+          ctx.drawImage(ET_title[1], 16, 20);
+          ctx.drawImage(ET_title[2], 24, 20);
+          ctx.drawImage(ET_title[3], 32, 20);
+          ctx.drawImage(ET_title[4], 40, 20);
+          ctx.drawImage(ET_title[5], 48, 20);
+
+        }
+
+        showTitle();
+
 
       </script>
 
