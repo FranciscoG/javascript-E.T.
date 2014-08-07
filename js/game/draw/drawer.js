@@ -43,7 +43,7 @@ function SpriteDrawer(options, sprite) {
   ctx.putImageData(imgData, 0, 0);
 
   return canvas;
-};
+}
 
 
 /**
