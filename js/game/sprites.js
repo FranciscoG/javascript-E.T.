@@ -1,5 +1,12 @@
 /*
 
+Original Colors:
+		17F9: 0E DE DC DA DA DA
+
+		New Colors:
+		17F9: 0E FE FC F8 F8 F8
+
+
 	ETColors
    .byte WHITE,DK_GREEN+14,DK_GREEN+12,DK_GREEN+10
    .byte DK_GREEN+10,DK_GREEN+10,BLACK
