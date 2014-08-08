@@ -4,29 +4,23 @@
         <meta charset="utf-8">
        
         <title>Sprite Test</title>
+        <style type="text/css">
+          .br { height: 20px;} 
+        </style>
     </head>
     <body>
-      <canvas id="cv" width="160" height="192"></canvas>
+      <canvas id="cv" width="320" height="192"></canvas>
+      <div class="br"></div>
+      <canvas id="cv2" width="320" height="192"></canvas>
 
       <script src="drawer.js"></script>
       <script src="../sprites.js"></script>
       <script>
 
-        var options = {
-          hex: true,
-          color: "#fce08c"
-        };
-
-        ET_walk = [
-          SpriteDrawer(options, ETWalkSprite_A0),
-          SpriteDrawer(options, ETWalkSprite_A1),
-          SpriteDrawer(options, ETWalkSprite_A2),
-
-          SpriteDrawer(options, ETWalkSprite_B0),
-          SpriteDrawer(options, ETWalkSprite_B1),
-          SpriteDrawer(options, ETWalkSprite_B2)
-        ];
-
+        /*****************************************
+         * setup canvases
+         */
+        
         var cv = document.getElementById('cv');
         var ctx = cv.getContext("2d");
         ctx.fillStyle = "#000";
@@ -38,41 +32,40 @@
         ctx.scale(scale * 2,scale * 2) // only scales what's placed on the canvas
         ctx.webkitImageSmoothingEnabled = false;
         ctx.mozImageSmoothingEnabled = false;
-        ctximageSmoothingEnabled = false;
+        ctx.imageSmoothingEnabled = false;
 
-        /**************************************************
-          Walking Player animation sprite
-        */
+        var cv2 = document.getElementById('cv2');
+        var ctx2 = cv2.getContext("2d");
+        ctx2.fillStyle = "#000";
 
-        var _i = 3;
-        function draw(){
-          ctx.fillRect(0, 0, cv.width, cv.height);
-          ctx.drawImage(ET_walk[_i], 20, 20);
-          _i++;
-          if (_i > 5) {_i = 3;}
+        cv2.width = cv2.width * scale;
+        cv2.height = cv2.height * scale;
+        ctx2.scale(scale * 2,scale * 2) // only scales what's placed on the canvas
+        ctx2.webkitImageSmoothingEnabled = false;
+        ctx2.mozImageSmoothingEnabled = false;
+        ctx2.imageSmoothingEnabled = false;
+        
+        /************************************************
+         * create images off screen using drawer.js lib
+         */
+        
+        var options = {
+          hex: true,
+          color: "#fce08c"
         };
 
-        var framesToSkip = 5, counter = 0;
+        ET_walkA = [
+          SpriteDrawer(options, ETWalkSprite_A0),
+          SpriteDrawer(options, ETWalkSprite_A1),
+          SpriteDrawer(options, ETWalkSprite_A2),
+        ];
 
-        function loop() {
+        ET_walkB = [
+          SpriteDrawer(options, ETWalkSprite_B0),
+          SpriteDrawer(options, ETWalkSprite_B1),
+          SpriteDrawer(options, ETWalkSprite_B2)
+        ];
 
-          if (counter < framesToSkip) {
-              counter++;
-              requestAnimationFrame(loop);
-              return;
-          }
-
-          draw();
-
-          counter = 0;
-          requestAnimationFrame(loop);
-        }
-        //loop();
-
-        /**************************************************
-          Title Screen ET
-        */
-        
         ET_title = [
           SpriteDrawer(options, TitleETGraphics_1),
           SpriteDrawer(options, TitleETGraphics_2),
@@ -82,17 +75,59 @@
           SpriteDrawer(options, TitleETGraphics_0)
         ];
 
-        function showTitle(){
-          ctx.fillRect(0, 0, cv.width, cv.height);
-          ctx.translate(80, 90);
-          ctx.rotate(3.14);
-          ctx.drawImage(ET_title[0], 8, 20);
-          ctx.drawImage(ET_title[1], 16, 20);
-          ctx.drawImage(ET_title[2], 24, 20);
-          ctx.drawImage(ET_title[3], 32, 20);
-          ctx.drawImage(ET_title[4], 40, 20);
-          ctx.drawImage(ET_title[5], 48, 20);
 
+        /**************************************************
+         * Walking Player animation sprite
+         */
+
+        // this loops through each walk image and puts it on the screen
+        var _i = 0;
+        function doWalk(){
+          ctx.fillRect(0, 0, cv.width, cv.height);
+          ctx.drawImage(ET_walkA[_i], 20, 20);
+          ctx.drawImage(ET_walkB[_i], 20, 50);
+          _i++;
+          if (_i > 2) {_i = 0;}
+        };
+
+        // using requestAnimationFrame to make it walk
+        var framesToSkip = 5, counter = 0;
+
+        function loop() {
+          if (counter < framesToSkip) {
+              counter++;
+              requestAnimationFrame(loop);
+              return;
+          }
+          doWalk();
+          counter = 0;
+          requestAnimationFrame(loop);
+        }
+
+        loop();
+
+        /**************************************************
+         * Title Screen ET
+         */
+
+        function showTitle(){
+          ctx2.fillRect(0, 0, cv.width, cv.height);
+          
+          // // rotation section
+          // var hW = cv2.width / (scale * 2);
+          // var hH = cv2.width / (scale * 2);
+          // ctx2.translate(hW, hH);
+          // ctx2.rotate(Math.PI);
+          // // end rotation
+          
+          var loc = 20;
+          var top = 15;
+          ctx2.drawImage(ET_title[0], loc + 8, top);
+          ctx2.drawImage(ET_title[1], loc + (8*2), top);
+          ctx2.drawImage(ET_title[2], loc + (8*3), top);
+          ctx2.drawImage(ET_title[3], loc + (8*4), top);
+          ctx2.drawImage(ET_title[4], loc + (8*5), top);
+          ctx2.drawImage(ET_title[5], loc + (8*6), top);
         }
 
         showTitle();
