@@ -17,11 +17,13 @@
           color: "#fce08c"
         };
 
-        ET_walk = [
+        var ET_walkA = [
           SpriteDrawer(options, ETWalkSprite_A0),
           SpriteDrawer(options, ETWalkSprite_A1),
-          SpriteDrawer(options, ETWalkSprite_A2),
+          SpriteDrawer(options, ETWalkSprite_A2)
+        ];
 
+        var ET_walkB = [
           SpriteDrawer(options, ETWalkSprite_B0),
           SpriteDrawer(options, ETWalkSprite_B1),
           SpriteDrawer(options, ETWalkSprite_B2)
@@ -44,12 +46,14 @@
           Walking Player animation sprite
         */
 
-        var _i = 3;
+        var _i = 0;
         function draw(){
+          // fill whole bg of canvas with black
           ctx.fillRect(0, 0, cv.width, cv.height);
-          ctx.drawImage(ET_walk[_i], 20, 20);
+          // place imade on screen
+          ctx.drawImage(ET_walkB[_i], 20, 20);
           _i++;
-          if (_i > 5) {_i = 3;}
+          if (_i > 2) {_i = 0;}
         };
 
         var framesToSkip = 5, counter = 0;

@@ -1,31 +1,3 @@
-/*
-
-Original Colors:
-		17F9: 0E DE DC DA DA DA
-
-		New Colors:
-		17F9: 0E FE FC F8 F8 F8
-
-
-	ETColors
-   .byte WHITE,DK_GREEN+14,DK_GREEN+12,DK_GREEN+10
-   .byte DK_GREEN+10,DK_GREEN+10,BLACK
-
-   ETAnimationLSBTable_A
-   .byte <ETWalkSprite_A0,<ETWalkSprite_A1,<ETWalkSprite_A2
-   
-	ETAnimationLSBTable_B
-   .byte <ETWalkSprite_B0,<ETWalkSprite_B1,<ETWalkSprite_B2
-
-
-regex for converting from ET source 
-	find:
-		(\.byte\s\$)([0-9A-Za-z]{2})(\s)(;)
-	replace:
-		"\2", //
-
- */
-
 // NTSC color constants
 var ET_COLORS = {
   BLACK: "00",
@@ -48,6 +20,37 @@ var ET_COLORS = {
   BROWN: "F0",
   NTSC_BROWN: this.BROWN
 };
+
+/*
+
+	ETColors
+   .byte WHITE,DK_GREEN+14,DK_GREEN+12,DK_GREEN+10
+   .byte DK_GREEN+10,DK_GREEN+10,BLACK
+
+From the Fix ET article:
+
+Original Colors:
+		17F9: 0E DE DC DA DA DA
+
+		New Colors:
+		17F9: 0E FE FC F8 F8 F8
+
+   ETAnimationLSBTable_A
+   .byte <ETWalkSprite_A0,<ETWalkSprite_A1,<ETWalkSprite_A2
+   
+	ETAnimationLSBTable_B
+   .byte <ETWalkSprite_B0,<ETWalkSprite_B1,<ETWalkSprite_B2
+
+
+regex for converting from ET source 
+find:
+	(\.byte\s\$)([0-9A-Za-z]{2})(\s)(;)
+replace:
+	"\2", //
+
+ */
+
+
 
 var ETWalkSprite_A0 = [
   "FE", // |XXXXXXX.|
