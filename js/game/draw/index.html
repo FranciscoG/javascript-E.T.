@@ -54,19 +54,19 @@
           color: "#fce08c"
         };
 
-        ET_walkA = [
+        var ET_walkA = [
           SpriteDrawer(options, ETWalkSprite_A0),
           SpriteDrawer(options, ETWalkSprite_A1),
           SpriteDrawer(options, ETWalkSprite_A2),
         ];
 
-        ET_walkB = [
+        var ET_walkB = [
           SpriteDrawer(options, ETWalkSprite_B0),
           SpriteDrawer(options, ETWalkSprite_B1),
           SpriteDrawer(options, ETWalkSprite_B2)
         ];
 
-        ET_title = [
+        var ET_title = [
           SpriteDrawer(options, TitleETGraphics_1),
           SpriteDrawer(options, TitleETGraphics_2),
           SpriteDrawer(options, TitleETGraphics_3),
@@ -74,6 +74,14 @@
           SpriteDrawer(options, TitleETGraphics_5),
           SpriteDrawer(options, TitleETGraphics_0)
         ];
+
+        options.hex = false;
+        options.native = true;
+        var troll = SpriteDrawer(options, trollfaceSprite);
+
+        options.hex = true;
+        options.native = true;
+        var ET_test = SpriteDrawer(options, testET);
 
 
         /**************************************************
@@ -86,6 +94,8 @@
           ctx.fillRect(0, 0, cv.width, cv.height);
           ctx.drawImage(ET_walkA[_i], 20, 20);
           ctx.drawImage(ET_walkB[_i], 20, 50);
+          ctx.drawImage(troll, 50, 20);
+          ctx.drawImage(ET_test, 50, 50);
           _i++;
           if (_i > 2) {_i = 0;}
         };
