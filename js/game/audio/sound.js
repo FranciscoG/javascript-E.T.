@@ -62,12 +62,6 @@ PlayThemeMusic
 	http://modernweb.com/2014/03/31/creating-sound-with-the-web-audio-api-and-oscillators/
  */
 
-/*
-    <option>sine</option>
-    <option>square</option>
-    <option>sawtooth</option>
-    <option>triangle</option>
- */
 
 var notes = {
   'C0': 16.35,
@@ -231,7 +225,7 @@ function playNote(pitch, length, wave, vol) {
 //playNote("A3", 1, "square", 0.3);
 
 
-function playSequence(arrNotes, bpm, wave) {
+function playSequence(arrNotes, bpm, wave, vol) {
   var o, t = ctx.currentTime,
     arrayLength = arrNotes.length,
     playlength = 0;
