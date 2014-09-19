@@ -12,7 +12,10 @@
 
 var ET_Theme_music = [{
   frq: notes["A3"],
-  notelength: 4
+  notelength: 3
+}, {
+  frq: notes["A3"],
+  notelength: 1
 }, {
   frq: notes["E4"],
   notelength: 4
@@ -78,4 +81,4 @@ var ET_Theme_music = [{
   notelength: 5
 }];
 
-playSequence(ET_Theme_music, 300, "square")
+playSequence(ET_Theme_music, 300, "square");

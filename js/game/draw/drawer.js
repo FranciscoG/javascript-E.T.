@@ -8,15 +8,17 @@ function SpriteDrawer(options, sprite) {
   }
 
   //TODO:  Test for HEX instead of setting it as an option
-  //TODO:  Test if Sprite is an array or string instead of using _opts.native 
 
   var _opts = options || {};
   _opts.hex = _opts.hex || false; // set to True to convert Hex to Binary
   _opts.color = _opts.color || "#696969"; // hex color, default to gray
-  _opts.native = _opts.native || false;
+
+  _opts.native = false;
+  if (typeof sprite === "string") {
+    _opts.native = true;
+  }
 
   var canvas = document.createElement('canvas');
-  // Atari Player Sprites were 8 pixel wide.  no height limit
   var ctx = canvas.getContext("2d");
 
   function repl(match, p1, p2, p3, offset, string) {
@@ -28,7 +30,7 @@ function SpriteDrawer(options, sprite) {
       sprite[i] = hex2bin(arr[i]);
     });
   } else if (_opts.hex && _opts.native) {
-    sprite = sprite.trim().replace(/(\$)?([a-z0-9]{2})(\s?;\s?[|X.\s]*\s?)?/gi, repl);
+    sprite = sprite.trim().replace(/(\$)?([a-z0-9]{2})(\s?;?\s?[|X.\s]*\s?)?/gi, repl);
   }
 
   if (_opts.native) {

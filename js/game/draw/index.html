@@ -67,20 +67,18 @@
         ];
 
         var ET_title = [
-          SpriteDrawer(options, TitleETGraphics_1),
-          SpriteDrawer(options, TitleETGraphics_2),
-          SpriteDrawer(options, TitleETGraphics_3),
-          SpriteDrawer(options, TitleETGraphics_4),
-          SpriteDrawer(options, TitleETGraphics_5),
-          SpriteDrawer(options, TitleETGraphics_0)
+          SpriteDrawer(options, TitleETGraphics_1.reverse()),
+          SpriteDrawer(options, TitleETGraphics_2.reverse()),
+          SpriteDrawer(options, TitleETGraphics_3.reverse()),
+          SpriteDrawer(options, TitleETGraphics_4.reverse()),
+          SpriteDrawer(options, TitleETGraphics_5.reverse()),
+          SpriteDrawer(options, TitleETGraphics_0.reverse())
         ];
 
         options.hex = false;
-        options.native = true;
         var troll = SpriteDrawer(options, trollfaceSprite);
 
         options.hex = true;
-        options.native = true;
         var ET_test = SpriteDrawer(options, testET);
 
 
@@ -123,13 +121,6 @@
         function showTitle(){
           ctx2.fillRect(0, 0, cv.width, cv.height);
           
-          // // rotation section
-          // var hW = cv2.width / (scale * 2);
-          // var hH = cv2.width / (scale * 2);
-          // ctx2.translate(hW, hH);
-          // ctx2.rotate(Math.PI);
-          // // end rotation
-          
           var loc = 20;
           var top = 15;
           ctx2.drawImage(ET_title[0], loc + 8, top);
@@ -137,7 +128,7 @@
           ctx2.drawImage(ET_title[2], loc + (8*3), top);
           ctx2.drawImage(ET_title[3], loc + (8*4), top);
           ctx2.drawImage(ET_title[4], loc + (8*5), top);
-          ctx2.drawImage(ET_title[5], loc + (8*6), top);
+          ctx2.drawImage(ET_title[5], loc + (8*6), top + 7);
         }
 
         showTitle();
