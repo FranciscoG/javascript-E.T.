@@ -82,7 +82,7 @@ var worldMap = {
     bgcolor: "red",
     up: 5
   }
-}
+};
 
 var sides = { //x,y positions of the sides
   T: ny - 1, //actually just entering from the bottom means you exited the top
@@ -109,7 +109,7 @@ function reset() {
   color = "#6f9440";
   canvas.style.backgroundColor = color;
   resetStage();
-};
+}
 
 function resetStage() { // reset the map on the left
   var stageToReset;
@@ -119,12 +119,12 @@ function resetStage() { // reset the map on the left
   }
   visAid = document.getElementById("stage4");
   visAid.style.backgroundColor = "yellow";
-};
+}
 
 //Our game loop is a traditional update/draw loop using setTimeout
 function timestamp() {
   return new Date().getTime();
-};
+}
 
 var start, last = timestamp();
 
@@ -200,7 +200,7 @@ function onkeydown(ev) {
   }
   if (handled)
     ev.preventDefault(); // prevent arrow keys from scrolling the page
-};
+}
 
 function move(where) {
   var previous = moves.length ? moves[moves.length - 1] : dir;
@@ -209,16 +209,16 @@ function move(where) {
   currentDir = where;
   increase(where);
   snakeExits(head);
-};
+}
 
 function play() {
   reset();
   playing = true;
-};
+}
 
 function lose() {
   playing = false;
-};
+}
 
 /*
 Updating the Game
@@ -239,7 +239,7 @@ function update(idt) {
       dt = dt - dstep;
     }
   }
-};
+}
 
 /*
 Rendering the Game
@@ -259,7 +259,7 @@ function draw(ctx) {
   ctx.globalAlpha = playing ? 1.0 : 0.5;
   ctx.fillStyle = 'black';
   ctx.fillRect(head.x * dx, head.y * dy, dx, dy);
-};
+}
 
 /*
 Managing Snake Growth
@@ -274,7 +274,7 @@ function push(segment) {
     segment.next = head;
   }
   head = segment;
-};
+}
 
 
 /*
@@ -311,7 +311,7 @@ function increase(changeDir) {
       });
       break;
   }
-};
+}
 
 /*
 Collision Detection
@@ -321,11 +321,11 @@ The remaining code is some simple collision detection logic.
 
 function occupies(a, b) {
   return a && b && (a.x == b.x) && (a.y == b.y);
-};
+}
 
 function foodOccupies(pos) {
   return occupies(food, pos);
-};
+}
 
 function snakeOccupies(pos, ignoreHead) {
   var segment = ignoreHead ? head.next : head;
@@ -334,7 +334,7 @@ function snakeOccupies(pos, ignoreHead) {
       return true;
   } while (segment = segment.next);
   return false;
-};
+}
 
 function snakeExits(pos) {
   if (pos.y === sides.T && currentDir === 0) {
@@ -376,8 +376,8 @@ function unoccupied() {
     pos.y = Math.round(random(0, ny - 1));
   } while (foodOccupies(pos) || snakeOccupies(pos));
   return pos;
-};
+}
 
 function random(min, max) {
   return (min + (Math.random() * (max - min)));
-};
+}

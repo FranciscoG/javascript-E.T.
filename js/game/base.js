@@ -2,7 +2,7 @@
 // feature detection
 //=============================================================================
 ua = function() {
-
+  var version;
   var ua  = navigator.userAgent.toLowerCase(); // should avoid user agent sniffing... but sometimes you just gotta do what you gotta do
   var key =        ((ua.indexOf("opera")   > -1) ? "opera"   : null);
       key = key || ((ua.indexOf("firefox") > -1) ? "firefox" : null);
@@ -11,16 +11,16 @@ ua = function() {
       key = key || ((ua.indexOf("msie")    > -1) ? "ie"      : null);
 
   try {
-    var re      = (key == "ie") ? "msie ([\\d\\.]*)" : key + "\\/([\\d\\.]*)"
+    var re      = (key == "ie") ? "msie ([\\d\\.]*)" : key + "\\/([\\d\\.]*)";
     var matches = ua.match(new RegExp(re, "i"));
-    var version = matches ? matches[1] : null;
+    version = matches ? matches[1] : null;
   } catch (e) {}
 
   return {
     full:    ua,
     name:    key + (version ? " " + version : ""),
     version: version,
-    major:   version ? parseInt(version) : null,
+    major:   version ? parseInt(version,10) : null,
     is: {
       firefox: (key == "firefox"),
       chrome:  (key == "chrome"),
@@ -33,7 +33,7 @@ ua = function() {
       canvas: (document.createElement('canvas').getContext),
       touch:  ('ontouchstart' in window)
     }
-  }
+  };
 }();
 
 //=============================================================================
@@ -51,26 +51,26 @@ is = {
   'notNull':        function(obj) { return (obj !== null);                            },
   'invalid':        function(obj) { return ( is['null'](obj) ||  is.undefined(obj));  },
   'valid':          function(obj) { return (!is['null'](obj) && !is.undefined(obj));  },
-  'emptyString':    function(obj) { return (is.string(obj) && (obj.length == 0));     },
+  'emptyString':    function(obj) { return (is.string(obj) && (obj.length === 0));     },
   'nonEmptyString': function(obj) { return (is.string(obj) && (obj.length > 0));      },
-  'emptyArray':     function(obj) { return (is.array(obj) && (obj.length == 0));      },
+  'emptyArray':     function(obj) { return (is.array(obj) && (obj.length === 0));      },
   'nonEmptyArray':  function(obj) { return (is.array(obj) && (obj.length > 0));       },
-  'document':       function(obj) { return (obj === document);                        }, 
+  'document':       function(obj) { return (obj === document);                        },
   'window':         function(obj) { return (obj === window);                          },
   'element':        function(obj) { return (obj instanceof HTMLElement);              },
   'event':          function(obj) { return (obj instanceof Event);                    },
-  'link':           function(obj) { return (is.element(obj) && (obj.tagName == 'A')); }
-}
+  'link':           function(obj) { return (is.element(obj) && (obj.tagName === 'A')); }
+};
 
 //=============================================================================
 // type coersion
 //=============================================================================
 
 to = {
-  'bool':   function(obj, def) { if (is.valid(obj)) return ((obj == 1) || (obj == true) || (obj == "1") || (obj == "y") || (obj == "Y") || (obj.toString().toLowerCase() == "true") || (obj.toString().toLowerCase() == 'yes')); else return (is.bool(def) ? def : false); },
+  'bool':   function(obj, def) { if (is.valid(obj)) return ((obj === 1) || (obj === true) || (obj === "1") || (obj === "y") || (obj === "Y") || (obj.toString().toLowerCase() === "true") || (obj.toString().toLowerCase() === 'yes')); else return (is.bool(def) ? def : false); },
   'number': function(obj, def) { if (is.valid(obj)) { var x = parseFloat(obj); if (!isNaN(x)) return x; } return (is.number(def) ? def : 0); },
   'string': function(obj, def) { if (is.valid(obj)) return obj.toString(); return (is.string(def) ? def : ''); }
-}
+};
 
 //=============================================================================
 //
@@ -90,7 +90,7 @@ if (!Function.prototype.bind) {
         self  = this,
         nop   = function () {},
         bound = function () {
-          return self.apply(this instanceof nop ? this : (obj || {}), args.concat(slice.call(arguments)));   
+          return self.apply(this instanceof nop ? this : (obj || {}), args.concat(slice.call(arguments)));
         };
     nop.prototype   = self.prototype;
     bound.prototype = new nop();
@@ -100,10 +100,10 @@ if (!Function.prototype.bind) {
 
 if (!Object.create) {
   Object.create = function(base) {
-    function F() {};
+    function F() {}
     F.prototype = base;
     return new F();
-  }
+  };
 }
 
 if (!Object.extend) {
@@ -118,20 +118,20 @@ if (!Object.extend) {
 
 var Class = {
   create: function(prototype, extensions) {
-    var ctor = function() { if (this.initialize) return this.initialize.apply(this, arguments); }
+    var ctor = function() { if (this.initialize) return this.initialize.apply(this, arguments); };
     ctor.prototype = prototype || {};      // instance methods
     Object.extend(ctor, extensions || {}); // class methods
     return ctor;
   }
-}
+};
 
 if (!window.requestAnimationFrame) {// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-  window.requestAnimationFrame = window.webkitRequestAnimationFrame || 
-                                 window.mozRequestAnimationFrame    || 
-                                 window.oRequestAnimationFrame      || 
-                                 window.msRequestAnimationFrame     || 
+  window.requestAnimationFrame = window.webkitRequestAnimationFrame ||
+                                 window.mozRequestAnimationFrame    ||
+                                 window.oRequestAnimationFrame      ||
+                                 window.msRequestAnimationFrame     ||
                                  function(callback, element) {
                                    window.setTimeout(callback, 1000 / 60);
-                                 }
+                                 };
 }
 
