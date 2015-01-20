@@ -81,4 +81,4 @@ var ET_Theme_music = [{
   notelength: 5
 }];
 
-playSequence(ET_Theme_music, 300, "square");
+playSequence(ET_Theme_music);

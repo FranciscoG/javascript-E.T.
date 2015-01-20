@@ -1,5 +1,6 @@
 /*
 http://www.qotile.net/files/2600_music_guide.txt
+http://www.popular-musicology-online.com/issues/01/collins-01.html
 ===================================================================
 2 TIA Sound Overview
 ===================================================================
@@ -225,23 +226,31 @@ function playNote(pitch, length, wave, vol) {
 //playNote("A3", 1, "square", 0.3);
 
 
-function playSequence(arrNotes, bpm, wave, vol) {
+function playSequence(sequence, opts) {
+  if (!opts) { opts = {}; }
+  // set defaults
+  var _opts = {
+    bpm : (opts.bpm) ? opts.bpm : 300,
+    wave : (opts.wave) ? opts.wave : "square",
+    vol : (opts.vol) ? opts.vol : 0.1
+  };
+
   var o, t = ctx.currentTime,
-    arrayLength = arrNotes.length,
+    arrayLength = sequence.length,
     playlength = 0;
 
   for (var i = 0; i < arrayLength; i++) {
     o = ctx.createOscillator();
     // 1 second divided by number of beats per second times number of beats (length of a note)
-    playlength = 1 / (bpm / 60) * arrNotes[i].notelength;
-    o.type = wave;
-    o.frequency.value = arrNotes[i].frq;
+    playlength = 1 / (_opts.bpm / 60) * sequence[i].notelength;
+    o.type = _opts.wave;
+    o.frequency.value = sequence[i].frq;
     o.start(t);
     o.stop(t + playlength);
     t += playlength;
     var g = ctx.createGain();
     o.connect(g);
     g.connect(ctx.destination);
-    g.gain.value = (typeof vol === "undefined" || vol === null) ? 0.1 : vol;
+    g.gain.value = _opts.vol;
   }
 }
