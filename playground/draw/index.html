@@ -16,7 +16,7 @@
       <script src="../../assets/sprites.js"></script>
       <script src="../../dist/vcs.js"></script>
       <script>
-        /* global vcs */
+
         /*****************************************
          * setup canvases
          */
@@ -34,17 +34,6 @@
         ctx.mozImageSmoothingEnabled = false;
         ctx.imageSmoothingEnabled = false;
 
-        var cv2 = document.getElementById('cv2');
-        var ctx2 = cv2.getContext("2d");
-        ctx2.fillStyle = "#000";
-
-        cv2.width = cv2.width * scale;
-        cv2.height = cv2.height * scale;
-        ctx2.scale(scale * 2,scale * 2); // only scales what's placed on the canvas
-        ctx2.webkitImageSmoothingEnabled = false;
-        ctx2.mozImageSmoothingEnabled = false;
-        ctx2.imageSmoothingEnabled = false;
-        
         /************************************************
          * create images off screen using drawer.js lib
          */
@@ -65,7 +54,6 @@
           vcs.draw(ETWalkSprite_B2, options)
         ];
 
-        options.flip = true;
         var ET_title = [
           vcs.draw(TitleETGraphics_1, options),
           vcs.draw(TitleETGraphics_2, options),
@@ -109,18 +97,38 @@
         /**************************************************
          * Title Screen ET
          */
+        
+        var cv2 = document.getElementById('cv2');
+        var ctx2 = cv2.getContext("2d");
+        ctx2.fillStyle = "#000";
+
+        cv2.width = cv2.width * scale;
+        cv2.height = cv2.height * scale;
+        ctx2.scale(scale * 2,scale * 2); // only scales what's placed on the canvas
+        ctx2.webkitImageSmoothingEnabled = false;
+        ctx2.mozImageSmoothingEnabled = false;
+        ctx2.imageSmoothingEnabled = false;
 
         function showTitle(){
-          ctx2.fillRect(0, 0, cv.width, cv.height);
+          ctx2.fillRect(0, 0, cv2.width, cv2.height);
+
+          // Move registration point to the center of the canvas
+          ctx2.save();
           
-          var x = 20;
-          var y = 15;
+          ctx2.translate(cv2.width/4, cv2.height/4);
+          // Rotate 180 degree
+          ctx2.rotate(180*(Math.PI/180));
+
+          var x = 0;
+          var y = 0;
           ctx2.drawImage(ET_title[0], x + 8, y);
           ctx2.drawImage(ET_title[1], x + (8*2), y);
           ctx2.drawImage(ET_title[2], x + (8*3), y);
           ctx2.drawImage(ET_title[3], x + (8*4), y);
           ctx2.drawImage(ET_title[4], x + (8*5), y);
           ctx2.drawImage(ET_title[5], x + (8*6), y);
+
+          ctx2.restore();
         }
 
         showTitle();

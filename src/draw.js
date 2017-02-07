@@ -46,16 +46,7 @@ function SpriteDrawer(sprite, options) {
     _n++;
   }
   ctx.putImageData(imgData, 0, 0);
-  
-  if (_opts.flip) {
-    // Move registration point to the center of the canvas
-    // ctx.translate(canvas.width/2, canvas.height/2);
-    // Rotate 180 degree
-    ctx.rotate(180*(Math.PI/180));
-    // Move registration point back to the top left corner of canvas
-    // ctx.translate(canvas.width/2, canvas.height/2);
-  }
-  
+
   return canvas;
 }
 
