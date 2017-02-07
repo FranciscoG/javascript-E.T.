@@ -169,3 +169,5 @@ var ntscColor = function(val) {
   var v = val.toUpperCase().replace("$", "").split("");
   return ntsc_colors[v[1]][v[0]];
 };
+
+module.exports = ntscColor;

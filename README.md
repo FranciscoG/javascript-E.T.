@@ -6,6 +6,28 @@ An HTML5 version of the classic Atari game E.T.
 
 I am just starting so please don't even bother looking at any of the code yet (seriously, it'll be very sad)
 
+### Browser Support
+
+Chrome >= 45    
+Firefox >= 34    
+Opera >= 32    
+Safari >= 9    
+MS Edge (all versions)    
+
+Chrome for Android >= 45    
+Firefox Mobile >= 34    
+
+Safari Mobile >= 9    
+
+**Will not work in:**    
+Android native browser    
+Internet Explorer    
+Opera Mobile
+
+What is limiting browsers?
+[Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)    
+[Template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)    
+
 
 Helpful resources
 =================
