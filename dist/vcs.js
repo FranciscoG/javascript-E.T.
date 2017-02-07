@@ -1,4 +1,67 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+var utils = require('./utils.js');
+
+/*
+  A very helpful tutorial on how the 2600 works
+  http://atariage.com/forums/topic/33233-sorted-table-of-contents/
+*/
+
+function SpriteDrawer(sprite, options) {
+  if (!sprite) {
+    return; // return undefined
+  }
+
+  var defaults = {
+    color : "#696969"
+  };
+  var _opts = Object.assign({}, defaults, options);
+
+  // create our canvas that will hold our sprite image
+  // and will be returned in the end
+  var canvas = document.createElement('canvas');
+  var ctx = canvas.getContext("2d");
+
+  function repl(match, p1, offset, string) {
+    return utils.hex2bin(p1);
+  }
+  sprite = sprite.trim().replace(/.*\$([a-f0-9]{2}).*\n?/gi, repl);
+
+  canvas.height = sprite.match(/%?[0-1]{8}[\s\n]*/g).length;
+  canvas.width = 8;
+  sprite = sprite.split("");
+
+  var _n = 0;
+  var rbgArr = utils.hex2rgb(_opts.color);
+  var imgData = ctx.createImageData(8, sprite.length);
+
+  for (var i = 0; i < imgData.data.length; i += 4) {
+    imgData.data[i + 0] = parseInt(rbgArr[0], 10);
+    imgData.data[i + 1] = parseInt(rbgArr[1], 10);
+    imgData.data[i + 2] = parseInt(rbgArr[2], 10);
+    if (sprite[_n] === "1") {
+      imgData.data[i + 3] = 255;
+    } else {
+      imgData.data[i + 3] = 0;
+    }
+    _n++;
+  }
+  ctx.putImageData(imgData, 0, 0);
+  
+  if (_opts.flip) {
+    // Move registration point to the center of the canvas
+    // ctx.translate(canvas.width/2, canvas.height/2);
+    // Rotate 180 degree
+    ctx.rotate(180*(Math.PI/180));
+    // Move registration point back to the top left corner of canvas
+    // ctx.translate(canvas.width/2, canvas.height/2);
+  }
+  
+  return canvas;
+}
+
+module.exports = SpriteDrawer;
+},{"./utils.js":3}],2:[function(require,module,exports){
 /*
 http://www.qotile.net/files/2600_music_guide.txt
 http://www.popular-musicology-online.com/issues/01/collins-01.html
@@ -257,7 +320,62 @@ function playSequence(sequence, opts) {
 }
 
 module.exports = playSequence;
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
+'use strict';
+/**
+ * Module containing an assortment of useful utility functions
+ * @type {Object}
+ */
+module.exports = {
+  
+  /**
+   * Usually Sprite Clocks are shown in Binary but in the Atari source code for E.T. it showed sprite clock/pixels in Hex
+   * So this converts those hex numbers to Binary
+   * @param  {string} hex the 2 character hex string
+   * @return {string}     the binary number as a string
+   */
+  hex2bin : function(hex) {
+
+    function pad(num, size) {
+      var s = "000" + num;
+      return s.substr(s.length - size);
+    }
+
+    var hexArr = hex.split("");
+    var bin = "";
+    hexArr.forEach(function(e, i, arr) {
+      var dec = parseInt(arr[i], 16);
+      bin += pad(dec.toString(2), 4);
+    });
+    return bin;
+  },
+
+  /**
+   * Convert a Hex Color to RGB array
+   * @param  {string} hex   a full hex color string includeing the hash.  example: "#99af34"
+   * @return {object}       an array containing RGB info [R,G,B]
+   */
+  hex2rgb : function(hex) {
+    var hx = hex.substr(1);
+    var parts = hx.match(/[0-9A-Za-z]{2}/g);
+    parts.forEach(function(e, i, arr) {
+      parts[i] = parseInt(arr[i], 16);
+    });
+    return parts;
+  }
+};
+},{}],4:[function(require,module,exports){
 var sound = require('./sound.js');
-},{"./sound.js":1}]},{},[2])
+var draw = require('./draw.js');
+
+var vcs = {
+
+  draw : draw
+};
+
+window.vcs = vcs;
+
+// loading system that caches renders of sprites
+// 
+},{"./draw.js":1,"./sound.js":2}]},{},[4])
 //# sourceMappingURL=vcs.js.map
