@@ -254,3 +254,5 @@ function playSequence(sequence, opts) {
     g.gain.value = _opts.vol;
   }
 }
+
+module.exports = playSequence;
