@@ -1,0 +1,26 @@
+{
+  "name": "vcs-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node tasks.js build",
+    "start": "node tasks.js watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FranciscoG/javascript-E.T..git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FranciscoG/javascript-E.T./issues"
+  },
+  "homepage": "https://github.com/FranciscoG/javascript-E.T.#readme",
+  "devDependencies": {
+    "browserify": "^14.0.0",
+    "exorcist": "^0.4.0",
+    "watchify": "^3.9.0"
+  }
+}
