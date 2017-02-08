@@ -1,6 +1,9 @@
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
 /*
 http://www.qotile.net/files/2600_music_guide.txt
 http://www.popular-musicology-online.com/issues/01/collins-01.html
+http://problemkaputt.de/2k6specs.htm#audio
 ===================================================================
 2 TIA Sound Overview
 ===================================================================
@@ -33,7 +36,7 @@ LEAD_E4                 = 15
 LEAD_D4_SHARP           = 16
 LEAD_D4                 = 17
 LEAD_C4_SHARP           = 18
-LEAD_H3                 = 20
+LEAD_H3                 = 20 // same as B3
 LEAD_A3                 = 23
 LEAD_G3_SHARP           = 24
 LEAD_F3_SHARP           = 27
@@ -62,6 +65,11 @@ PlayThemeMusic
 	WebAudio API help:
 	http://modernweb.com/2014/03/31/creating-sound-with-the-web-audio-api-and-oscillators/
  */
+
+// might need to generate noise for certain sounds.  these might help:
+// https://github.com/zacharydenton/noise.js/blob/master/noise.js
+// http://noisehack.com/generate-noise-web-audio-api/
+
 
 
 var notes = {
@@ -204,7 +212,6 @@ var notes = {
   'C8': 4186.01
 };
 
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
 var ctx = new AudioContext();
 
 function playNote(pitch, length, wave, vol) {

@@ -26,7 +26,7 @@ var ET_Theme_music = [{
   frq: notes["C#4"],
   notelength: 1
 }, {
-  frq: notes["B3"],
+  frq: notes["B3"], // aka H3
   notelength: 1
 }, {
   frq: notes["C#4"],
@@ -81,4 +81,57 @@ var ET_Theme_music = [{
   notelength: 5
 }];
 
-playSequence(ET_Theme_music);
+
+/*
+PlayETWalkingSound
+   lda SWCHA                        ; read joystick values
+   cmp #P0_NO_MOVE
+   bcs .turnOffETWalkingSound
+   bit etMotionValues               ; check E.T. motion values
+   bpl .playETWalkingSound          ; branch if E.T. not running
+   lda frameCount                   ; get the current frame count
+   lsr                              ; divide value by 4
+   lsr
+   and #7
+   sta AUDF1
+   lda #SOUND_CHANNEL_SQUARE + 1
+   sta AUDC1
+   lda #7
+   sta AUDV1
+   bne .donePlayingSoundChannel1    ; unconditional branch
+
+.playETWalkingSound
+   lda frameCount                   ; get the current frame count
+   and #7
+   bne .turnOffETWalkingSound
+   lda frameCount                   ; get the current frame count
+   lsr                              ; divide value by 8
+   lsr
+   lsr
+   and #3
+   beq .turnOffETWalkingSound
+   ldx #7
+   stx AUDV1
+   adc #$16
+   bne .setSoundChannel1AndFrequency
+
+   .turnOffETWalkingSound
+   lda #0
+   sta AUDV1
+.setSoundChannel1AndFrequency
+   sta AUDC1
+   sta AUDF1
+.donePlayingSoundChannel1
+   lda currentScreenId              ; get the current screen id
+   cmp #ID_ET_HOME
+   bne .checkIfOnTitleScreen
+   jmp SetSpecialSpriteForPit
+ */
+
+var ET_WalkSound = [{
+  frq: notes["C0"],
+  notelength: 0.5
+}];
+
+// playSequence(ET_Theme_music);
+playSequence(ET_WalkSound);
