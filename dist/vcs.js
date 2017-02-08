@@ -22,7 +22,7 @@ function SpriteDrawer(sprite, options) {
   var canvas = document.createElement('canvas');
   var ctx = canvas.getContext("2d");
 
-  function repl(match, p1, offset, string) {
+  function repl(match, p1) {
     return utils.hex2bin(p1);
   }
   sprite = sprite.trim().replace(/.*\$([a-f0-9]{2}).*\n?/gi, repl);
