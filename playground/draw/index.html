@@ -16,7 +16,7 @@
       <script src="../../assets/sprites.js"></script>
       <script src="../../dist/vcs.js"></script>
       <script>
-
+        'use strict';
         /*****************************************
          * setup canvases
          */
@@ -27,8 +27,8 @@
 
         var scale = 2;
 
-        cv.width = cv.width * scale;
-        cv.height = cv.height * scale;
+        // cv.width = cv.width * scale;
+        // cv.height = cv.height * scale;
         ctx.scale(scale * 2,scale * 2); // only scales what's placed on the canvas
         ctx.webkitImageSmoothingEnabled = false;
         ctx.mozImageSmoothingEnabled = false;
@@ -73,7 +73,7 @@
         function doWalk(){
           ctx.fillRect(0, 0, cv.width, cv.height);
           ctx.drawImage(ET_walkA[_i], 20, 20);
-          ctx.drawImage(ET_walkB[_i], 20, 50);
+          ctx.drawImage(ET_walkB[_i], 40, 20);
           _i++;
           if (_i > 2) {_i = 0;}
         }
@@ -121,12 +121,17 @@
 
           var x = 0;
           var y = 0;
-          ctx2.drawImage(ET_title[0], x + 8, y);
-          ctx2.drawImage(ET_title[1], x + (8*2), y);
-          ctx2.drawImage(ET_title[2], x + (8*3), y);
-          ctx2.drawImage(ET_title[3], x + (8*4), y);
-          ctx2.drawImage(ET_title[4], x + (8*5), y);
-          ctx2.drawImage(ET_title[5], x + (8*6), y);
+          ctx2.drawImage(ET_title[0], x, y);
+          ctx2.drawImage(ET_title[1], x + (8), y);
+          ctx2.drawImage(ET_title[2], x + (8*2), y);
+          ctx2.drawImage(ET_title[3], x + (8*3), y);
+          ctx2.drawImage(ET_title[4], x + (8*4), y);
+          ctx2.drawImage(ET_title[5], x + (8*5), y);
+
+          var ET_E = vcs.draw(ETTitle_E, options);
+          var ET_T = vcs.draw(ETTitle_T, options);
+          ctx2.drawImage(ET_E, 0, 50);
+          ctx2.drawImage(ET_T, 25, 50);
 
           ctx2.restore();
         }

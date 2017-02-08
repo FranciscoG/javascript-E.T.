@@ -836,6 +836,10 @@ var ETTitle_T = `
    .byte $0F ; |....XXXX|
 `;
 
+// lda #$0F  ; 2 enable missiles for dots in E.T.
+// 
+var ETTitle_dot = '$0F'; 
+
 var FlowerSpritesA = ``;
 
 var Flower_A0 = `
