@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "node tasks.js build",
-    "start": "node tasks.js watch",
+    "build": "rollup --config",
+    "start": "rollup --config --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,8 +19,10 @@
   },
   "homepage": "https://github.com/FranciscoG/javascript-E.T.#readme",
   "devDependencies": {
-    "browserify": "^14.0.0",
-    "exorcist": "^0.4.0",
-    "watchify": "^3.9.0"
-  }
+    "@rollup/plugin-typescript": "^4.0.0",
+    "rollup": "^2.2.0",
+    "tslib": "^1.11.1",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {}
 }

@@ -64,7 +64,7 @@ PlayThemeMusic
  */
 
 
-var notes = {
+const notes = {
   'C0': 16.35,
   'C#0': 17.32,
   'Db0': 17.32,
@@ -204,14 +204,13 @@ var notes = {
   'C8': 4186.01
 };
 
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
-var ctx = new AudioContext();
+const ctx = new AudioContext();
 
-function playNote(pitch, length, wave, vol) {
-  var frq = notes[pitch];
-  var o = ctx.createOscillator();
+function playNote(pitch: string, length: number, wave: OscillatorType, vol: number) {
+  const frq: number = notes[pitch];
+  const o: OscillatorNode = ctx.createOscillator();
   o.type = wave;
-  var g = ctx.createGain();
+  const g: GainNode = ctx.createGain();
   o.connect(g);
   g.connect(ctx.destination);
   g.gain.value = (typeof vol === "undefined" || vol === null) ? 0.1 : vol;
@@ -225,34 +224,48 @@ function playNote(pitch, length, wave, vol) {
 
 //playNote("A3", 1, "square", 0.3);
 
+interface SequenceOptions {
+  bpm : number,
+  wave : OscillatorType,
+  vol : number
+}
 
-function playSequence(sequence, opts) {
-  if (!opts) { opts = {}; }
-  // set defaults
-  var _opts = {
-    bpm : (opts.bpm) ? opts.bpm : 300,
-    wave : (opts.wave) ? opts.wave : "square",
-    vol : (opts.vol) ? opts.vol : 0.1
-  };
+interface SequenceData {
+  notelength: number,
+  frq: number
+}
 
-  var o, t = ctx.currentTime,
-    arrayLength = sequence.length,
-    playlength = 0;
+const sequenceOptsDefault: SequenceOptions = {
+  bpm: 300,
+  wave: "square",
+  vol: 0.1
+};
 
-  for (var i = 0; i < arrayLength; i++) {
+function playSequence(sequence: SequenceData[], opts?: SequenceOptions) {
+  let options = sequenceOptsDefault;
+  if (opts) {
+    options = Object.assign({}, sequenceOptsDefault, opts);
+  }
+
+  let o: OscillatorNode =  null;
+  let t:number = ctx.currentTime;
+  const arrayLength: number = sequence.length;
+  let playlength: number = 0;
+
+  for (let i:number = 0; i < arrayLength; i++) {
     o = ctx.createOscillator();
-    // 1 second divided by number of beats per second times number of beats (length of a note)
-    playlength = 1 / (_opts.bpm / 60) * sequence[i].notelength;
-    o.type = _opts.wave;
+    // 1 second / number of beats per second * number of beats (length of a note)
+    playlength = 1 / (options.bpm / 60) * sequence[i].notelength;
+    o.type = options.wave;
     o.frequency.value = sequence[i].frq;
     o.start(t);
     o.stop(t + playlength);
     t += playlength;
-    var g = ctx.createGain();
+    const g = ctx.createGain();
     o.connect(g);
     g.connect(ctx.destination);
-    g.gain.value = _opts.vol;
+    g.gain.value = options.vol;
   }
 }
 
-module.exports = playSequence;
+export default playSequence;
