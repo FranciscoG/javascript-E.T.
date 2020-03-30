@@ -13,8 +13,8 @@
       <div class="br"></div>
       <canvas id="cv2" width="320" height="192"></canvas>
 
-      <script src="../../assets/sprites.js"></script>
       <script src="../../dist/vcs.js"></script>
+      <script src="../../assets/sprites.js"></script>
       <script>
         'use strict';
         /*****************************************
@@ -38,29 +38,27 @@
          * create images off screen using drawer.js lib
          */
         
-        var options = {
-          color: "#fce08c"
-        };
+        var color = "#fce08c";
 
         var ET_walkA = [
-          vcs.draw(ETWalkSprite_A0, options),
-          vcs.draw(ETWalkSprite_A1, options),
-          vcs.draw(ETWalkSprite_A2, options),
+          vcs.draw(ETWalkSprite_A0, color),
+          vcs.draw(ETWalkSprite_A1, color),
+          vcs.draw(ETWalkSprite_A2, color),
         ];
 
         var ET_walkB = [
-          vcs.draw(ETWalkSprite_B0, options),
-          vcs.draw(ETWalkSprite_B1, options),
-          vcs.draw(ETWalkSprite_B2, options)
+          vcs.draw(ETWalkSprite_B0, color),
+          vcs.draw(ETWalkSprite_B1, color),
+          vcs.draw(ETWalkSprite_B2, color)
         ];
 
         var ET_title = [
-          vcs.draw(TitleETGraphics_1, options),
-          vcs.draw(TitleETGraphics_2, options),
-          vcs.draw(TitleETGraphics_3, options),
-          vcs.draw(TitleETGraphics_4, options),
-          vcs.draw(TitleETGraphics_5, options),
-          vcs.draw(TitleETGraphics_0, options)
+          vcs.draw(TitleETGraphics_1, color),
+          vcs.draw(TitleETGraphics_2, color),
+          vcs.draw(TitleETGraphics_3, color),
+          vcs.draw(TitleETGraphics_4, color),
+          vcs.draw(TitleETGraphics_5, color),
+          vcs.draw(TitleETGraphics_0, color)
         ];
 
 
@@ -128,8 +126,8 @@
           ctx2.drawImage(ET_title[4], x + (8*4), y);
           ctx2.drawImage(ET_title[5], x + (8*5), y);
 
-          var ET_E = vcs.draw(ETTitle_E, options);
-          var ET_T = vcs.draw(ETTitle_T, options);
+          var ET_E = vcs.draw(ETTitle_E, color);
+          var ET_T = vcs.draw(ETTitle_T, color);
           ctx2.drawImage(ET_E, 0, 50);
           ctx2.drawImage(ET_T, 25, 50);
 
