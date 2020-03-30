@@ -355,14 +355,30 @@
     }
     function registerLoop(cb) {
         loopCb = cb;
-        frame(0);
+        return function start() {
+            frame(0);
+        };
     }
     //# sourceMappingURL=game-loop.js.map
+
+    var canvas = document.createElement("canvas");
+    canvas.width = 160 * 2;
+    canvas.height = 192;
+    var ctx$1 = canvas.getContext("2d");
+    ctx$1.webkitImageSmoothingEnabled = false;
+    ctx$1.mozImageSmoothingEnabled = false;
+    ctx$1.imageSmoothingEnabled = false;
+    var display = {
+        canvas: canvas,
+        ctx: ctx$1
+    };
+    //# sourceMappingURL=display.js.map
 
     var vcs = {
         draw: SpriteDrawer,
         sound: sound,
-        loop: registerLoop
+        loop: registerLoop,
+        display: display
     };
     //# sourceMappingURL=vcs.js.map
 

@@ -6,18 +6,19 @@ const DIR = {
   OPPOSITE: [1, 0, 3, 2]
 };
 
-const canvas = document.getElementById("canvas");
-const width = (canvas.width = canvas.offsetWidth);
-const height = (canvas.height = canvas.offsetHeight);
-const ctx = canvas.getContext("2d");
-var scale = 2;
-// cv.width = cv.width * scale;
-// cv.height = cv.height * scale;
+
+const { canvas, ctx } = vcs.display;
+const { width, height } = canvas;
+
+const scale = 2;
+canvas.width = canvas.width * scale;
+canvas.height = canvas.height * scale;
 ctx.scale(scale * 2, scale * 2); // only scales what's placed on the canvas
 ctx.webkitImageSmoothingEnabled = false;
 ctx.mozImageSmoothingEnabled = false;
 ctx.imageSmoothingEnabled = false;
-
+canvas.id = "canvas";
+document.getElementById("game").appendChild(canvas);
 
 let nx = 44;
 let ny = 33;
@@ -135,7 +136,7 @@ let framesToSkip = 5;
 let counter = 0;
 
 /* global vcs */
-vcs.loop(function(ts, inputState) {
+const start = vcs.loop(function(ts, inputState) {
   if (counter < framesToSkip) {
     counter++;
     return;
@@ -144,3 +145,5 @@ vcs.loop(function(ts, inputState) {
   move(inputState)
   counter = 0;
 });
+
+start();

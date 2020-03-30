@@ -13,5 +13,7 @@ function frame(timestamp) {
 
 export default function registerLoop(cb: OnLoop) {
   loopCb = cb;
-  frame(0);
+  return function start() {
+    frame(0);
+  }
 };
