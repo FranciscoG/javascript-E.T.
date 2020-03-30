@@ -10,6 +10,8 @@
 // .byte LEAD_C4_SHARP,LEAD_A3,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2
 // .byte LEAD_E3_2
 
+const { playSequence, notes } = vcs.sound;
+
 var ET_Theme_music = [{
   frq: notes["A3"],
   notelength: 3
@@ -80,5 +82,3 @@ var ET_Theme_music = [{
   frq: notes["E3"],
   notelength: 5
 }];
-
-playSequence(ET_Theme_music);

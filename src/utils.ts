@@ -15,14 +15,14 @@ export default {
   hex2bin: function (hex: string): string {
 
     function pad(num: string, size: number) {
-      const s: string = "000" + num;
+      const s = "000" + num;
       return s.substr(s.length - size);
     }
 
     const hexArr: string[] = hex.split("");
     let bin: string = "";
     hexArr.forEach(function (e: string, i: number, arr: string[]) {
-      const dec: number = parseInt(arr[i], 16);
+      const dec = parseInt(arr[i], 16);
       bin += pad(dec.toString(2), 4);
     });
     return bin;
@@ -38,7 +38,7 @@ export default {
       hex = hex.substr(1);
     }
     // separate "99af34" into ["99", "af", "34"]
-    const parts: string[] = hex.match(/[0-9A-Za-z]{2}/g);
+    const parts = hex.match(/[0-9A-Za-z]{2}/g);
     // convert into hexadecimal number
     return parts.map(function (e: string) {
       return parseInt(e, 16);

@@ -8,11 +8,14 @@
     <body>
       <h1>Audio test page</h1>
       <p>Playing the ET Theme Music Secquence</p>
+      <button id="play">play</button>
 
-      <script src="../../assets/sounds.js"></script>
       <script src="../../dist/vcs.js"></script>
+      <script src="../../assets/sounds.js"></script>
       <script>
-
+        document.getElementById("play").addEventListener('click', function(e){
+          playSequence(ET_Theme_music);
+        });
       </script>
 
     </body>

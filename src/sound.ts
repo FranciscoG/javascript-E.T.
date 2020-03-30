@@ -5,7 +5,16 @@ http://www.popular-musicology-online.com/issues/01/collins-01.html
 2 TIA Sound Overview
 ===================================================================
 
-The TIA is the chip in the Atari 2600 that produces audio and video.  The audio portion has two independent voices, each of which has a 4 bit volume control (16 values), 5 bit pitch (32 values), and a 4 bit control register which selects the type of sound you will hear.  When writing software for the Atari, the standard labels for these registers are AUDV0 and AUDV1 for the volume registers, AUDF0 and AUDF1 for the pitch registers, and AUDC0 and AUDC1 for the control registers.  The 5 bit pitch is very limited and the frequency values are simply divided down from the system clock, so many of the pitch values are not in-tune with others.  Note that setting the pitch register to a lower value results in a higher pitch.
+The TIA is the chip in the Atari 2600 that produces audio and video.  The audio 
+portion has two independent voices, each of which has a 4 bit volume control 
+(16 values), 5 bit pitch (32 values), and a 4 bit control register which selects 
+the type of sound you will hear.  When writing software for the Atari, the 
+standard labels for these registers are AUDV0 and AUDV1 for the volume registers, 
+AUDF0 and AUDF1 for the pitch registers, and AUDC0 and AUDC1 for the control 
+registers.  The 5 bit pitch is very limited and the frequency values are simply 
+divided down from the system clock, so many of the pitch values are not in-tune 
+with others.  Note that setting the pitch register to a lower value results in 
+a higher pitch.
 
 2 independent voices
 - 4 bit volume (16 values)
@@ -225,9 +234,9 @@ function playNote(pitch: string, length: number, wave: OscillatorType, vol: numb
 //playNote("A3", 1, "square", 0.3);
 
 interface SequenceOptions {
-  bpm : number,
-  wave : OscillatorType,
-  vol : number
+  bpm?: number,
+  wave? : OscillatorType,
+  vol? : number
 }
 
 interface SequenceData {
@@ -241,15 +250,15 @@ const sequenceOptsDefault: SequenceOptions = {
   vol: 0.1
 };
 
-function playSequence(sequence: SequenceData[], opts?: SequenceOptions) {
+function playSequence(sequence: SequenceData[], opts?: SequenceOptions): void {
   let options = sequenceOptsDefault;
   if (opts) {
     options = Object.assign({}, sequenceOptsDefault, opts);
   }
 
+  const arrayLength = sequence.length;
   let o: OscillatorNode =  null;
   let t:number = ctx.currentTime;
-  const arrayLength: number = sequence.length;
   let playlength: number = 0;
 
   for (let i:number = 0; i < arrayLength; i++) {
@@ -268,4 +277,7 @@ function playSequence(sequence: SequenceData[], opts?: SequenceOptions) {
   }
 }
 
-export default playSequence;
+export default {
+  playSequence,
+  notes
+};
