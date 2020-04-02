@@ -9,9 +9,9 @@
         </style>
     </head>
     <body>
-      <canvas id="cv" width="320" height="192"></canvas>
+      <canvas id="cv" width="320" height="210"></canvas>
       <div class="br"></div>
-      <canvas id="cv2" width="320" height="192"></canvas>
+      <canvas id="cv2" width="320" height="210"></canvas>
 
       <script src="../../dist/vcs.js"></script>
       <script src="../../assets/sprites.js"></script>
@@ -52,16 +52,6 @@
           vcs.draw(ETWalkSprite_B2, color)
         ];
 
-        var ET_title = [
-          vcs.draw(TitleETGraphics_1, color),
-          vcs.draw(TitleETGraphics_2, color),
-          vcs.draw(TitleETGraphics_3, color),
-          vcs.draw(TitleETGraphics_4, color),
-          vcs.draw(TitleETGraphics_5, color),
-          vcs.draw(TitleETGraphics_0, color)
-        ];
-
-
         /**************************************************
          * Walking Player animation sprite
          */
@@ -95,6 +85,16 @@
         /**************************************************
          * Title Screen ET
          */
+
+
+        var ET_Head = [
+          TitleETGraphics_1, 
+          TitleETGraphics_2, 
+          TitleETGraphics_3, 
+          TitleETGraphics_4, 
+          TitleETGraphics_5, 
+          TitleETGraphics_0
+        ];
         
         var cv2 = document.getElementById('cv2');
         var ctx2 = cv2.getContext("2d");
@@ -107,31 +107,30 @@
         ctx2.mozImageSmoothingEnabled = false;
         ctx2.imageSmoothingEnabled = false;
 
+        const titleE = new vcs.Sprite();
+        titleE.load(ETTitle_E, true);
+        
+        const titleT = new vcs.Sprite();
+        titleT.load(ETTitle_T, true);
+
+        const headET = new vcs.Sprite();
+        headET.loadGroup(ET_Head, true);
+
         function showTitle(){
           ctx2.fillRect(0, 0, cv2.width, cv2.height);
 
-          // Move registration point to the center of the canvas
-          ctx2.save();
-          
-          ctx2.translate(cv2.width/4, cv2.height/4);
-          // Rotate 180 degree
-          ctx2.rotate(180*(Math.PI/180));
+          // var x = 0;
+          // var y = 0;
+          // ctx2.drawImage(ET_title[0], x, y);
+          // ctx2.drawImage(ET_title[1], x + (8), y);
+          // ctx2.drawImage(ET_title[2], x + (8*2), y);
+          // ctx2.drawImage(ET_title[3], x + (8*3), y);
+          // ctx2.drawImage(ET_title[4], x + (8*4), y);
+          // ctx2.drawImage(ET_title[5], x + (8*5), y);
 
-          var x = 0;
-          var y = 0;
-          ctx2.drawImage(ET_title[0], x, y);
-          ctx2.drawImage(ET_title[1], x + (8), y);
-          ctx2.drawImage(ET_title[2], x + (8*2), y);
-          ctx2.drawImage(ET_title[3], x + (8*3), y);
-          ctx2.drawImage(ET_title[4], x + (8*4), y);
-          ctx2.drawImage(ET_title[5], x + (8*5), y);
-
-          var ET_E = vcs.draw(ETTitle_E, color);
-          var ET_T = vcs.draw(ETTitle_T, color);
-          ctx2.drawImage(ET_E, 0, 50);
-          ctx2.drawImage(ET_T, 25, 50);
-
-          ctx2.restore();
+          titleE.draw(ctx2, 45, 0, color);
+          titleT.draw(ctx2, 75, 0, color);
+          headET.drawGroup(ctx2, 0, 30, color);
         }
 
         showTitle();

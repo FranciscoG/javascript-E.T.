@@ -27,15 +27,18 @@ const inputState: InputStates = {
   bttn: false
 }
 
-const DIRECTIONS = {
-  UP: "UP",
-  DOWN: "DOWN",
-  LEFT: "LEFT",
-  RIGHT: "RIGHT"
-};
-Object.freeze(DIRECTIONS);
+enum DIRECTIONS {
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT
+}
 
-const KEY_MAP = {
+interface KeyMap {
+  [key: string]: DIRECTIONS
+}
+
+const KEY_MAP: KeyMap = {
   // event.code and event.key
   "ArrowUp"   : DIRECTIONS.UP,
   "ArrowDown" : DIRECTIONS.DOWN,
@@ -55,10 +58,10 @@ const KEY_MAP = {
   "d"         : DIRECTIONS.RIGHT,
   
   // WASD event.code
-  "KeyW"         : DIRECTIONS.UP,
-  "KeyS"         : DIRECTIONS.DOWN,
-  "KeyA"         : DIRECTIONS.LEFT,
-  "KeyD"         : DIRECTIONS.RIGHT
+  "KeyW"      : DIRECTIONS.UP,
+  "KeyS"      : DIRECTIONS.DOWN,
+  "KeyA"      : DIRECTIONS.LEFT,
+  "KeyD"      : DIRECTIONS.RIGHT
 };
 
 function handleKeyDown(key: string): boolean {
@@ -70,7 +73,7 @@ function handleKeyDown(key: string): boolean {
 
   const dir = KEY_MAP[key];
   
-  if (!dir) {
+  if (dir !== 0 && !dir) {
     return false;
   }
 
@@ -107,7 +110,7 @@ function handleKeyUp(key: string): boolean {
 
   const dir = KEY_MAP[key];
   
-  if (!dir) {
+  if (dir !== 0 && !dir) {
     return false;
   }
   
@@ -136,14 +139,14 @@ function handleKeyUp(key: string): boolean {
 }
 
 function setup(element?: HTMLElement): void {
-  (element || document).addEventListener("keydown", function onDown(e: KeyboardEvent) {
-    if (handleKeyDown(e.code)) {
+  (element || document).addEventListener("keydown", function onDown(e: Event) {
+    if (handleKeyDown((e as KeyboardEvent).code)) {
       e.preventDefault();
     }
   }, false);
 
-  (element || document).addEventListener("keyup", function onUp(e: KeyboardEvent) {
-    if (handleKeyUp(e.code)) {
+  (element || document).addEventListener("keyup", function onUp(e: Event) {
+    if (handleKeyUp((e as KeyboardEvent).code)) {
       e.preventDefault();
     }
   }, false);

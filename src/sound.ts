@@ -72,8 +72,11 @@ PlayThemeMusic
 	http://modernweb.com/2014/03/31/creating-sound-with-the-web-audio-api-and-oscillators/
  */
 
+interface Notes {
+  [key: string]: number
+}
 
-const notes = {
+const notes: Notes = {
   'C0': 16.35,
   'C#0': 17.32,
   'Db0': 17.32,
@@ -250,22 +253,21 @@ const sequenceOptsDefault: SequenceOptions = {
   vol: 0.1
 };
 
-function playSequence(sequence: SequenceData[], opts?: SequenceOptions): void {
-  let options = sequenceOptsDefault;
-  if (opts) {
-    options = Object.assign({}, sequenceOptsDefault, opts);
-  }
+function playSequence(sequence: SequenceData[], opts: SequenceOptions = {}): void {
+  const options = Object.assign({}, sequenceOptsDefault, opts);
 
   const arrayLength = sequence.length;
-  let o: OscillatorNode =  null;
+  let o: OscillatorNode;
   let t:number = ctx.currentTime;
   let playlength: number = 0;
 
   for (let i:number = 0; i < arrayLength; i++) {
-    o = ctx.createOscillator();
+    if (!(o = ctx.createOscillator())) {
+      throw new Error(`AudioContext createOscillator not supported or failed`);
+    }
     // 1 second / number of beats per second * number of beats (length of a note)
-    playlength = 1 / (options.bpm / 60) * sequence[i].notelength;
-    o.type = options.wave;
+    playlength = 1 / (options.bpm! / 60) * sequence[i].notelength;
+    o.type = options.wave!;
     o.frequency.value = sequence[i].frq;
     o.start(t);
     o.stop(t + playlength);
@@ -273,11 +275,12 @@ function playSequence(sequence: SequenceData[], opts?: SequenceOptions): void {
     const g = ctx.createGain();
     o.connect(g);
     g.connect(ctx.destination);
-    g.gain.value = options.vol;
+    g.gain.value = options.vol!;
   }
 }
 
 export default {
   playSequence,
+  playNote,
   notes
 };

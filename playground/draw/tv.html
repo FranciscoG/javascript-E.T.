@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Sprite Test</title>
+    <style type="text/css">
+      .br {
+        height: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>How the 2600 draws on a TV (NTSC)</h1>
+    <p>
+      <a
+        href="https://alienbill.com/2600/101/docs/stella.html#tvprot"
+        target="_blank"
+        >src</a
+      >
+    </p>
+    <h2>Vertical</h2>
+    <p>A single television "frame" consists of 262 horizontal lines.</p>
+    <ul>
+      <li>
+        3 vertical sync (VSYNC) line (to signal the TV set to start a new frame)
+      </li>
+      <li>37 vertical blank (VBLANK) lines</li>
+      <li>192 TV picture lines</li>
+      <li>30 overscan lines</li>
+      <li><b>Total:</b> 262 lines</li>
+    </ul>
+    <h2>horizontal</h2>
+    <p>Each line is divided by 228 clock counts</p>
+    <ul>
+      <li>
+        starts with 68 clock counts of horizontal blank (not seen on the TV
+        screen)
+      </li>
+      <li>160 clock counts to fully scan one line of TV picture</li>
+      <li><b>Total:</b> 228 "pixels" (clocks)</li>
+    </ul>
+
+    <h2>TV Resolution</h2>
+    <p>Actual visible "resolution" is 160 x 192</p>
+
+    <h2>Resolution adjusted for modern computers</h2>
+    <p>
+      320 x 210 -
+      <a
+        href="https://atariage.com/forums/topic/169128-what-is-the-atari-2600-screen-resolution/?tab=comments#comment-2092604"
+        target="_blank"
+        >click here to read why</a
+      >
+    </p>
+
+    <canvas id="cv"></canvas>
+
+    <script>
+      "use strict";
+      /*****************************************
+       * setup canvases
+       */
+      const WIDTH = 320;
+      const HEIGHT = 210;
+
+      const DRAW_CLOCKS = 160;
+      const DRAW_LINES = 192;
+
+      var cv = document.getElementById("cv");
+      var ctx = cv.getContext("2d");
+      
+
+      var scale = 2;
+
+      cv.width = WIDTH * scale;
+      cv.height = HEIGHT * scale;
+      ctx.scale(scale * 2,scale * 2); // only scales what's placed on the canvas
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.imageSmoothingEnabled = false;
+
+      ctx.fillStyle = "#000";
+
+      const pixelWidth = WIDTH / DRAW_CLOCKS;
+      const pixelHeight = HEIGHT / DRAW_LINES;
+
+      // draw vertical lines
+      for (let i = 0; i < WIDTH; ) {
+        ctx.fillRect(0, i, WIDTH, 0.25);
+        i = i + pixelHeight;
+      }
+
+      // draw horizontal lines
+      for (let i = 0; i < HEIGHT; ) {
+        ctx.fillRect(i, 0, 0.25, HEIGHT);
+        i = i + pixelWidth;
+      }
+    </script>
+  </body>
+</html>

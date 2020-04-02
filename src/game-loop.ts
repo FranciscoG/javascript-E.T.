@@ -1,13 +1,9 @@
-import input, { InputStates } from "./input";
-
-type OnLoop = (ts: number, input: InputStates) => void
+type OnLoop = (ts: number) => void
 
 let loopCb: OnLoop = () => {};
 
-input.setup();
-
-function frame(timestamp) {
-  loopCb(timestamp, input.read());
+function frame(timestamp: number) {
+  loopCb(timestamp);
   requestAnimationFrame(frame);
 }
 

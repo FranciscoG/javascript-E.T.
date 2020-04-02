@@ -23,6 +23,9 @@
                 hex = hex.substr(1);
             }
             var parts = hex.match(/[0-9A-Za-z]{2}/g);
+            if (!parts) {
+                return [0, 0, 0];
+            }
             return parts.map(function (e) {
                 return parseInt(e, 16);
             });
@@ -30,18 +33,27 @@
     };
     //# sourceMappingURL=utils.js.map
 
-    function repl(match, p1) {
+    var pixelW = 320 / 160;
+    var pixelH = Math.floor(210 / 192);
+    function extractToBinary(match, p1) {
         return utils.hex2bin(p1);
     }
     function SpriteDrawer(sprite, color) {
         if (color === void 0) { color = "#696969"; }
-        if (!sprite) {
-            return;
-        }
         var canvas = document.createElement("canvas");
-        var ctx = canvas.getContext("2d");
-        sprite = sprite.trim().replace(/.*\$([a-f0-9]{2}).*\n?/gi, repl);
-        canvas.height = sprite.match(/%?[0-1]{8}[\s\n]*/g).length;
+        var ctx;
+        if (!(ctx = canvas.getContext("2d"))) {
+            throw new Error("2d context not supported or canvas already initialized");
+        }
+        sprite = sprite.trim().replace(/.*\$([a-f0-9]{2}).*\n?/gi, extractToBinary);
+        if (!sprite) {
+            throw new Error("Could not find any hex values in the sprite string");
+        }
+        var matches = sprite.match(/%?[0-1]{8}[\s\n]*/g);
+        if (!matches) {
+            throw new Error("Error parsing binary string amd converting it into array");
+        }
+        canvas.height = matches.length;
         canvas.width = 8;
         var spriteArr = sprite.split("");
         var n = 0;
@@ -62,7 +74,67 @@
         ctx.putImageData(imgData, 0, 0);
         return canvas;
     }
-    //# sourceMappingURL=draw.js.map
+    var Sprite = (function () {
+        function Sprite() {
+            this.byteArray = [];
+            this.groupByteArray = [];
+        }
+        Sprite.prototype.load = function (sprite, flipped) {
+            if (flipped === void 0) { flipped = false; }
+            sprite = sprite.trim().replace(/.*\$([a-f0-9]{2}).*\n?/gi, extractToBinary);
+            if (!sprite) {
+                throw new Error("Could not find any hex values in the sprite string");
+            }
+            var matches = sprite.match(/%?[0-1]{8}[\s\n]*/g);
+            if (!matches) {
+                throw new Error("Error parsing binary string amd converting it into array");
+            }
+            if (flipped) {
+                matches.reverse();
+            }
+            this.byteArray = matches.map(function (bit) {
+                return bit.split("");
+            });
+            return this.byteArray;
+        };
+        Sprite.prototype.loadGroup = function (spriteGroup, flipped) {
+            var _this = this;
+            if (flipped === void 0) { flipped = false; }
+            this.groupByteArray = spriteGroup.map(function (sprite) {
+                return _this.load(sprite, flipped);
+            });
+        };
+        Sprite.prototype.draw = function (ctx, startX, startY, color) {
+            if (color === void 0) { color = "#696969"; }
+            ctx.fillStyle = color;
+            var x = startX;
+            var y = startY;
+            for (var _i = 0, _a = this.byteArray; _i < _a.length; _i++) {
+                var byte = _a[_i];
+                for (var _b = 0, byte_1 = byte; _b < byte_1.length; _b++) {
+                    var bit = byte_1[_b];
+                    if (bit === "1") {
+                        ctx.fillRect(x, y, pixelW, pixelH);
+                    }
+                    x += pixelW;
+                }
+                y += pixelH;
+                x = startX;
+            }
+        };
+        Sprite.prototype.drawGroup = function (ctx, startX, startY, color) {
+            if (color === void 0) { color = "#696969"; }
+            var x = startX;
+            console.log(this.groupByteArray);
+            for (var _i = 0, _a = this.groupByteArray; _i < _a.length; _i++) {
+                var byteArray = _a[_i];
+                this.byteArray = byteArray;
+                this.draw(ctx, x, startY, color);
+                x += (pixelW * 8);
+            }
+        };
+        return Sprite;
+    }());
 
     var notes = {
         'C0': 16.35,
@@ -204,22 +276,36 @@
         'C8': 4186.01
     };
     var ctx = new AudioContext();
+    function playNote(pitch, length, wave, vol) {
+        var frq = notes[pitch];
+        var o = ctx.createOscillator();
+        o.type = wave;
+        var g = ctx.createGain();
+        o.connect(g);
+        g.connect(ctx.destination);
+        g.gain.value = (typeof vol === "undefined" || vol === null) ? 0.1 : vol;
+        if (frq) {
+            o.frequency.value = frq;
+            o.start(0);
+            o.stop(length);
+        }
+    }
     var sequenceOptsDefault = {
         bpm: 300,
         wave: "square",
         vol: 0.1
     };
     function playSequence(sequence, opts) {
-        var options = sequenceOptsDefault;
-        if (opts) {
-            options = Object.assign({}, sequenceOptsDefault, opts);
-        }
+        if (opts === void 0) { opts = {}; }
+        var options = Object.assign({}, sequenceOptsDefault, opts);
         var arrayLength = sequence.length;
-        var o = null;
+        var o;
         var t = ctx.currentTime;
         var playlength = 0;
         for (var i = 0; i < arrayLength; i++) {
-            o = ctx.createOscillator();
+            if (!(o = ctx.createOscillator())) {
+                throw new Error("AudioContext createOscillator not supported or failed");
+            }
             playlength = 1 / (options.bpm / 60) * sequence[i].notelength;
             o.type = options.wave;
             o.frequency.value = sequence[i].frq;
@@ -234,22 +320,58 @@
     }
     var sound = {
         playSequence: playSequence,
+        playNote: playNote,
         notes: notes
     };
     //# sourceMappingURL=sound.js.map
+
+    var loopCb = function () { };
+    function frame(timestamp) {
+        loopCb(timestamp);
+        requestAnimationFrame(frame);
+    }
+    function registerLoop(cb) {
+        loopCb = cb;
+        return function start() {
+            frame(0);
+        };
+    }
+    //# sourceMappingURL=game-loop.js.map
+
+    function createDisplay(w, h) {
+        if (w === void 0) { w = 320; }
+        if (h === void 0) { h = 210; }
+        var canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext("2d");
+        return {
+            canvas: canvas,
+            ctx: ctx,
+            scale: function (x, y) {
+                canvas.width = canvas.width * x;
+                canvas.height = canvas.height * y;
+                ctx.scale(x * 2, y * 2);
+                ctx.webkitImageSmoothingEnabled = false;
+                ctx.mozImageSmoothingEnabled = false;
+                ctx.imageSmoothingEnabled = false;
+            }
+        };
+    }
+    //# sourceMappingURL=display.js.map
 
     var inputState = {
         vert: 0,
         horz: 0,
         bttn: false
     };
-    var DIRECTIONS = {
-        UP: "UP",
-        DOWN: "DOWN",
-        LEFT: "LEFT",
-        RIGHT: "RIGHT"
-    };
-    Object.freeze(DIRECTIONS);
+    var DIRECTIONS;
+    (function (DIRECTIONS) {
+        DIRECTIONS[DIRECTIONS["UP"] = 0] = "UP";
+        DIRECTIONS[DIRECTIONS["DOWN"] = 1] = "DOWN";
+        DIRECTIONS[DIRECTIONS["LEFT"] = 2] = "LEFT";
+        DIRECTIONS[DIRECTIONS["RIGHT"] = 3] = "RIGHT";
+    })(DIRECTIONS || (DIRECTIONS = {}));
     var KEY_MAP = {
         "ArrowUp": DIRECTIONS.UP,
         "ArrowDown": DIRECTIONS.DOWN,
@@ -274,7 +396,7 @@
             return true;
         }
         var dir = KEY_MAP[key];
-        if (!dir) {
+        if (dir !== 0 && !dir) {
             return false;
         }
         var handled = false;
@@ -304,7 +426,7 @@
             return true;
         }
         var dir = KEY_MAP[key];
-        if (!dir) {
+        if (dir !== 0 && !dir) {
             return false;
         }
         var handled = false;
@@ -347,41 +469,17 @@
     };
     //# sourceMappingURL=input.js.map
 
-    var loopCb = function () { };
-    input.setup();
-    function frame(timestamp) {
-        loopCb(timestamp, input.read());
-        requestAnimationFrame(frame);
-    }
-    function registerLoop(cb) {
-        loopCb = cb;
-        return function start() {
-            frame(0);
-        };
-    }
-    //# sourceMappingURL=game-loop.js.map
-
-    var canvas = document.createElement("canvas");
-    canvas.width = 160 * 2;
-    canvas.height = 192;
-    var ctx$1 = canvas.getContext("2d");
-    ctx$1.webkitImageSmoothingEnabled = false;
-    ctx$1.mozImageSmoothingEnabled = false;
-    ctx$1.imageSmoothingEnabled = false;
-    var display = {
-        canvas: canvas,
-        ctx: ctx$1
-    };
-    //# sourceMappingURL=display.js.map
-
     var vcs = {
         draw: SpriteDrawer,
+        Sprite: Sprite,
         sound: sound,
         loop: registerLoop,
-        display: display
+        display: createDisplay,
+        input: input
     };
     //# sourceMappingURL=vcs.js.map
 
     return vcs;
 
 })));
+//# sourceMappingURL=vcs.js.map
