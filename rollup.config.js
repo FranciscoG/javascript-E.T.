@@ -5,7 +5,8 @@ export default {
   output: {
     file: "dist/vcs.js",
     format: "umd",
-    name: "vcs"
+    name: "vcs",
+    sourcemap: true
   },
   plugins: [typescript()]
 };

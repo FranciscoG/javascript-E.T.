@@ -23,30 +23,30 @@ var ET_COLORS = {
 
 /*
 
-	ETColors
+   ETColors
    .byte WHITE,DK_GREEN+14,DK_GREEN+12,DK_GREEN+10
    .byte DK_GREEN+10,DK_GREEN+10,BLACK
 
 From the Fix ET article:
 
 Original Colors:
-		17F9: 0E DE DC DA DA DA
+      17F9: 0E DE DC DA DA DA
 
-		New Colors:
-		17F9: 0E FE FC F8 F8 F8
+      New Colors:
+      17F9: 0E FE FC F8 F8 F8
 
    ETAnimationLSBTable_A
    .byte <ETWalkSprite_A0,<ETWalkSprite_A1,<ETWalkSprite_A2
    
-	ETAnimationLSBTable_B
+   ETAnimationLSBTable_B
    .byte <ETWalkSprite_B0,<ETWalkSprite_B1,<ETWalkSprite_B2
 
 
 regex for converting from ET source 
 find:
-	(\.byte\s\$)([0-9A-Za-z]{2})(\s)(;)
+   (\.byte\s\$)([0-9A-Za-z]{2})(\s)(;)
 replace:
-	"\2", //
+   "\2", //
 
  */
 
@@ -87,6 +87,13 @@ var TitleETGraphics_0 = `
   .byte $A0 ; |X.X.....|
   .byte $40 ; |.X......|
   .byte $80 ; |X.......|
+  .byte $00 ; |........|
+  .byte $00 ; |........|
+  .byte $00 ; |........|
+  .byte $00 ; |........|
+  .byte $00 ; |........|
+  .byte $00 ; |........|
+  .byte $00 ; |........|
 `;
 
 var TitleETGraphics_1 = `

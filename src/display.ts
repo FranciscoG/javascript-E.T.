@@ -1,34 +1,27 @@
 /**
- * In summary, an Atari 2600 frame consists of 262 scanlines (NTSC) or 312
- * scanlines (PAL), sent at 60Hz (NTSC) or 50Hz (PAL) frequency. It is the job
- * of the '2600 programmer to make sure that the correct number of scanlines are
- * sent to the TV at the right time, with the right graphics data, and
- * appropriate control signals to indicate the end of the frame are also
- * included.
+ * How the 2600 draws on a TV (NTSC) 
+ * https://alienbill.com/2600/101/docs/stella.html#tvprot
  *
- * The TIA 'draws' the pixels on the screen 'on-the-fly'. Each pixel is one
- * 'clock' of the TIA's processing time, and there are exactly 228 colour clocks
- * of TIA time on each scanline. But a scanline consists of not only the time it
- * takes to scan the electron beam across the picture tube, but also the time it
- * takes for the beam to return to the start of the next line (the horizontal
- * blank, or retrace). Of the 228 colour clocks, 160 are used to draw the pixels
- * on the screen (giving us our maximum horizontal resolution of 160 pixels per
- * line), and 68 are consumed during the retrace period.
+ * VERTICAL:
+ * A single television "frame" consists of 262 horizontal lines.
+ * - 3 vertical sync (VSYNC) line (to signal the TV set to start a new frame) 
+ * - 37 vertical blank (VBLANK) lines 
+ * - 192 TV picture lines 
+ * - 30 overscan lines 
+ * - Total: 262 lines 
+ * 
+ * HORIZONTAL: 
+ * Each line is divided by 228 clock counts
+ * - Starts with 68 clock counts of horizontal blank (not seen on the TV screen)
+ * - 160 clock counts to fully scan one line of TV picture 
+ * - Total: 228 "pixels" (clocks)
+ * 
+ * TV RESOLUTION: 
+ * Actual visible "resolution" is 160 w x 192 h
  *
- *
- * The 6502 clock is derived from the TIA clock through a divide-by-three. That
- * is, for every single clock of 6502 time, three clocks of TIA time have
- * passed. Therefore, there are *exactly* 228/3 = 76 cycles of 6502 time per
- * scanline. The 6502 and TIA perform a complex 'in-step' dance - one cycle of
- * 6502, three cycles of TIA. A side-note: 76 cycles per line x 262 lines per
- * frame x 60 frames per second = the number of 6502 cycles per second for NTSC
- * (= 1.19MHz, roughly).
- *
- * Vertical
- * 3 Scanlines devoted to the vertical synchronisation
- * 37 scanlines of vertical blank time
- * ---> 192 (NTSC) or 242 (PAL) lines of actual picture
- * 30 scanlines of overscan
+ * Resolution adjusted for modern computers: 
+ * 320 x 210, read why in this link
+ * https://atariage.com/forums/topic/169128-what-is-the-atari-2600-screen-resolution/?tab=comments#comment-2092604
  */
 
 interface Context2D extends CanvasRenderingContext2D {
@@ -36,16 +29,31 @@ interface Context2D extends CanvasRenderingContext2D {
   mozImageSmoothingEnabled: boolean;
 }
 
-const canvas: HTMLCanvasElement = document.createElement("canvas");
-canvas.width = 160 * 2;
-canvas.height = 192;
-const ctx = <Context2D> canvas.getContext("2d");
-ctx.webkitImageSmoothingEnabled = false;
-ctx.mozImageSmoothingEnabled = false;
-ctx.imageSmoothingEnabled = false;
+interface CanvasAndContext {
+  canvas: HTMLCanvasElement,
+  ctx: Context2D,
+  scale: (x: number, y: number) => void
+}
+
+function createDisplay(w: number = 320, h: number = 210): CanvasAndContext {
+  const canvas: HTMLCanvasElement = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = <Context2D>canvas.getContext("2d");
+
+  return {
+    canvas,
+    ctx,
+    scale: function (x: number, y: number): void {
+      canvas.width = canvas.width * x;
+      canvas.height = canvas.height * y;
+      ctx.scale(x * 2, y * 2); // only scales what's placed on the canvas
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.imageSmoothingEnabled = false;
+    }
+  }
+}
 
 // TODO: handle scaling in this module
-export default {
-  canvas,
-  ctx
-}
+export default createDisplay

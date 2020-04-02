@@ -30,8 +30,7 @@ export default {
 
   /**
    * Convert a Hex Color to RGB array
-   * @param  {string} hex   a full hex color string including the hash.  example: "#99af34"
-   * @return {object}       an array containing RGB info [R,G,B]
+   * @param  hex  a full hex color string including the hash.  example: "#99af34"
    */
   hex2rgb: function (hex: string): number[] {
     if (hex.charAt(0) === "#") {
@@ -39,6 +38,11 @@ export default {
     }
     // separate "99af34" into ["99", "af", "34"]
     const parts = hex.match(/[0-9A-Za-z]{2}/g);
+
+    if (!parts) {
+      return [0,0,0]; // just return black if it failes
+    }
+
     // convert into hexadecimal number
     return parts.map(function (e: string) {
       return parseInt(e, 16);

@@ -1,12 +1,15 @@
 // import sound from "./sound";
-import draw from "./draw";
+import draw, { Sprite } from "./draw";
 import sound from "./sound";
 import loop from "./game-loop";
 import display from "./display";
+import input from "./input";
 
 export default {
   draw,
+  Sprite,
   sound,
   loop,
-  display
+  display,
+  input,
 }
