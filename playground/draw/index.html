@@ -102,7 +102,7 @@
 
         cv2.width = cv2.width * scale;
         cv2.height = cv2.height * scale;
-        ctx2.scale(scale * 2,scale * 2); // only scales what's placed on the canvas
+        ctx2.scale(scale, scale); // only scales what's placed on the canvas
         ctx2.webkitImageSmoothingEnabled = false;
         ctx2.mozImageSmoothingEnabled = false;
         ctx2.imageSmoothingEnabled = false;
@@ -118,16 +118,6 @@
 
         function showTitle(){
           ctx2.fillRect(0, 0, cv2.width, cv2.height);
-
-          // var x = 0;
-          // var y = 0;
-          // ctx2.drawImage(ET_title[0], x, y);
-          // ctx2.drawImage(ET_title[1], x + (8), y);
-          // ctx2.drawImage(ET_title[2], x + (8*2), y);
-          // ctx2.drawImage(ET_title[3], x + (8*3), y);
-          // ctx2.drawImage(ET_title[4], x + (8*4), y);
-          // ctx2.drawImage(ET_title[5], x + (8*5), y);
-
           titleE.draw(ctx2, 45, 0, color);
           titleT.draw(ctx2, 75, 0, color);
           headET.drawGroup(ctx2, 0, 30, color);

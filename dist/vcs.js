@@ -31,48 +31,11 @@
             });
         }
     };
-    //# sourceMappingURL=utils.js.map
 
     var pixelW = 320 / 160;
     var pixelH = Math.floor(210 / 192);
     function extractToBinary(match, p1) {
         return utils.hex2bin(p1);
-    }
-    function SpriteDrawer(sprite, color) {
-        if (color === void 0) { color = "#696969"; }
-        var canvas = document.createElement("canvas");
-        var ctx;
-        if (!(ctx = canvas.getContext("2d"))) {
-            throw new Error("2d context not supported or canvas already initialized");
-        }
-        sprite = sprite.trim().replace(/.*\$([a-f0-9]{2}).*\n?/gi, extractToBinary);
-        if (!sprite) {
-            throw new Error("Could not find any hex values in the sprite string");
-        }
-        var matches = sprite.match(/%?[0-1]{8}[\s\n]*/g);
-        if (!matches) {
-            throw new Error("Error parsing binary string amd converting it into array");
-        }
-        canvas.height = matches.length;
-        canvas.width = 8;
-        var spriteArr = sprite.split("");
-        var n = 0;
-        var rbgArr = utils.hex2rgb(color);
-        var imgData = ctx.createImageData(8, spriteArr.length);
-        for (var i = 0; i < imgData.data.length; i += 4) {
-            imgData.data[i + 0] = rbgArr[0];
-            imgData.data[i + 1] = rbgArr[1];
-            imgData.data[i + 2] = rbgArr[2];
-            if (spriteArr[n] === "1") {
-                imgData.data[i + 3] = 255;
-            }
-            else {
-                imgData.data[i + 3] = 0;
-            }
-            n++;
-        }
-        ctx.putImageData(imgData, 0, 0);
-        return canvas;
     }
     var Sprite = (function () {
         function Sprite() {
@@ -125,7 +88,6 @@
         Sprite.prototype.drawGroup = function (ctx, startX, startY, color) {
             if (color === void 0) { color = "#696969"; }
             var x = startX;
-            console.log(this.groupByteArray);
             for (var _i = 0, _a = this.groupByteArray; _i < _a.length; _i++) {
                 var byteArray = _a[_i];
                 this.byteArray = byteArray;
@@ -323,7 +285,6 @@
         playNote: playNote,
         notes: notes
     };
-    //# sourceMappingURL=sound.js.map
 
     var loopCb = function () { };
     function frame(timestamp) {
@@ -336,9 +297,8 @@
             frame(0);
         };
     }
-    //# sourceMappingURL=game-loop.js.map
 
-    function createDisplay(w, h) {
+    function CreateDisplay(w, h) {
         if (w === void 0) { w = 320; }
         if (h === void 0) { h = 210; }
         var canvas = document.createElement("canvas");
@@ -358,7 +318,6 @@
             }
         };
     }
-    //# sourceMappingURL=display.js.map
 
     var inputState = {
         vert: 0,
@@ -467,17 +426,14 @@
         setup: setup,
         read: read
     };
-    //# sourceMappingURL=input.js.map
 
     var vcs = {
-        draw: SpriteDrawer,
         Sprite: Sprite,
         sound: sound,
         loop: registerLoop,
-        display: createDisplay,
+        CreateDisplay: CreateDisplay,
         input: input
     };
-    //# sourceMappingURL=vcs.js.map
 
     return vcs;
 

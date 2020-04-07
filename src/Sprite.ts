@@ -28,67 +28,6 @@ function extractToBinary(match: string, p1: string): string {
   `;
  */
 
-/**
- * Takes a sprite string contain hex numbers, converts it to binary, then draws
- * them on the canvas
- * @param sprite a sprite string in the example format above
- * @param color 
- */
-function SpriteDrawer(sprite: string, color: string = "#696969"): HTMLCanvasElement | undefined {
-  // create our canvas that will hold our sprite image
-  // and will be returned in the end
-  const canvas = document.createElement("canvas");
-  let ctx: CanvasRenderingContext2D | null;
-  if (!(ctx = canvas.getContext("2d"))) {
-    throw new Error(`2d context not supported or canvas already initialized`);
-  }
-
-  /**
-   * Extract all of the hex numbers (i.e. $FE) from the sprite string
-   * and convert them to binary. This prodiuces one long string of 1s and 0s
-   * without any space or line breaks like this;
-   * 111111101111111111000011000011111111111100111111001010111110011100000000
-   */
-  sprite = sprite.trim().replace(/.*\$([a-f0-9]{2}).*\n?/gi, extractToBinary);
-
-  if (!sprite) {
-    throw new Error(`Could not find any hex values in the sprite string`);
-  }
-
-  /**
-   * parse long binary string into an array like this
-   * ["11111110", "11111111", "11000011", "00001111", "11111111", ... ]
-   */
-  const matches = sprite.match(/%?[0-1]{8}[\s\n]*/g);
-
-  if (!matches) {
-    throw new Error(`Error parsing binary string amd converting it into array`);
-  }
-
-  canvas.height = matches.length;
-  canvas.width = 8;
-
-  const spriteArr = sprite.split("");
-
-  let n: number = 0;
-  const rbgArr: number[] = utils.hex2rgb(color);
-  const imgData = ctx.createImageData(8, spriteArr.length);
-
-  for (let i = 0; i < imgData.data.length; i += 4) {
-    imgData.data[i + 0] = rbgArr[0];
-    imgData.data[i + 1] = rbgArr[1];
-    imgData.data[i + 2] = rbgArr[2];
-    if (spriteArr[n] === "1") {
-      imgData.data[i + 3] = 255;
-    } else {
-      imgData.data[i + 3] = 0;
-    }
-    n++;
-  }
-  ctx.putImageData(imgData, 0, 0);
-
-  return canvas;
-}
 
 /**
  * string[][] = [ 
@@ -97,7 +36,7 @@ function SpriteDrawer(sprite: string, color: string = "#696969"): HTMLCanvasElem
  * ]
  */
 
-export class Sprite {
+export default class Sprite {
   byteArray: string[][];
   groupByteArray: string[][][];
 
@@ -174,7 +113,6 @@ export class Sprite {
 
   drawGroup(ctx: CanvasRenderingContext2D, startX: number, startY: number, color: string = "#696969") {
     let x = startX;
-    console.log(this.groupByteArray);
     for (let byteArray of this.groupByteArray) {
       this.byteArray = byteArray
       this.draw(ctx, x, startY, color);
@@ -183,5 +121,3 @@ export class Sprite {
   }
 
 }
-
-export default SpriteDrawer;

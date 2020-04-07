@@ -35,7 +35,7 @@ interface CanvasAndContext {
   scale: (x: number, y: number) => void
 }
 
-function createDisplay(w: number = 320, h: number = 210): CanvasAndContext {
+function CreateDisplay(w: number = 320, h: number = 210): CanvasAndContext {
   const canvas: HTMLCanvasElement = document.createElement("canvas");
   canvas.width = w;
   canvas.height = h;
@@ -55,5 +55,4 @@ function createDisplay(w: number = 320, h: number = 210): CanvasAndContext {
   }
 }
 
-// TODO: handle scaling in this module
-export default createDisplay
+export default CreateDisplay
