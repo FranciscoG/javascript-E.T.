@@ -1,27 +1,32 @@
+///////////////////////////////////////////////////////////////////////////////
+// Setup canvas
+
+const { canvas, ctx, scale } = vcs.display();
+const { width, height } = canvas;
+const spriteScale = 2;
+scale(spriteScale, spriteScale);
+canvas.id = "canvas";
+document.getElementById("game").appendChild(canvas);
+
+///////////////////////////////////////////////////////////////////////////////
+// constants
+
+const color = "#fce08c"
+
 const DIRS = {
   UP: 0,
   DOWN: 1,
   LEFT: 2,
   RIGHT: 3,
   OPPOSITE: [1, 0, 3, 2],
-  STOPPED: 5,
+  STOPPED: 5
 };
-let currentX = DIRS.STOPPED;
-let currentY = DIRS.STOPPED;
 
-const { canvas, ctx, scale } = vcs.display();
-const { width, height } = canvas;
-
-const spriteScale = 2;
-scale(spriteScale, spriteScale);
-canvas.id = "canvas";
-document.getElementById("game").appendChild(canvas);
-
-let nx = 44;
-let ny = 33;
-let dx = width / nx;
-let dy = height / ny;
-let playing = false;
+const walkspeed = 3;
+const nx = 44;
+const ny = 33;
+const dx = width / nx;
+const dy = height / ny;
 
 const worldMap = {
   stage1: {
@@ -79,7 +84,7 @@ const worldMap = {
   }
 };
 
-//x,y positions of the sides
+// x,y positions of the sides
 const sides = {
   T: ny - 1, //actually just entering from the bottom means you exited the top
   R: 0,
@@ -87,37 +92,40 @@ const sides = {
   L: nx - 1
 };
 
-var color = "#fce08c";
+///////////////////////////////////////////////////////////////////////////////
+// Variables
 
-/***************************************
- * Title screen
- */
+let framesToSkip = 5;
+let counter = 0;
+let currentX = DIRS.STOPPED;
+let currentY = DIRS.STOPPED;
+
+///////////////////////////////////////////////////////////////////////////////
+// Title screen
+
+var ET_Head = [
+  TitleETGraphics_1,
+  TitleETGraphics_2,
+  TitleETGraphics_3,
+  TitleETGraphics_4,
+  TitleETGraphics_5,
+  TitleETGraphics_0
+];
+
+const titleE = new vcs.Sprite();
+titleE.load(ETTitle_E, true);
+
+const titleT = new vcs.Sprite();
+titleT.load(ETTitle_T, true);
+
+const headET = new vcs.Sprite();
+headET.loadGroup(ET_Head, true);
 
 function showTitle() {
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Move registration point to the center of the canvas
-  // ctx.save();
-
-  ctx2.translate(cv2.width / 4, cv2.height / 4);
-  // Rotate 180 degree
-  ctx2.rotate(180 * (Math.PI / 180));
-
-  var x = 0;
-  var y = 0;
-  ctx2.drawImage(ET_title[0], x, y);
-  ctx2.drawImage(ET_title[1], x + 8, y);
-  ctx2.drawImage(ET_title[2], x + 8 * 2, y);
-  ctx2.drawImage(ET_title[3], x + 8 * 3, y);
-  ctx2.drawImage(ET_title[4], x + 8 * 4, y);
-  ctx2.drawImage(ET_title[5], x + 8 * 5, y);
-
-  var ET_E = vcs.draw(ETTitle_E, color);
-  var ET_T = vcs.draw(ETTitle_T, color);
-  ctx2.drawImage(ET_E, 0, 50);
-  ctx2.drawImage(ET_T, 25, 50);
-
-  ctx2.restore();
+  titleE.draw(ctx2, 45, 0, color);
+  titleT.draw(ctx2, 75, 0, color);
+  headET.drawGroup(ctx2, 0, 30, color);
+  headET.drawGroup(ctx, 0, 30, color);
 }
 
 /****************************************
@@ -139,7 +147,6 @@ let _i = 0;
 let playerX = 20;
 let playerY = 20;
 function walkAnim() {
-  // console.log(currentX);
   if (currentX === DIRS.RIGHT) {
     ctx.save();
     ctx.scale(-1, 1);
@@ -154,6 +161,7 @@ function walkAnim() {
     _i = 0;
   }
 }
+
 function stand() {
   if (currentX === DIRS.RIGHT) {
     ctx.save();
@@ -165,7 +173,7 @@ function stand() {
   }
 }
 
-const walkspeed = 3;
+
 function move(inputState) {
   let walking = false;
 
@@ -200,12 +208,7 @@ function move(inputState) {
   } else {
     stand();
   }
-  // else do stand
 }
-
-// using requestAnimationFrame to make it walk
-let framesToSkip = 5;
-let counter = 0;
 
 /* global vcs */
 const start = vcs.loop(function(ts) {
@@ -214,8 +217,7 @@ const start = vcs.loop(function(ts) {
     return;
   }
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  const inputState = vcs.input.read();
-  move(inputState);
+  move(vcs.input.read());
   counter = 0;
 });
 

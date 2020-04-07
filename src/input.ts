@@ -45,7 +45,7 @@ const KEY_MAP: KeyMap = {
   "ArrowLeft" : DIRECTIONS.LEFT,
   "ArrowRight": DIRECTIONS.RIGHT,
 
-  // IE Edge Event.key
+  // IE Edge event.key
   "Up"        : DIRECTIONS.UP,
   "Down"      : DIRECTIONS.DOWN,
   "Left"      : DIRECTIONS.LEFT,

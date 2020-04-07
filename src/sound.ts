@@ -1,6 +1,7 @@
 /*
 http://www.qotile.net/files/2600_music_guide.txt
 http://www.popular-musicology-online.com/issues/01/collins-01.html
+http://www.igorski.nl/application/slocum-tracker/
 ===================================================================
 2 TIA Sound Overview
 ===================================================================
@@ -52,20 +53,49 @@ themeMusicNoteDelay     = $EE
 themeMusicFreqIndex     = $EF
 
 
-PlayThemeMusic
+ThemeMusicFrequencyTable
+   .byte LEAD_A3,LEAD_A3,LEAD_A3,LEAD_A3,LEAD_E4,LEAD_E4,LEAD_E4,LEAD_E4
+   .byte LEAD_D4,LEAD_C4_SHARP,LEAD_H3,LEAD_C4_SHARP,LEAD_A3,LEAD_A3,LEAD_A3
+   .byte LEAD_A3,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2
+   .byte LEAD_E3_2,LEAD_E3_2,LEAD_F3_SHARP,LEAD_F3_SHARP,LEAD_F3_SHARP
+   .byte LEAD_F3_SHARP,LEAD_F4_SHARP,LEAD_F4_SHARP,LEAD_F4_SHARP,LEAD_F4_SHARP
+   .byte LEAD_E4,LEAD_D4_SHARP,LEAD_C4_SHARP,LEAD_D4_SHARP,LEAD_H3,LEAD_H3
+   .byte LEAD_H3,LEAD_H3,LEAD_F3_SHARP,LEAD_F3_SHARP,LEAD_F3_SHARP
+   .byte LEAD_F3_SHARP,LEAD_G3_SHARP,LEAD_G3_SHARP,LEAD_G3_SHARP,LEAD_H3
+   .byte LEAD_C4_SHARP,LEAD_A3,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2
+   .byte LEAD_E3_2
+
+PlayETWalkingSound
+   lda SWCHA                        ; read joystick values
+   cmp #P0_NO_MOVE
+   bcs .turnOffETWalkingSound
+   bit etMotionValues               ; check E.T. motion values
+   bpl .playETWalkingSound          ; branch if E.T. not running
+   lda frameCount                   ; get the current frame count
+   lsr                              ; divide value by 4
+   lsr
+   and #7
+   sta AUDF1
+   lda #SOUND_CHANNEL_SQUARE + 1
+   sta AUDC1
    lda #7
    sta AUDV1
-   lda #SOUND_CHANNEL_LEAD
-   sta AUDC1
-   ldx themeMusicNoteDelay          ; get theme music note delay value
-   dex
-   bpl .playCurrentThemeNote        ; hold note if not negative
-   ldx #11                          ; initial hold note delay
-   ldy themeMusicFreqIndex          ; get theme music frequency index
-   iny                              ; increment frequency index
-   cpy #55
-   bcc .setThemeMusicFreqIndex
-   ldy #0
+   bne .donePlayingSoundChannel1    ; unconditional branch
+
+.playETWalkingSound
+   lda frameCount                   ; get the current frame count
+   and #7
+   bne .turnOffETWalkingSound
+   lda frameCount                   ; get the current frame count
+   lsr                              ; divide value by 8
+   lsr
+   lsr
+   and #3
+   beq .turnOffETWalkingSound
+   ldx #7
+   stx AUDV1
+   adc #$16
+   bne .setSoundChannel1AndFrequency
 
 
 	WebAudio API help:
