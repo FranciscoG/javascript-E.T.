@@ -14,7 +14,7 @@ Code borrowed and inspired heavily from [jakesgordon's](https://github.com/jakes
 
 ----
 
-[A good exlpanation of the E.T world map](http://www.randomterrain.com/atari-2600-memories-et-map.html)
+[A good explanation of the E.T world map](http://www.randomterrain.com/atari-2600-memories-et-map.html)
 
 [Giant Bomb explanation of items and gameplay](http://www.giantbomb.com/et-the-extra-terrestrial/3030-21595/)
 
