@@ -12,7 +12,7 @@
 
 const { playSequence, notes } = vcs.sound;
 
-var ET_Theme_music = [
+const ET_Theme_music = [
   {
     frq: notes["A3"],
     notelength: 4,

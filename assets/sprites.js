@@ -1,5 +1,5 @@
 // NTSC color constants
-var ET_COLORS = {
+const ET_COLORS = {
   BLACK: "00",
   WHITE: "0E",
   LT_RED: "20",
@@ -51,9 +51,9 @@ replace:
  */
 
 
-var TitleETGraphics = ``;
+const TitleETGraphics = ``;
 
-var TitleETGraphics_0 = `
+const TitleETGraphics_0 = `
   .byte $D0 ; |XX.X....|
   .byte $00 ; |........|
   .byte $D0 ; |XX.X....|
@@ -96,7 +96,7 @@ var TitleETGraphics_0 = `
   .byte $00 ; |........|
 `;
 
-var TitleETGraphics_1 = `
+const TitleETGraphics_1 = `
   .byte $00 ; |........|
   .byte $00 ; |........|
   .byte $00 ; |........|
@@ -139,7 +139,7 @@ var TitleETGraphics_1 = `
   .byte $00 ; |........|
 `;
 
-var TitleETGraphics_2 = `
+const TitleETGraphics_2 = `
   .byte $00 ; |........|
   .byte $00 ; |........|
   .byte $00 ; |........|
@@ -182,7 +182,7 @@ var TitleETGraphics_2 = `
   .byte $7B ; |.XXXX.XX|
 `;
 
-var TitleETGraphics_3 = `
+const TitleETGraphics_3 = `
   .byte $00 ; |........|
   .byte $00 ; |........|
   .byte $7F ; |.XXXXXXX|
@@ -225,7 +225,7 @@ var TitleETGraphics_3 = `
   .byte $00 ; |........|
 `;
 
-var TitleETGraphics_4 = `
+const TitleETGraphics_4 = `
   .byte $01 ; |.......X|
   .byte $00 ; |........|
   .byte $81 ; |X......X|
@@ -268,7 +268,7 @@ var TitleETGraphics_4 = `
   .byte $2A ; |..X.X.X.|
 `;
 
-var TitleETGraphics_5 = `
+const TitleETGraphics_5 = `
   .byte $FF ; |XXXXXXXX|
   .byte $15 ; |...X.X.X|
   .byte $FF ; |XXXXXXXX|
@@ -322,9 +322,9 @@ var TitleETGraphics_5 = `
 //   .byte DK_GREEN+10,DK_GREEN+10,BLACK
 
 
-var WideDiamondPitGraphics = ``;
+const WideDiamondPitGraphics = ``;
 
-var WideDiamondPitPF1Graphics = `
+const WideDiamondPitPF1Graphics = `
   .byte $00 ; |........|
   .byte $00 ; |........|
   .byte $00 ; |........|
@@ -332,7 +332,7 @@ var WideDiamondPitPF1Graphics = `
   .byte $00 ; |........|
 `;
 
-var KernelJumpTableIndex = `
+const KernelJumpTableIndex = `
   .byte $00 ; |........|
   .byte $00 ; |........|
   .byte $00 ; |........|
@@ -381,7 +381,7 @@ var KernelJumpTableIndex = `
   .byte $02 ; |......X.|
 `;
 
-var WideDiamondPitPF2Graphics = `
+const WideDiamondPitPF2Graphics = `
   .byte $00 ; |........|
   .byte $00 ; |........|
   .byte $00 ; |........|
@@ -448,9 +448,9 @@ var WideDiamondPitPF2Graphics = `
   .byte $00 ; |........|
 `;
 
-var ForestGraphics = ``;
+const ForestGraphics = ``;
 
-var ForestPF1Graphics = `
+const ForestPF1Graphics = `
   .byte $AA ; |X.X.X.X.|
   .byte $55 ; |.X.X.X.X|
   .byte $AB ; |X.X.X.XX|
@@ -517,7 +517,7 @@ var ForestPF1Graphics = `
   .byte $D5 ; |XX.X.X.X|
 `;
 
-var ForestPF2Graphics = `
+const ForestPF2Graphics = `
   .byte $55 ; |.X.X.X.X|
   .byte $AB ; |X.X.X.XX|
   .byte $57 ; |.X.X.XXX|
@@ -593,7 +593,7 @@ var ForestPF2Graphics = `
   
 //   BOUNDARY 0
 
-var ETSprites = `
+const ETSprites = `
   .byte $FE ; |XXXXXXX.|
   .byte $FF ; |XXXXXXXX|
   .byte $C3 ; |XX....XX|
@@ -604,9 +604,9 @@ var ETSprites = `
   .byte $E7 ; |XXX..XXX|
   .byte $00 ; |........|
 `;
-var ETWalkSprite_A0 = ETSprites;
+const ETWalkSprite_A0 = ETSprites;
 
-var ETExtensionSprites_A = `
+const ETExtensionSprites_A = `
   .byte $FE ; |XXXXXXX.|
   .byte $FF ; |XXXXXXXX|
   .byte $C3 ; |XX....XX|
@@ -618,9 +618,9 @@ var ETExtensionSprites_A = `
   .byte $E7 ; |XXX..XXX|
   .byte $00 ; |........|
 `;
-var ETExtensionSprite_A0 = ETExtensionSprites_A;
+const ETExtensionSprite_A0 = ETExtensionSprites_A;
 
-var ETExtensionSprite_A1 = `
+const ETExtensionSprite_A1 = `
    .byte $FE ; |XXXXXXX.|
    .byte $FF ; |XXXXXXXX|
    .byte $C3 ; |XX....XX|
@@ -633,7 +633,7 @@ var ETExtensionSprite_A1 = `
    .byte $E7 ; |XXX..XXX|
    .byte $00 ; |........|
 `;
-var ETExtensionSprite_A2 = `
+const ETExtensionSprite_A2 = `
    .byte $FE ; |XXXXXXX.|
    .byte $FF ; |XXXXXXXX|
    .byte $C3 ; |XX....XX|
@@ -648,7 +648,7 @@ var ETExtensionSprite_A2 = `
    .byte $00 ; |........|
 `;
 
-var ETExtensionSprite_A3 = `
+const ETExtensionSprite_A3 = `
    .byte $FE ; |XXXXXXX.|
    .byte $FF ; |XXXXXXXX|
    .byte $03 ; |......XX|
@@ -664,7 +664,7 @@ var ETExtensionSprite_A3 = `
    .byte $00 ; |........|
 `;
 
-var ETWalkSprite_B0 = `
+const ETWalkSprite_B0 = `
    .byte $BF ; |X.XXXXXX|
    .byte $FF ; |XXXXXXXX|
    .byte $03 ; |......XX|
@@ -676,7 +676,7 @@ var ETWalkSprite_B0 = `
    .byte $00 ; |........|
 `;
 
-var ETExtensionSprite_B0 = `
+const ETExtensionSprite_B0 = `
    .byte $BF ; |X.XXXXXX|
    .byte $FF ; |XXXXXXXX|
    .byte $03 ; |......XX|
@@ -688,10 +688,10 @@ var ETExtensionSprite_B0 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
 `;
-var ETExtensionSprites_B = ETExtensionSprite_B0;
+const ETExtensionSprites_B = ETExtensionSprite_B0;
 
 
-var ETExtensionSprite_B1 = `
+const ETExtensionSprite_B1 = `
    .byte $BF ; |X.XXXXXX|
    .byte $FF ; |XXXXXXXX|
    .byte $03 ; |......XX|
@@ -705,25 +705,9 @@ var ETExtensionSprite_B1 = `
    .byte $00 ; |........|
 `;
 
-var ETExtensionSprite_B2 = `
+const ETExtensionSprite_B2 = `
    .byte $BF ; |X.XXXXXX|
    .byte $FF ; |XXXXXXXX|
-   .byte $03 ; |......XX|
-   .byte $03 ; |......XX|
-   .byte $03 ; |......XX|
-   .byte $03 ; |......XX|
-   .byte $1F ; |...XXXXX|
-   .byte $BF ; |X.XXXXXX|
-   .byte $3F ; |..XXXXXX|
-   .byte $63 ; |.XX...XX|
-   .byte $00 ; |........|
-   .byte $00 ; |........|
-`;
-
-var ETExtensionSprite_B3 = `
-   .byte $BF ; |X.XXXXXX|
-   .byte $FF ; |XXXXXXXX|
-   .byte $03 ; |......XX|
    .byte $03 ; |......XX|
    .byte $03 ; |......XX|
    .byte $03 ; |......XX|
@@ -736,9 +720,25 @@ var ETExtensionSprite_B3 = `
    .byte $00 ; |........|
 `;
 
+const ETExtensionSprite_B3 = `
+   .byte $BF ; |X.XXXXXX|
+   .byte $FF ; |XXXXXXXX|
+   .byte $03 ; |......XX|
+   .byte $03 ; |......XX|
+   .byte $03 ; |......XX|
+   .byte $03 ; |......XX|
+   .byte $03 ; |......XX|
+   .byte $1F ; |...XXXXX|
+   .byte $BF ; |X.XXXXXX|
+   .byte $3F ; |..XXXXXX|
+   .byte $63 ; |.XX...XX|
+   .byte $00 ; |........|
+   .byte $00 ; |........|
+`;
 
 
-var ETDead_0 = `
+
+const ETDead_0 = `
    .byte $E0 ; |XXX.....|
    .byte $A2 ; |X.X...X.|
    .byte $E7 ; |XXX..XXX|
@@ -747,7 +747,7 @@ var ETDead_0 = `
    .byte $00 ; |........|
 `;
 
-var ETDead_1 = `
+const ETDead_1 = `
    .byte $E0 ; |XXX.....|
    .byte $E3 ; |XXX...XX|
    .byte $EF ; |XXX.XXXX|
@@ -757,7 +757,7 @@ var ETDead_1 = `
 `;
 
 
-var ETWalkSprite_A1 = `
+const ETWalkSprite_A1 = `
    .byte $FE ; |XXXXXXX.|
    .byte $FF ; |XXXXXXXX|
    .byte $C3 ; |XX....XX|
@@ -769,7 +769,7 @@ var ETWalkSprite_A1 = `
    .byte $00 ; |........|
 `;
 
-var ETWalkSprite_B1 = `
+const ETWalkSprite_B1 = `
    .byte $BF ; |X.XXXXXX|
    .byte $FF ; |XXXXXXXX|
    .byte $03 ; |......XX|
@@ -781,7 +781,7 @@ var ETWalkSprite_B1 = `
    .byte $00 ; |........|
 `;
 
-var ETWalkSprite_A2 = `
+const ETWalkSprite_A2 = `
    .byte $FE ; |XXXXXXX.|
    .byte $FF ; |XXXXXXXX|
    .byte $C3 ; |XX....XX|
@@ -793,7 +793,7 @@ var ETWalkSprite_A2 = `
    .byte $00 ; |........|
 `;
 
-var ETWalkSprite_B2 = `
+const ETWalkSprite_B2 = `
    .byte $BF ; |X.XXXXXX|
    .byte $FF ; |XXXXXXXX|
    .byte $03 ; |......XX|
@@ -805,7 +805,7 @@ var ETWalkSprite_B2 = `
    .byte $00 ; |........|
 `;
 
-var ETTitle_E = `
+const ETTitle_E = `
    .byte $E0 ; |XXX.....|
    .byte $F0 ; |XXXX....|
    .byte $F8 ; |XXXXX...|
@@ -824,7 +824,7 @@ var ETTitle_E = `
    .byte $1E ; |...XXXX.|
 `;
 
-var ETTitle_T = `
+const ETTitle_T = `
    .byte $10 ; |...X....|
    .byte $18 ; |...XX...|
    .byte $18 ; |...XX...|
@@ -845,11 +845,11 @@ var ETTitle_T = `
 
 // lda #$0F  ; 2 enable missiles for dots in E.T.
 // 
-var ETTitle_dot = '$0F'; 
+const ETTitle_dot = '$0F'; 
 
-var FlowerSpritesA = ``;
+const FlowerSpritesA = ``;
 
-var Flower_A0 = `
+const Flower_A0 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -859,7 +859,7 @@ var Flower_A0 = `
    .byte $3A ; |..XXX.X.|
 `;
 
-var Flower_A1 = `
+const Flower_A1 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $1C ; |...XXX..|
@@ -869,7 +869,7 @@ var Flower_A1 = `
    .byte $38 ; |..XXX...|
 `;
 
-var Flower_A2 = `
+const Flower_A2 = `
    .byte $00 ; |........|
    .byte $14 ; |...X.X..|
    .byte $1C ; |...XXX..|
@@ -879,7 +879,7 @@ var Flower_A2 = `
    .byte $18 ; |...XX...|
 `;
 
-var Flower_A3 = `
+const Flower_A3 = `
    .byte $14 ; |...X.X..|
    .byte $1C ; |...XXX..|
    .byte $14 ; |...X.X..|
@@ -889,9 +889,9 @@ var Flower_A3 = `
    .byte $18 ; |...XX...|
 `;
 
-var FlowerSpritesB = ``;
+const FlowerSpritesB = ``;
 
-var Flower_B0 = `
+const Flower_B0 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -901,7 +901,7 @@ var Flower_B0 = `
    .byte $08 ; |....X...|
 `;
 
-var Flower_B1 = `
+const Flower_B1 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $2A ; |..X.X.X.|
@@ -911,7 +911,7 @@ var Flower_B1 = `
    .byte $08 ; |....X...|
 `;
 
-var Flower_B2 = `
+const Flower_B2 = `
    .byte $00 ; |........|
    .byte $2A ; |..X.X.X.|
    .byte $2A ; |..X.X.X.|
@@ -921,7 +921,7 @@ var Flower_B2 = `
    .byte $08 ; |....X...|
 `;
 
-var Flower_B3 = `
+const Flower_B3 = `
    .byte $2A ; |..X.X.X.|
    .byte $2A ; |..X.X.X.|
    .byte $08 ; |....X...|
@@ -941,9 +941,9 @@ var Flower_B3 = `
 //    BOUNDARY 0
 
 
-var NumberFonts = ``;
+const NumberFonts = ``;
 
-var zero = `
+const zero = `
    .byte $FE ; |XXXXXXX.|
    .byte $86 ; |X....XX.|
    .byte $86 ; |X....XX.|
@@ -954,7 +954,7 @@ var zero = `
    .byte $00 ; |........|
 `;
 
-var one = `
+const one = `
    .byte $18 ; |...XX...|
    .byte $18 ; |...XX...|
    .byte $18 ; |...XX...|
@@ -965,7 +965,7 @@ var one = `
    .byte $00 ; |........|
 `;
 
-var two = `
+const two = `
    .byte $FE ; |XXXXXXX.|
    .byte $C0 ; |XX......|
    .byte $C0 ; |XX......|
@@ -976,7 +976,7 @@ var two = `
    .byte $00 ; |........|
 `;
 
-var three = `
+const three = `
    .byte $FE ; |XXXXXXX.|
    .byte $86 ; |X....XX.|
    .byte $06 ; |.....XX.|
@@ -987,7 +987,7 @@ var three = `
    .byte $00 ; |........|
 `;
 
-var four = `
+const four = `
    .byte $06 ; |.....XX.|
    .byte $06 ; |.....XX.|
    .byte $FE ; |XXXXXXX.|
@@ -998,7 +998,7 @@ var four = `
    .byte $00 ; |........|
 `;
 
-var five = `
+const five = `
    .byte $FE ; |XXXXXXX.|
    .byte $86 ; |X....XX.|
    .byte $06 ; |.....XX.|
@@ -1009,7 +1009,7 @@ var five = `
    .byte $00 ; |........|
 `;
 
-var six = `
+const six = `
    .byte $FE ; |XXXXXXX.|
    .byte $86 ; |X....XX.|
    .byte $86 ; |X....XX.|
@@ -1020,7 +1020,7 @@ var six = `
    .byte $00 ; |........|
 `;
 
-var seven = `
+const seven = `
    .byte $06 ; |.....XX.|
    .byte $06 ; |.....XX.|
    .byte $06 ; |.....XX.|
@@ -1031,7 +1031,7 @@ var seven = `
    .byte $00 ; |........|
 `;
 
-var eight = `
+const eight = `
    .byte $FE ; |XXXXXXX.|
    .byte $82 ; |X.....X.|
    .byte $82 ; |X.....X.|
@@ -1042,7 +1042,7 @@ var eight = `
    .byte $00 ; |........|
 `;
 
-var nine = `
+const nine = `
    .byte $06 ; |.....XX.|
    .byte $06 ; |.....XX.|
    .byte $06 ; |.....XX.|
@@ -1053,7 +1053,7 @@ var nine = `
    .byte $00 ; |........|
 `;
 
-var Blank = `
+const Blank = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1065,7 +1065,7 @@ var Blank = `
 `;
 
 
-var HSWInitials = `
+const HSWInitials = `
    .byte $07 ; |.....XXX|
    .byte $01 ; |.......X|
    .byte $57 ; |.X.X.XXX|
@@ -1085,9 +1085,9 @@ var HSWInitials = `
    .byte $00 ; |........|
 `;
 
-var ElliottSprites = ``;
+const ElliottSprites = ``;
 
-var Elliott_0 = `
+const Elliott_0 = `
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $18 ; |...XX...|
@@ -1101,7 +1101,7 @@ var Elliott_0 = `
    .byte $84 ; |X....X..|
 `;
 
-var Elliott_1 = `
+const Elliott_1 = `
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $18 ; |...XX...|
@@ -1115,7 +1115,7 @@ var Elliott_1 = `
    .byte $06 ; |.....XX.|
 `;
 
-var Elliott_2 = `
+const Elliott_2 = `
    .byte $00 ; |........|
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
@@ -1129,7 +1129,7 @@ var Elliott_2 = `
    .byte $38 ; |..XXX...|
 `;
 
-var Elliott_3 = `
+const Elliott_3 = `
    .byte $00 ; |........|
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
@@ -1143,7 +1143,7 @@ var Elliott_3 = `
    .byte $00 ; |........|
 `;
 
-var Elliott_4 = `
+const Elliott_4 = `
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $18 ; |...XX...|
@@ -1157,7 +1157,7 @@ var Elliott_4 = `
    .byte $00 ; |........|
 `;
 
-var Elliott_5 = `
+const Elliott_5 = `
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $18 ; |...XX...|
@@ -1175,7 +1175,7 @@ var Elliott_5 = `
 //    .byte LT_BLUE+10,LT_BLUE+10,DK_GREEN_2+14,DK_GREEN_2+14
 
 
-var Elliott_6 = `
+const Elliott_6 = `
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
    .byte $00 ; |........|
@@ -1189,7 +1189,7 @@ var Elliott_6 = `
    .byte $00 ; |........|
 `;
 
-var Elliott_7 = `
+const Elliott_7 = `
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
    .byte $00 ; |........|
@@ -1203,7 +1203,7 @@ var Elliott_7 = `
    .byte $00 ; |........|
 `;
 
-var Elliott_8 = `
+const Elliott_8 = `
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $18 ; |...XX...|
@@ -1217,7 +1217,7 @@ var Elliott_8 = `
    .byte $00 ; |........|
 `;
 
-var Elliott_9 = `
+const Elliott_9 = `
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $18 ; |...XX...|
@@ -1231,7 +1231,7 @@ var Elliott_9 = `
    .byte $00 ; |........|
 `;
 
-var Elliott_10 = `
+const Elliott_10 = `
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
    .byte $00 ; |........|
@@ -1245,7 +1245,7 @@ var Elliott_10 = `
    .byte $00 ; |........|
 `;
 
-var Elliott_11 = `
+const Elliott_11 = `
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
    .byte $00 ; |........|
@@ -1263,9 +1263,9 @@ var Elliott_11 = `
 //    .byte LT_BLUE+10,LT_BLUE+10,DK_GREEN_2+14,DK_GREEN_2+14
 
 
-var FourDiamondPitGraphics = ``;
+const FourDiamondPitGraphics = ``;
 
-var FourDiamondPitPF1Graphics = `
+const FourDiamondPitPF1Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1324,7 +1324,7 @@ var FourDiamondPitPF1Graphics = `
    .byte $00 ; |........|
 `;
 
-var EightPitGraphics = `
+const EightPitGraphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1383,9 +1383,9 @@ var EightPitGraphics = `
    .byte $C0 ; |XX......|
 `;
 
-var ArrowPitGraphics = ``;
+const ArrowPitGraphics = ``;
 
-var ArrowPitPF1Graphics = `
+const ArrowPitPF1Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1436,7 +1436,7 @@ var ArrowPitPF1Graphics = `
    .byte $01 ; |.......X|
 `;
 
-var ArrowPitPF2Graphics = `
+const ArrowPitPF2Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1503,7 +1503,7 @@ var ArrowPitPF2Graphics = `
    .byte $00 ; |........|
 `;
 
-var Telephone = `
+const Telephone = `
    .byte $3C ; |..XXXX..|
    .byte $20 ; |..X.....|
    .byte $3C ; |..XXXX..|
@@ -1518,9 +1518,9 @@ var Telephone = `
 //    .byte <Telephone,<Telephone - 3,<Telephone - 5,<Telephone - 9
 
 
-var YarSprites = ``;
+const YarSprites = ``;
 
-var Yar_0 = `
+const Yar_0 = `
    .byte $24 ; |..X..X..|
    .byte $18 ; |...XX...|
    .byte $24 ; |..X..X..|
@@ -1531,7 +1531,7 @@ var Yar_0 = `
    .byte $3C ; |..XXXX..|
 `;
 
-var Yar_1 = `
+const Yar_1 = `
    .byte $24 ; |..X..X..|
    .byte $99 ; |X..XX..X|
    .byte $A5 ; |X.X..X.X|
@@ -1545,9 +1545,9 @@ var Yar_1 = `
    // BOUNDARY 0
 
 
-var GameIcons = ``;
+const GameIcons = ``;
 
-var BlankIcon = `
+const BlankIcon = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1558,7 +1558,7 @@ var BlankIcon = `
    .byte $00 ; |........|
 `;
 
-var WarpLeftIcon = `
+const WarpLeftIcon = `
    .byte $18 ; |...XX...|
    .byte $30 ; |..XX....|
    .byte $60 ; |.XX.....|
@@ -1569,7 +1569,7 @@ var WarpLeftIcon = `
    .byte $18 ; |...XX...|
 `;
 
-var WarpRightIcon = `
+const WarpRightIcon = `
    .byte $18 ; |...XX...|
    .byte $0C ; |....XX..|
    .byte $06 ; |.....XX.|
@@ -1579,7 +1579,7 @@ var WarpRightIcon = `
    .byte $0C ; |....XX..|
 `;
 
-var WarpUpIcon = `
+const WarpUpIcon = `
    .byte $18 ; |...XX...|
    .byte $18 ; |...XX...|
    .byte $18 ; |...XX...|
@@ -1591,7 +1591,7 @@ var WarpUpIcon = `
    .byte $18 ; |...XX...|
 `;
 
-var WarpDownIcon = `
+const WarpDownIcon = `
    .byte $18 ; |...XX...|
    .byte $3C ; |..XXXX..|
    .byte $7E ; |.XXXXXX.|
@@ -1602,7 +1602,7 @@ var WarpDownIcon = `
    .byte $18 ; |...XX...|
 `;
 
-var QuestionIcon = `
+const QuestionIcon = `
    .byte $38 ; |..XXX...|
    .byte $00 ; |........|
    .byte $38 ; |..XXX...|
@@ -1613,7 +1613,7 @@ var QuestionIcon = `
    .byte $3C ; |..XXXX..|
 `;
 
-var EatCandyIcon_0 = `
+const EatCandyIcon_0 = `
    .byte $00 ; |........|
    .byte $7E ; |.XXXXXX.|
    .byte $C3 ; |XX....XX|
@@ -1624,7 +1624,7 @@ var EatCandyIcon_0 = `
    .byte $3C ; |..XXXX..|
 `;
 
-var WashingtonIcon = `
+const WashingtonIcon = `
    .byte $7F ; |.XXXXXXX|
    .byte $7F ; |.XXXXXXX|
    .byte $2A ; |..X.X.X.|
@@ -1635,7 +1635,7 @@ var WashingtonIcon = `
    .byte $7F ; |.XXXXXXX|
 `;
 
-var CallElliottIcon = `
+const CallElliottIcon = `
    .byte $02 ; |......X.|
    .byte $74 ; |.XXX.X..|
    .byte $C0 ; |XX......|
@@ -1646,7 +1646,7 @@ var CallElliottIcon = `
    .byte $01 ; |.......X|
 `;
 
-var CallShipIcon = `
+const CallShipIcon = `
    .byte $42 ; |.X....X.|
    .byte $24 ; |..X..X..|
    .byte $7E ; |.XXXXXX.|
@@ -1657,7 +1657,7 @@ var CallShipIcon = `
    .byte $24 ; |..X..X..|
 `;
 
-var LandingZoneIcon = `
+const LandingZoneIcon = `
    .byte $00 ; |........|
    .byte $7F ; |.XXXXXXX|
    .byte $49 ; |.X..X..X|
@@ -1668,7 +1668,7 @@ var LandingZoneIcon = `
    .byte $7F ; |.XXXXXXX|
 `;
 
-var LevitateIcon = `
+const LevitateIcon = `
    .byte $FF ; |XXXXXXXX|
    .byte $00 ; |........|
    .byte $18 ; |...XX...|
@@ -1679,7 +1679,7 @@ var LevitateIcon = `
    .byte $18 ; |...XX...|
 `;
 
-var ReviveFlowerIcon = `
+const ReviveFlowerIcon = `
    .byte $00 ; |........|
    .byte $3E ; |..XXXXX.|
    .byte $63 ; |.XX...XX|
@@ -1690,9 +1690,9 @@ var ReviveFlowerIcon = `
    .byte $22 ; |..X...X.|
 `;
 
-var CountdownClockIcons = ``;
+const CountdownClockIcons = ``;
 
-var CountdownClock_0 = `
+const CountdownClock_0 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1703,7 +1703,7 @@ var CountdownClock_0 = `
    .byte $70 ; |.XXX....|
 `;
 
-var CountdownClock_1 = `
+const CountdownClock_1 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1714,7 +1714,7 @@ var CountdownClock_1 = `
    .byte $70 ; |.XXX....|
 `;
 
-var CountdownClock_2 = `
+const CountdownClock_2 = `
    .byte $00 ; |........|
    .byte $80 ; |X.......|
    .byte $C0 ; |XX......|
@@ -1725,7 +1725,7 @@ var CountdownClock_2 = `
    .byte $70 ; |.XXX....|
 `;
 
-var CountdownClock_3 = `
+const CountdownClock_3 = `
    .byte $70 ; |.XXX....|
    .byte $B0 ; |X.XX....|
    .byte $D0 ; |XX.X....|
@@ -1736,7 +1736,7 @@ var CountdownClock_3 = `
    .byte $70 ; |.XXX....|
 `;
 
-var CountdownClock_4 = `   
+const CountdownClock_4 = `   
    .byte $7E ; |.XXXXXX.|
    .byte $BC ; |X.XXXX..|
    .byte $D8 ; |XX.XX...|
@@ -1747,7 +1747,7 @@ var CountdownClock_4 = `
    .byte $70 ; |.XXX....|
 `;
 
-var CountdownClock_5 = `   
+const CountdownClock_5 = `   
    .byte $7E ; |.XXXXXX.|
    .byte $BD ; |X.XXXX.X|
    .byte $DB ; |XX.XX.XX|
@@ -1758,7 +1758,7 @@ var CountdownClock_5 = `
    .byte $70 ; |.XXX....|
 `;
 
-var CountdownClock_6 = `   
+const CountdownClock_6 = `   
    .byte $7E ; |.XXXXXX.|
    .byte $BD ; |X.XXXX.X|
    .byte $DB ; |XX.XX.XX|
@@ -1769,7 +1769,7 @@ var CountdownClock_6 = `
    .byte $70 ; |.XXX....|
 `;
 
-var CountdownClock_7 = `
+const CountdownClock_7 = `
    .byte $7E ; |.XXXXXX.|
    .byte $BD ; |X.XXXX.X|
    .byte $DB ; |XX.XX.XX|
@@ -1780,7 +1780,7 @@ var CountdownClock_7 = `
    .byte $7E ; |.XXXXXX.|
 `;
 
-var EatCandyIcon_1 = `
+const EatCandyIcon_1 = `
    .byte $00 ; |........|
    .byte $3C ; |..XXXX..|
    .byte $7E ; |.XXXXXX.|
@@ -1792,7 +1792,7 @@ var EatCandyIcon_1 = `
 `;
 
 
-var Copyright_0 = `
+const Copyright_0 = `
    .byte $79 ; |.XXXX..X|
    .byte $85 ; |X....X.X|
    .byte $B5 ; |X.XX.X.X|
@@ -1803,7 +1803,7 @@ var Copyright_0 = `
    .byte $00 ; |........|
 `;
 
-var Copyright_1 = `
+const Copyright_1 = `
    .byte $17 ; |...X.XXX|
    .byte $15 ; |...X.X.X|
    .byte $15 ; |...X.X.X|
@@ -1814,7 +1814,7 @@ var Copyright_1 = `
    .byte $00 ; |........|
 `;
 
-var Copyright_2 = `
+const Copyright_2 = `
    .byte $71 ; |.XXX...X|
    .byte $41 ; |.X.....X|
    .byte $41 ; |.X.....X|
@@ -1825,7 +1825,7 @@ var Copyright_2 = `
    .byte $00 ; |........|
 `;
 
-var Copyright_3 = `
+const Copyright_3 = `
    .byte $49 ; |.X..X..X|
    .byte $49 ; |.X..X..X|
    .byte $49 ; |.X..X..X|
@@ -1836,7 +1836,7 @@ var Copyright_3 = `
    .byte $00 ; |........|
 `;
 
-var Copyright_4 = `
+const Copyright_4 = `
    .byte $55 ; |.X.X.X.X|
    .byte $55 ; |.X.X.X.X|
    .byte $55 ; |.X.X.X.X|
@@ -1847,7 +1847,7 @@ var Copyright_4 = `
    .byte $00 ; |........|
 `;
 
-var ArtistInitials = `
+const ArtistInitials = `
    .byte $1E ; |...XXXX.|
    .byte $1B ; |...XX.XX|
    .byte $7B ; |.XXXX.XX|
@@ -1858,9 +1858,9 @@ var ArtistInitials = `
    .byte $18 ; |...XX...|
 `;
 
-var PitGraphics = ``;
+const PitGraphics = ``;
 
-var PitPF1Graphics = `
+const PitPF1Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1922,9 +1922,9 @@ var PitPF1Graphics = `
 //    .byte NTSC_BROWN+15,NTSC_BROWN+15,NTSC_BROWN+15,NTSC_BROWN+15
 
 
-var WashingtonDCGraphics = ``;
+const WashingtonDCGraphics = ``;
 
-var WashingtonPF2Graphics = `
+const WashingtonPF2Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1984,7 +1984,7 @@ var WashingtonPF2Graphics = `
    .byte $F0 ; |XXXX....|
 `;
 
-var WashingtonPF1Graphics = `
+const WashingtonPF1Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -2019,7 +2019,7 @@ var WashingtonPF1Graphics = `
    .byte $00 ; |........|
 `;
 
-var PitPF2Graphics = `
+const PitPF2Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -2078,9 +2078,9 @@ var PitPF2Graphics = `
    .byte $00 ; |........|
 `;
 
-var ScientistSprites = ``;
+const ScientistSprites = ``;
 
-var Scientist_0 = `
+const Scientist_0 = `
    .byte $1A ; |...XX.X.|
    .byte $00 ; |........|
    .byte $1C ; |...XXX..|
@@ -2097,7 +2097,7 @@ var Scientist_0 = `
    .byte $E7 ; |XXX..XXX|
 `;
 
-var Scientist_1 = `
+const Scientist_1 = `
    .byte $1A ; |...XX.X.|
    .byte $00 ; |........|
    .byte $1C ; |...XXX..|
@@ -2114,7 +2114,7 @@ var Scientist_1 = `
    .byte $7C ; |.XXXXX..|
 `;
 
-var Scientist_2 = `
+const Scientist_2 = `
    .byte $1A ; |...XX.X.|
    .byte $00 ; |........|
    .byte $1C ; |...XXX..|
@@ -2131,7 +2131,7 @@ var Scientist_2 = `
    .byte $3C ; |..XXXX..|
 `;
 
-var Scientist_3 = `
+const Scientist_3 = `
    .byte $1A ; |...XX.X.|
    .byte $00 ; |........|
    .byte $1C ; |...XXX..|
@@ -2148,7 +2148,7 @@ var Scientist_3 = `
    .byte $76 ; |.XXX.XX.|
 `;
 
-var Scientist_4 = `
+const Scientist_4 = `
    .byte $1A ; |...XX.X.|
    .byte $00 ; |........|
    .byte $1C ; |...XXX..|
@@ -2165,7 +2165,7 @@ var Scientist_4 = `
    .byte $EE ; |XXX.XXX.|
 `;
 
-var Scientist_5 = `
+const Scientist_5 = `
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
    .byte $1C ; |...XXX..|
@@ -2182,7 +2182,7 @@ var Scientist_5 = `
    .byte $C7 ; |XX...XXX|
 `;
 
-var Scientist_6 = `
+const Scientist_6 = `
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
    .byte $1C ; |...XXX..|
@@ -2199,7 +2199,7 @@ var Scientist_6 = `
    .byte $1C ; |...XXX..|
 `;
 
-var Scientist_7 = `
+const Scientist_7 = `
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
    .byte $1C ; |...XXX..|
@@ -2216,7 +2216,7 @@ var Scientist_7 = `
    .byte $38 ; |..XXX...|
 `;
 
-var Scientist_8 = `
+const Scientist_8 = `
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
    .byte $1C ; |...XXX..|
@@ -2233,7 +2233,7 @@ var Scientist_8 = `
    .byte $70 ; |.XXX....|
 `;
 
-var Scientist_9 = `
+const Scientist_9 = `
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
    .byte $1C ; |...XXX..|
@@ -2258,7 +2258,7 @@ var Scientist_9 = `
 //    .byte WHITE-4,WHITE-4,WHITE-4,BLACK+8,BLACK+8,ORANGE+8,ORANGE+8
 
 
-var H_PhonePiece_0 = `
+const H_PhonePiece_0 = `
    .byte $90 ; |X..X....|
    .byte $64 ; |.XX..X..|
    .byte $3F ; |..XXXXXX|
@@ -2266,7 +2266,7 @@ var H_PhonePiece_0 = `
    .byte $90 ; |X..X....|
 `;
 
-var H_PhonePiece_1 = `
+const H_PhonePiece_1 = `
    .byte $C8 ; |XX..X...|
    .byte $32 ; |..XX..X.|
    .byte $32 ; |..XX..X.|
@@ -2275,7 +2275,7 @@ var H_PhonePiece_1 = `
 `;
 
 
-var S_PhonePiece_0 = `
+const S_PhonePiece_0 = `
    .byte $1F ; |...XXXXX|
    .byte $54 ; |.X.X.X..|
    .byte $54 ; |.X.X.X..|
@@ -2283,7 +2283,7 @@ var S_PhonePiece_0 = `
    .byte $7C ; |.XXXXX..|
 `;
 
-var S_PhonePiece_1 = `
+const S_PhonePiece_1 = `
    .byte $3E ; |..XXXXX.|
    .byte $A8 ; |X.X.X...|
    .byte $2A ; |..X.X.X.|
@@ -2292,7 +2292,7 @@ var S_PhonePiece_1 = `
 `;
 
 
-var W_PhonePiece_0 = `
+const W_PhonePiece_0 = `
    .byte $3C ; |..XXXX..|
    .byte $C0 ; |XX......|
    .byte $AA ; |X.X.X.X.|
@@ -2300,7 +2300,7 @@ var W_PhonePiece_0 = `
    .byte $E0 ; |XXX.....|
 `;
 
-var W_PhonePiece_1 = `
+const W_PhonePiece_1 = `
    .byte $60 ; |.XX.....|
    .byte $FE ; |XXXXXXX.|
    .byte $FE ; |XXXXXXX.|
@@ -2314,7 +2314,7 @@ var W_PhonePiece_1 = `
 //    .byte BROWN+12,BROWN+8,LT_BROWN_2+6,LT_BROWN_2+4,LT_BROWN_2+2
 
 
-var MotherShip = `
+const MotherShip = `
    .byte $18 ; |...XX...|
    .byte $3C ; |..XXXX..|
    .byte $7E ; |.XXXXXX.|
@@ -2351,9 +2351,9 @@ var MotherShip = `
 //    BOUNDARY 0
    
 
-var ETHomePFGraphics = ``;
+const ETHomePFGraphics = ``;
 
-var ETHomePF2Graphics = `
+const ETHomePF2Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -2381,7 +2381,7 @@ var ETHomePF2Graphics = `
    .byte $F0 ; |XXXX....|
 `;
 
-var ETHomePF1Graphics = `
+const ETHomePF1Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -2449,9 +2449,9 @@ var ETHomePF1Graphics = `
    .byte $00 ; |........|
 `;
 
-var FBIAgentSprites = ``;
+const FBIAgentSprites = ``;
 
-var FBIAgent_0 = `
+const FBIAgent_0 = `
    .byte $1C ; |...XXX..|
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
@@ -2468,7 +2468,7 @@ var FBIAgent_0 = `
    .byte $E7 ; |XXX..XXX|
 `;
 
-var FBIAgent_1 = `
+const FBIAgent_1 = `
    .byte $38 ; |..XXX...|
    .byte $7C ; |.XXXXX..|
    .byte $78 ; |.XXXX...|
@@ -2485,7 +2485,7 @@ var FBIAgent_1 = `
    .byte $3E ; |..XXXXX.|
 `;
 
-var FBIAgent_2 = `
+const FBIAgent_2 = `
    .byte $38 ; |..XXX...|
    .byte $7C ; |.XXXXX..|
    .byte $78 ; |.XXXX...|
@@ -2502,7 +2502,7 @@ var FBIAgent_2 = `
    .byte $3C ; |..XXXX..|
 `;
 
-var FBIAgent_3 = `
+const FBIAgent_3 = `
    .byte $1C ; |...XXX..|
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
@@ -2519,7 +2519,7 @@ var FBIAgent_3 = `
    .byte $6E ; |.XX.XXX.|
 `;
 
-var FBIAgent_4 = `
+const FBIAgent_4 = `
    .byte $1C ; |...XXX..|
    .byte $1C ; |...XXX..|
    .byte $1C ; |...XXX..|
@@ -2536,7 +2536,7 @@ var FBIAgent_4 = `
    .byte $E7 ; |XXX..XXX|
 `;
 
-var FBIAgent_5 = `
+const FBIAgent_5 = `
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
@@ -2553,7 +2553,7 @@ var FBIAgent_5 = `
    .byte $3E ; |..XXXXX.|
 `;
 
-var FBIAgent_6 = `
+const FBIAgent_6 = `
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
@@ -2570,7 +2570,7 @@ var FBIAgent_6 = `
    .byte $3C ; |..XXXX..|
 `;
 
-var FBIAgent_7 = `
+const FBIAgent_7 = `
    .byte $1C ; |...XXX..|
    .byte $1C ; |...XXX..|
    .byte $1C ; |...XXX..|
@@ -2598,7 +2598,7 @@ var FBIAgent_7 = `
 //    .byte 28,60,94
 
 
-var IndySprite = `
+const IndySprite = `
    .byte $18 ; |...XX...|
    .byte $3C ; |..XXXX..|
    .byte $00 ; |........|

@@ -3,13 +3,13 @@
   http://atariage.com/forums/topic/33233-sorted-table-of-contents/
 */
 
-import utils from "./utils";
+import { hex2bin } from "./utils";
 
 const pixelW = 320 / 160;
 const pixelH = Math.floor(210 / 192);
 
-function extractToBinary(match: string, p1: string): string {
-  return utils.hex2bin(p1);
+function extractToBinary(_: string, p1: string): string {
+  return hex2bin(p1);
 }
 
 /**
@@ -36,7 +36,7 @@ function extractToBinary(match: string, p1: string): string {
  * ]
  */
 
-export default class Sprite {
+class Sprite {
   byteArray: string[][];
   groupByteArray: string[][][];
 
@@ -44,8 +44,8 @@ export default class Sprite {
     this.byteArray = [];
     this.groupByteArray = [];
   }
-  
-  load(sprite: string, flipped: boolean = false) : string[][] {
+
+  load(sprite: string, flipped: boolean = false): string[][] {
 
     /**
      * Extract all of the hex numbers (i.e. $FE) from the sprite string
@@ -71,7 +71,7 @@ export default class Sprite {
 
     if (flipped) {
       matches.reverse();
-    } 
+    }
 
     this.byteArray = matches.map((bit: string): string[] => {
       return bit.split("");
@@ -97,7 +97,7 @@ export default class Sprite {
     ctx.fillStyle = color;
     let x = startX;
     let y = startY;
-    
+
     for (let byte of this.byteArray) {
       for (let bit of byte) {
         if (bit === "1") {
@@ -116,8 +116,11 @@ export default class Sprite {
     for (let byteArray of this.groupByteArray) {
       this.byteArray = byteArray
       this.draw(ctx, x, startY, color);
-      x += (pixelW*8);
+      x += (pixelW * 8);
     }
   }
 
 }
+
+
+export default Sprite;
