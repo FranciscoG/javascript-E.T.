@@ -1,22 +1,19 @@
 {
   "compilerOptions": {
-      "types" : [],
-      "lib": ["esnext", "dom"],
-      "removeComments": true,
-      "strict": true,
-      "noImplicitAny": true,
-      "noUnusedLocals": true,
-      "noImplicitReturns": true,
-      "strictNullChecks": true,
-      "sourceMap": true
+    "lib": ["ESNext", "DOM"],
+    "removeComments": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "module": "esnext",
+    "target": "ES2020"
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-      "node_modules",
-      "playground",
-      "dist",
-      "assets"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "playground", "assets"],
+  "buildOptions": {
+    "outDir": "dist"
+  }
 }

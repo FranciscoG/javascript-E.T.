@@ -106,7 +106,7 @@ interface Notes {
   [key: string]: number
 }
 
-const notes: Notes = {
+export const notes: Notes = {
   'C0': 16.35,
   'C#0': 17.32,
   'Db0': 17.32,
@@ -248,7 +248,7 @@ const notes: Notes = {
 
 const ctx = new AudioContext();
 
-function playNote(pitch: string, length: number, wave: OscillatorType, vol: number) {
+export function playNote(pitch: string, length: number, wave: OscillatorType, vol: number) {
   const frq: number = notes[pitch];
   const o: OscillatorNode = ctx.createOscillator();
   o.type = wave;
@@ -283,7 +283,7 @@ const sequenceOptsDefault: SequenceOptions = {
   vol: 0.1
 };
 
-function playSequence(sequence: SequenceData[], opts: SequenceOptions = {}): void {
+export function playSequence(sequence: SequenceData[], opts: SequenceOptions = {}): void {
   const options = Object.assign({}, sequenceOptsDefault, opts);
 
   const arrayLength = sequence.length;
@@ -308,9 +308,3 @@ function playSequence(sequence: SequenceData[], opts: SequenceOptions = {}): voi
     g.gain.value = options.vol!;
   }
 }
-
-export default {
-  playSequence,
-  playNote,
-  notes
-};

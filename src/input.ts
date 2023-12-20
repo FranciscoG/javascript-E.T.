@@ -15,7 +15,7 @@
 
 type AxisState = 0b00|0b10|0b01;
 
-interface InputStates {
+export interface InputStates {
   vert: AxisState,
   horz: AxisState,
   bttn: boolean
@@ -138,7 +138,7 @@ function handleKeyUp(key: string): boolean {
   return handled;
 }
 
-function setup(element?: HTMLElement): void {
+export function setup(element?: HTMLElement): void {
   (element || document).addEventListener("keydown", function onDown(e: Event) {
     if (handleKeyDown((e as KeyboardEvent).code)) {
       e.preventDefault();
@@ -152,11 +152,4 @@ function setup(element?: HTMLElement): void {
   }, false);
 }
 
-const read = (): InputStates => inputState;
-
-export default {
-  setup,
-  read
-}
-
-export { InputStates };
+export const read = (): InputStates => inputState;

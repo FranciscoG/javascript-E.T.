@@ -7,7 +7,7 @@ function frame(timestamp: number) {
   requestAnimationFrame(frame);
 }
 
-export default function registerLoop(cb: OnLoop) {
+export function registerLoop(cb: OnLoop) {
   loopCb = cb;
   return function start() {
     frame(0);

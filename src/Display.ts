@@ -29,30 +29,23 @@ interface Context2D extends CanvasRenderingContext2D {
   mozImageSmoothingEnabled: boolean;
 }
 
-interface CanvasAndContext {
-  canvas: HTMLCanvasElement,
-  ctx: Context2D,
-  scale: (x: number, y: number) => void
-}
+export class Display {
+  canvas: HTMLCanvasElement;
+  ctx: Context2D;
+  constructor(w: number = 320, h: number = 210) {
+    this.canvas = document.createElement("canvas");
+    this.canvas.width = w;
+    this.canvas.height = h;
+    this.ctx = <Context2D>this.canvas.getContext("2d");
+  }
 
-function CreateDisplay(w: number = 320, h: number = 210): CanvasAndContext {
-  const canvas: HTMLCanvasElement = document.createElement("canvas");
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = <Context2D>canvas.getContext("2d");
-
-  return {
-    canvas,
-    ctx,
-    scale: function (x: number, y: number): void {
-      canvas.width = canvas.width * x;
-      canvas.height = canvas.height * y;
-      ctx.scale(x * 2, y * 2); // only scales what's placed on the canvas
-      ctx.webkitImageSmoothingEnabled = false;
-      ctx.mozImageSmoothingEnabled = false;
-      ctx.imageSmoothingEnabled = false;
-    }
+  scale(x: number, y: number) {
+    this.canvas.width = this.canvas.width * x;
+    this.canvas.height = this.canvas.height * y;
+    this.ctx.scale(x * 2, y * 2); // only scales what's placed on the canvas
+    this.ctx.webkitImageSmoothingEnabled = false;
+    this.ctx.mozImageSmoothingEnabled = false;
+    this.ctx.imageSmoothingEnabled = false;
   }
 }
 
-export default CreateDisplay

@@ -1,9 +1,9 @@
+import { hex2bin } from "./utils";
+
 /*
   A very helpful tutorial on how the 2600 works
   http://atariage.com/forums/topic/33233-sorted-table-of-contents/
 */
-
-import { hex2bin } from "./utils";
 
 const pixelW = 320 / 160;
 const pixelH = Math.floor(210 / 192);
@@ -36,7 +36,7 @@ function extractToBinary(_: string, p1: string): string {
  * ]
  */
 
-class Sprite {
+export class Sprite {
   byteArray: string[][];
   groupByteArray: string[][][];
 
@@ -121,6 +121,3 @@ class Sprite {
   }
 
 }
-
-
-export default Sprite;
