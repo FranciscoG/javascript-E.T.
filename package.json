@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsc --watch"
+    "start": "tsc --watch",
+    "demo": "cp -r dist demo && cp -r assets demo && serve demo"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/FranciscoG/javascript-E.T.#readme",
   "devDependencies": {
+    "serve": "^14.2.1",
     "typescript": "^5.3.3"
   }
 }

@@ -1,10 +1,8 @@
-javascript-E.T.
-===============
+# Javascript-E.T.
 
 An HTML5 version of the classic Atari game E.T. 
 
-Game Engine
-===============
+## Game Engine
 
 I created a very simple Javacscript Game Engine with the main purpuse of being able to reuse "assets" from a 2600 game source code.
 
@@ -13,10 +11,7 @@ I created a very simple Javacscript Game Engine with the main purpuse of being a
 - collision detection
 - draw sprites from hex values
 
-
-
-Helpful resources
-=================
+# Helpful resources
 
 [A good exlpanation of the E.T world map](http://www.randomterrain.com/atari-2600-memories-et-map.html)
 
