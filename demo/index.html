@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Javascript E.T.</title>
+    <link href="css/normalize.css" rel="stylesheet" type="text/css" />
+    <link href="css/styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>JS E.T.</h1>
+    <a href="draw/index.html">Sprite Drawer Test Page</a>
+    <br />
+    <a href="audio/index.html">Audio Test Page</a>
+    <div class="container clearfix">
+      <div class="left_side">
+        <div id="worldMap">
+          <div class="stage" id="stage1">1</div>
+          <div class="wells clearfix">
+            <div class="stage" id="stage2">2</div>
+            <div class="stage" id="stage3">3</div>
+            <div class="stage" id="stage4">4</div>
+            <div class="stage" id="stage5">5</div>
+          </div>
+          <div class="stage" id="stage6">6</div>
+          <div class="well stage">Well</div>
+          <p>Think of the world map as a cube that has been unfolded.</p>
+        </div>
+      </div>
+      <div class="game_area">
+        <div id="game"></div>
+      </div>
+    </div>
+
+    <script src="./assets/sprites.js"></script>
+    <script type="module" src="game.js"></script>
+  </body>
+</html>

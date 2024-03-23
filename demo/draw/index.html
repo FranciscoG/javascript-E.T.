@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Sprite Test</title>
+    <style type="text/css">
+      .br {
+        height: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="cv" width="320" height="210"></canvas>
+    <div class="br"></div>
+    <canvas id="cv2" width="320" height="210"></canvas>
+
+    <script type="module">
+      import { Display } from "../dist/vcs.js";
+      /*****************************************
+       * setup canvases
+       */
+
+      var cv = document.getElementById("cv");
+      var ctx = cv.getContext("2d");
+      ctx.fillStyle = "#000";
+
+      var scale = 2;
+
+      // cv.width = cv.width * scale;
+      // cv.height = cv.height * scale;
+      ctx.scale(scale * 2, scale * 2); // only scales what's placed on the canvas
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.imageSmoothingEnabled = false;
+
+      /************************************************
+       * create images off screen using drawer.js lib
+       */
+
+      var color = "#fce08c";
+
+      var ET_walkA = [
+        vcs.draw(ETWalkSprite_A0, color),
+        vcs.draw(ETWalkSprite_A1, color),
+        vcs.draw(ETWalkSprite_A2, color),
+      ];
+
+      var ET_walkB = [
+        vcs.draw(ETWalkSprite_B0, color),
+        vcs.draw(ETWalkSprite_B1, color),
+        vcs.draw(ETWalkSprite_B2, color),
+      ];
+
+      /**************************************************
+       * Walking Player animation sprite
+       */
+
+      // this loops through each walk image and puts it on the screen
+      var _i = 0;
+      function doWalk() {
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        ctx.drawImage(ET_walkA[_i], 20, 20);
+        ctx.drawImage(ET_walkB[_i], 40, 20);
+        _i++;
+        if (_i > 2) {
+          _i = 0;
+        }
+      }
+
+      // using requestAnimationFrame to make it walk
+      var framesToSkip = 5,
+        counter = 0;
+
+      function loop() {
+        if (counter < framesToSkip) {
+          counter++;
+          requestAnimationFrame(loop);
+          return;
+        }
+        doWalk();
+        counter = 0;
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+
+      /**************************************************
+       * Title Screen ET
+       */
+
+      var ET_Head = [
+        TitleETGraphics_1,
+        TitleETGraphics_2,
+        TitleETGraphics_3,
+        TitleETGraphics_4,
+        TitleETGraphics_5,
+        TitleETGraphics_0,
+      ];
+
+      var cv2 = document.getElementById("cv2");
+      var ctx2 = cv2.getContext("2d");
+      ctx2.fillStyle = "#000";
+
+      cv2.width = cv2.width * scale;
+      cv2.height = cv2.height * scale;
+      ctx2.scale(scale, scale); // only scales what's placed on the canvas
+      ctx2.webkitImageSmoothingEnabled = false;
+      ctx2.mozImageSmoothingEnabled = false;
+      ctx2.imageSmoothingEnabled = false;
+
+      const titleE = new vcs.Sprite();
+      titleE.load(ETTitle_E, true);
+
+      const titleT = new vcs.Sprite();
+      titleT.load(ETTitle_T, true);
+
+      const headET = new vcs.Sprite();
+      headET.loadGroup(ET_Head, true);
+
+      function showTitle() {
+        ctx2.fillRect(0, 0, cv2.width, cv2.height);
+        titleE.draw(ctx2, 45, 0, color);
+        titleT.draw(ctx2, 75, 0, color);
+        headET.drawGroup(ctx2, 0, 30, color);
+      }
+
+      showTitle();
+    </script>
+  </body>
+</html>

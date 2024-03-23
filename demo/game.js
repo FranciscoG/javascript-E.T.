@@ -1,12 +1,13 @@
-import vcs from "../dist/vcs.js";
+import vcs from "./dist/vcs.js";
 
 ///////////////////////////////////////////////////////////////////////////////
 // Setup canvas
 
-const { canvas, ctx, scale } = vcs.display();
+const display = new vcs.Display();
+const { canvas, ctx } = display;
 const { width, height } = canvas;
 const spriteScale = 2;
-scale(spriteScale, spriteScale);
+display.scale(spriteScale, spriteScale);
 canvas.id = "canvas";
 document.getElementById("game").appendChild(canvas);
 
@@ -133,16 +134,22 @@ function showTitle() {
 /****************************************
  * ET Character animation
  */
+
 var ET_walkA = [
-  vcs.draw(ETWalkSprite_A0, color),
-  vcs.draw(ETWalkSprite_A1, color),
-  vcs.draw(ETWalkSprite_A2, color)
+  ETWalkSprite_A0,
+  ETWalkSprite_A1,
+  ETWalkSprite_A2
 ];
+const etWalkA = new vcs.Sprite();
+etWalkA.loadGroup(ET_walkA, true);
+
 var ET_walkB = [
-  vcs.draw(ETWalkSprite_B0, color),
-  vcs.draw(ETWalkSprite_B1, color),
-  vcs.draw(ETWalkSprite_B2, color)
+  ETWalkSprite_B0,
+  ETWalkSprite_B1,
+  ETWalkSprite_B2
 ];
+const etWalkB = new vcs.Sprite();
+etWalkB.loadGroup(ET_walkB, true);
 
 // this loops through each walk image and puts it on the screen
 let _i = 0;
@@ -152,10 +159,10 @@ function walkAnim() {
   if (currentX === DIRS.RIGHT) {
     ctx.save();
     ctx.scale(-1, 1);
-    ctx.drawImage(ET_walkA[_i], playerX * -1, playerY, -8, 8);
+    etWalkA.drawGroup(ctx, playerX * -1, playerY, color);
     ctx.restore();
   } else {
-    ctx.drawImage(ET_walkA[_i], playerX, playerY);
+    etWalkA.drawGroup(ctx, playerX, playerY, color);
   }
 
   _i++;
@@ -168,10 +175,10 @@ function stand() {
   if (currentX === DIRS.RIGHT) {
     ctx.save();
     ctx.scale(-1, 1);
-    ctx.drawImage(ET_walkA[0], playerX * -1, playerY, -8, 8);
+    etWalkA.draw(ctx, playerX * -1, playerY, color);
     ctx.restore();
   } else {
-    ctx.drawImage(ET_walkA[0], playerX, playerY);
+    etWalkA.draw(ctx, playerX, playerY, color);
   }
 }
 
@@ -213,7 +220,7 @@ function move(inputState) {
 }
 
 /* global vcs */
-const start = vcs.loop(function(ts) {
+const start = vcs.loop.registerLoop(function(ts) {
   if (counter < framesToSkip) {
     counter++;
     return;
