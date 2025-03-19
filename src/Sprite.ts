@@ -1,16 +1,13 @@
-import { hex2bin } from "./utils";
+import { hex2bin } from "./utils.js";
 
-/*
-  A very helpful tutorial on how the 2600 works
-  http://atariage.com/forums/topic/33233-sorted-table-of-contents/
-*/
+/**
+ * A very helpful tutorial on how the 2600 works
+ * http://atariage.com/forums/topic/33233-sorted-table-of-contents/
+ * 
+ * Sprites were drawn using binary. Each byte represented a row of pixels.
+ */
 
-const pixelW = 320 / 160;
-const pixelH = Math.floor(210 / 192);
 
-function extractToBinary(_: string, p1: string): string {
-  return hex2bin(p1);
-}
 
 /**
  * ET example 
@@ -35,6 +32,13 @@ function extractToBinary(_: string, p1: string): string {
  *  ["1","0","1","1", ...] 
  * ]
  */
+
+const pixelW = 320 / 160;
+const pixelH = Math.floor(210 / 192);
+
+function extractToBinary(_: string, p1: string): string {
+  return hex2bin(p1);
+}
 
 export class Sprite {
   byteArray: string[][];

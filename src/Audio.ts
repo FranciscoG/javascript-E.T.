@@ -246,24 +246,6 @@ export const notes: Notes = {
   'C8': 4186.01
 };
 
-const ctx = new AudioContext();
-
-export function playNote(pitch: string, length: number, wave: OscillatorType, vol: number) {
-  const frq: number = notes[pitch];
-  const o: OscillatorNode = ctx.createOscillator();
-  o.type = wave;
-  const g: GainNode = ctx.createGain();
-  o.connect(g);
-  g.connect(ctx.destination);
-  g.gain.value = (typeof vol === "undefined" || vol === null) ? 0.1 : vol;
-
-  if (frq) {
-    o.frequency.value = frq;
-    o.start(0);
-    o.stop(length);
-  }
-}
-
 //playNote("A3", 1, "square", 0.3);
 
 interface SequenceOptions {
@@ -283,28 +265,52 @@ const sequenceOptsDefault: SequenceOptions = {
   vol: 0.1
 };
 
-export function playSequence(sequence: SequenceData[], opts: SequenceOptions = {}): void {
-  const options = Object.assign({}, sequenceOptsDefault, opts);
+export class Audio {
+  ctx: AudioContext
+  
+  constructor() {
+    this.ctx = new AudioContext();
+  }
 
-  const arrayLength = sequence.length;
-  let o: OscillatorNode;
-  let t:number = ctx.currentTime;
-  let playlength: number = 0;
-
-  for (let i:number = 0; i < arrayLength; i++) {
-    if (!(o = ctx.createOscillator())) {
-      throw new Error(`AudioContext createOscillator not supported or failed`);
+  playSequence(sequence: SequenceData[], opts: SequenceOptions = {}): void {
+    const options = Object.assign({}, sequenceOptsDefault, opts);
+  
+    const arrayLength = sequence.length;
+    let o: OscillatorNode;
+    let t:number = this.ctx.currentTime;
+    let playlength: number = 0;
+  
+    for (let i:number = 0; i < arrayLength; i++) {
+      if (!(o = this.ctx.createOscillator())) {
+        throw new Error(`AudioContext createOscillator not supported or failed`);
+      }
+      // 1 second / number of beats per second * number of beats (length of a note)
+      playlength = 1 / (options.bpm! / 60) * sequence[i].notelength;
+      o.type = options.wave!;
+      o.frequency.value = sequence[i].frq;
+      o.start(t);
+      o.stop(t + playlength);
+      t += playlength;
+      const g = this.ctx.createGain();
+      o.connect(g);
+      g.connect(this.ctx.destination);
+      g.gain.value = options.vol!;
     }
-    // 1 second / number of beats per second * number of beats (length of a note)
-    playlength = 1 / (options.bpm! / 60) * sequence[i].notelength;
-    o.type = options.wave!;
-    o.frequency.value = sequence[i].frq;
-    o.start(t);
-    o.stop(t + playlength);
-    t += playlength;
-    const g = ctx.createGain();
+  }
+
+  playNote(pitch: string, length: number, wave: OscillatorType, vol: number) {
+    const frq: number = notes[pitch];
+    const o: OscillatorNode = this.ctx.createOscillator();
+    o.type = wave;
+    const g: GainNode = this.ctx.createGain();
     o.connect(g);
-    g.connect(ctx.destination);
-    g.gain.value = options.vol!;
+    g.connect(this.ctx.destination);
+    g.gain.value = (typeof vol === "undefined" || vol === null) ? 0.1 : vol;
+  
+    if (frq) {
+      o.frequency.value = frq;
+      o.start(0);
+      o.stop(length);
+    }
   }
 }

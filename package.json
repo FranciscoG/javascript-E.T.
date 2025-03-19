@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc --watch",
-    "demo": "cp -r dist demo && cp -r assets demo && serve demo"
+    "demo": "npm run build && rm -rf demo/dist && rm -rf demo/assets && cp -r dist demo && cp -r assets demo && serve demo"
   },
   "repository": {
     "type": "git",

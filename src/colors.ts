@@ -2,7 +2,7 @@
 // https://github.com/ppeccin/javatari.js/blob/master/src/main/atari/tia/TiaPalettes.js
 // for the purposes of this project we're just going to need the NTSC palette
 
-const ntscRGB = [
+let ntscRGB: number[] | undefined = [
     0x000000,    // 00
     0x404040,    // 02
     0x6c6c6c,    // 04
@@ -133,10 +133,13 @@ const ntscRGB = [
     0x8ce0fc     // FE
 ];
 
-var ntscPalette = new Uint32Array(256);
+const ntscPalette = new Uint32Array(256);
 for (let i = 0, len = ntscRGB.length; i < len; i++) {
     // Adds 100% alpha for ARGB use
     ntscPalette[i * 2] = ntscPalette[i * 2 + 1] = ntscRGB[i] + 0xff000000;
 }
+
+// Free memory
+ntscRGB = undefined;
 
 export default ntscPalette;

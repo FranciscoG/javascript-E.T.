@@ -1,7 +1,8 @@
-// import sound from "./sound";
-export { Sprite } from "./Sprite";
-export * as Sound from "./sound";
-export * as loop from "./game-loop";
-export { Display } from "./Display";
-export * as Input from "./input";
+// these are Classes
+export { Sprite } from "./Sprite.js";
+export { Display } from "./Display.js";
 
+// there are functions
+export { Audio  } from "./Audio.js";
+export * as loop from "./game-loop.js";
+export { InputHandler } from "./InputHandler.js";

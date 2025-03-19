@@ -1,4 +1,4 @@
-import vcs from "./dist/vcs.js";
+import * as vcs from "./dist/vcs.js";
 
 ///////////////////////////////////////////////////////////////////////////////
 // Setup canvas
@@ -14,7 +14,7 @@ document.getElementById("game").appendChild(canvas);
 ///////////////////////////////////////////////////////////////////////////////
 // constants
 
-const color = "#fce08c"
+const color = "#fce08c";
 
 const DIRS = {
   UP: 0,
@@ -22,7 +22,7 @@ const DIRS = {
   LEFT: 2,
   RIGHT: 3,
   OPPOSITE: [1, 0, 3, 2],
-  STOPPED: 5
+  STOPPED: 5,
 };
 
 const walkspeed = 3;
@@ -38,7 +38,7 @@ const worldMap = {
     up: 2,
     down: 4,
     left: 3,
-    right: 7 //into top center well from the log/frogger stage
+    right: 7, //into top center well from the log/frogger stage
   },
   stage2: {
     name: "tall twins",
@@ -46,7 +46,7 @@ const worldMap = {
     up: 1,
     down: 6,
     left: 5,
-    right: 3
+    right: 3,
   },
   stage3: {
     name: "4 diamonds",
@@ -54,7 +54,7 @@ const worldMap = {
     up: 1,
     down: 6,
     left: 2,
-    right: 4
+    right: 4,
   },
   stage4: {
     name: "arrows",
@@ -62,7 +62,7 @@ const worldMap = {
     up: 1,
     down: 6,
     left: 3,
-    right: 5
+    right: 5,
   },
   stage5: {
     name: "frogger", // log screen
@@ -70,7 +70,7 @@ const worldMap = {
     up: 1,
     down: 6,
     left: 4,
-    right: 2
+    right: 2,
   },
   stage6: {
     name: "D.C.",
@@ -78,13 +78,13 @@ const worldMap = {
     up: 2,
     down: 4,
     left: 7, // Leaving from the left side always lands E.T. in the bottom center well on the Log Screen.
-    right: 3
+    right: 3,
   },
   stage7: {
     nname: "Well",
     bgcolor: "red",
-    up: 5
-  }
+    up: 5,
+  },
 };
 
 // x,y positions of the sides
@@ -92,7 +92,7 @@ const sides = {
   T: ny - 1, //actually just entering from the bottom means you exited the top
   R: 0,
   B: 0,
-  L: nx - 1
+  L: nx - 1,
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ var ET_Head = [
   TitleETGraphics_3,
   TitleETGraphics_4,
   TitleETGraphics_5,
-  TitleETGraphics_0
+  TitleETGraphics_0,
 ];
 
 const titleE = new vcs.Sprite();
@@ -135,19 +135,11 @@ function showTitle() {
  * ET Character animation
  */
 
-var ET_walkA = [
-  ETWalkSprite_A0,
-  ETWalkSprite_A1,
-  ETWalkSprite_A2
-];
+var ET_walkA = [ETWalkSprite_A0, ETWalkSprite_A1, ETWalkSprite_A2];
 const etWalkA = new vcs.Sprite();
 etWalkA.loadGroup(ET_walkA, true);
 
-var ET_walkB = [
-  ETWalkSprite_B0,
-  ETWalkSprite_B1,
-  ETWalkSprite_B2
-];
+var ET_walkB = [ETWalkSprite_B0, ETWalkSprite_B1, ETWalkSprite_B2];
 const etWalkB = new vcs.Sprite();
 etWalkB.loadGroup(ET_walkB, true);
 
@@ -181,7 +173,6 @@ function stand() {
     etWalkA.draw(ctx, playerX, playerY, color);
   }
 }
-
 
 function move(inputState) {
   let walking = false;
@@ -220,7 +211,7 @@ function move(inputState) {
 }
 
 /* global vcs */
-const start = vcs.loop.registerLoop(function(ts) {
+const start = vcs.loop.registerLoop(function (ts) {
   if (counter < framesToSkip) {
     counter++;
     return;
@@ -231,4 +222,7 @@ const start = vcs.loop.registerLoop(function(ts) {
 });
 
 vcs.input.setup();
-start();
+
+document.getElementById("startGame").addEventListener("click", function () {
+  start();
+});

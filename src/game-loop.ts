@@ -1,15 +1,28 @@
 type OnLoop = (ts: number) => void
 
-let loopCb: OnLoop = () => {};
+/*
+first step, load assets
+second step, create scene
+third step, start game loop
+*/
 
-function frame(timestamp: number) {
-  loopCb(timestamp);
-  requestAnimationFrame(frame);
-}
+export class Game {
+  perFrameCallback: OnLoop = () => {};
 
-export function registerLoop(cb: OnLoop) {
-  loopCb = cb;
-  return function start() {
-    frame(0);
+  constructor() {
+    this.frame = this.frame.bind(this);
   }
-};
+
+  perFrame(cb: OnLoop) { 
+    this.perFrameCallback = cb;
+  }
+
+  start() {
+    requestAnimationFrame(this.frame);
+  }
+
+  frame(timestamp: number) {
+    this.perFrameCallback(timestamp);
+    requestAnimationFrame(this.frame);
+  }
+}
