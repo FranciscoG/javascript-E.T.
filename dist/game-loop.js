@@ -1,12 +1,16 @@
-let loopCb = () => { };
-function frame(timestamp) {
-    loopCb(timestamp);
-    requestAnimationFrame(frame);
+export class Game {
+    constructor() {
+        this.perFrameCallback = () => { };
+        this.frame = this.frame.bind(this);
+    }
+    perFrame(cb) {
+        this.perFrameCallback = cb;
+    }
+    start() {
+        requestAnimationFrame(this.frame);
+    }
+    frame(timestamp) {
+        this.perFrameCallback(timestamp);
+        requestAnimationFrame(this.frame);
+    }
 }
-export function registerLoop(cb) {
-    loopCb = cb;
-    return function start() {
-        frame(0);
-    };
-}
-;

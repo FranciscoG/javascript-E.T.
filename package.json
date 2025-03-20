@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc --watch",
+    "dev": "serve .",
     "demo": "npm run build && rm -rf demo/dist && rm -rf demo/assets && cp -r dist demo && cp -r assets demo && serve demo"
   },
   "repository": {
@@ -19,7 +20,7 @@
   },
   "homepage": "https://github.com/FranciscoG/javascript-E.T.#readme",
   "devDependencies": {
-    "serve": "^14.2.1",
-    "typescript": "^5.3.3"
+    "serve": "^14.2.4",
+    "typescript": "^5.8.2"
   }
 }

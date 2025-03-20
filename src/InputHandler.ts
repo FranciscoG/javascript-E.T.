@@ -69,14 +69,14 @@ export class InputHandler {
   }
 
   constructor(element: HTMLElement = document.body) {
-    element.addEventListener("keydown", (e: Event) => {
-      if (this.handleKeyDown((e as KeyboardEvent).code)) {
+    element.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (this.handleKeyDown(e.code)) {
         e.preventDefault();
       }
     }, false);
 
-    element.addEventListener("keyup", (e: Event) => {
-      if (this.handleKeyUp((e as KeyboardEvent).code)) {
+    element.addEventListener("keyup", (e: KeyboardEvent) => {
+      if (this.handleKeyUp(e.code)) {
         e.preventDefault();
       }
     }, false);
