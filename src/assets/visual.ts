@@ -1,24 +1,24 @@
 // NTSC color constants
-const ET_COLORS = {
+export const ET_COLORS: { [key: string]: string } = {
   BLACK: "00",
   WHITE: "0E",
   LT_RED: "20",
   RED: "30",
   ORANGE: "40",
-  ORANGE_2: this.ORANGE,
-  RED_2: this.ORANGE,
+  ORANGE_2: "40",
+  RED_2: "40",
   DK_PINK: "50",
   DK_BLUE: "70",
   BLUE: "80",
   LT_BLUE: "90",
   GREEN: "C0",
-  GREEN_2: this.GREEN,
+  GREEN_2: "C0",
   DK_GREEN: "D0",
-  DK_GREEN_2: this.DK_GREEN,
+  DK_GREEN_2: "D0",
   LT_BROWN: "E0",
-  LT_BROWN_2: this.LT_BROWN,
+  LT_BROWN_2: "E0",
   BROWN: "F0",
-  NTSC_BROWN: this.BROWN
+  NTSC_BROWN: "F0",
 };
 
 /*
@@ -50,10 +50,9 @@ replace:
 
  */
 
+export const TitleETGraphics = ``;
 
-const TitleETGraphics = ``;
-
-const TitleETGraphics_0 = `
+export const TitleETGraphics_0 = `
   .byte $D0 ; |XX.X....|
   .byte $00 ; |........|
   .byte $D0 ; |XX.X....|
@@ -96,7 +95,7 @@ const TitleETGraphics_0 = `
   .byte $00 ; |........|
 `;
 
-const TitleETGraphics_1 = `
+export const TitleETGraphics_1 = `
   .byte $00 ; |........|
   .byte $00 ; |........|
   .byte $00 ; |........|
@@ -139,7 +138,7 @@ const TitleETGraphics_1 = `
   .byte $00 ; |........|
 `;
 
-const TitleETGraphics_2 = `
+export const TitleETGraphics_2 = `
   .byte $00 ; |........|
   .byte $00 ; |........|
   .byte $00 ; |........|
@@ -182,7 +181,7 @@ const TitleETGraphics_2 = `
   .byte $7B ; |.XXXX.XX|
 `;
 
-const TitleETGraphics_3 = `
+export const TitleETGraphics_3 = `
   .byte $00 ; |........|
   .byte $00 ; |........|
   .byte $7F ; |.XXXXXXX|
@@ -225,7 +224,7 @@ const TitleETGraphics_3 = `
   .byte $00 ; |........|
 `;
 
-const TitleETGraphics_4 = `
+export const TitleETGraphics_4 = `
   .byte $01 ; |.......X|
   .byte $00 ; |........|
   .byte $81 ; |X......X|
@@ -268,7 +267,7 @@ const TitleETGraphics_4 = `
   .byte $2A ; |..X.X.X.|
 `;
 
-const TitleETGraphics_5 = `
+export const TitleETGraphics_5 = `
   .byte $FF ; |XXXXXXXX|
   .byte $15 ; |...X.X.X|
   .byte $FF ; |XXXXXXXX|
@@ -313,7 +312,7 @@ const TitleETGraphics_5 = `
 
 // NextRoundScoreMSB
 //   .byte $00,$10,$22,$34,$45,$63,$78,$99
-  
+
 // NextRoundEnergyValues
 //   .byte $99,$92,$84,$76,$68,$59,$51,$42
 
@@ -321,10 +320,9 @@ const TitleETGraphics_5 = `
 //   .byte WHITE,DK_GREEN+14,DK_GREEN+12,DK_GREEN+10
 //   .byte DK_GREEN+10,DK_GREEN+10,BLACK
 
+export const WideDiamondPitGraphics = ``;
 
-const WideDiamondPitGraphics = ``;
-
-const WideDiamondPitPF1Graphics = `
+export const WideDiamondPitPF1Graphics = `
   .byte $00 ; |........|
   .byte $00 ; |........|
   .byte $00 ; |........|
@@ -332,7 +330,7 @@ const WideDiamondPitPF1Graphics = `
   .byte $00 ; |........|
 `;
 
-const KernelJumpTableIndex = `
+export const KernelJumpTableIndex = `
   .byte $00 ; |........|
   .byte $00 ; |........|
   .byte $00 ; |........|
@@ -381,7 +379,7 @@ const KernelJumpTableIndex = `
   .byte $02 ; |......X.|
 `;
 
-const WideDiamondPitPF2Graphics = `
+export const WideDiamondPitPF2Graphics = `
   .byte $00 ; |........|
   .byte $00 ; |........|
   .byte $00 ; |........|
@@ -448,9 +446,9 @@ const WideDiamondPitPF2Graphics = `
   .byte $00 ; |........|
 `;
 
-const ForestGraphics = ``;
+export const ForestGraphics = ``;
 
-const ForestPF1Graphics = `
+export const ForestPF1Graphics = `
   .byte $AA ; |X.X.X.X.|
   .byte $55 ; |.X.X.X.X|
   .byte $AB ; |X.X.X.XX|
@@ -517,7 +515,7 @@ const ForestPF1Graphics = `
   .byte $D5 ; |XX.X.X.X|
 `;
 
-const ForestPF2Graphics = `
+export const ForestPF2Graphics = `
   .byte $55 ; |.X.X.X.X|
   .byte $AB ; |X.X.X.XX|
   .byte $57 ; |.X.X.XXX|
@@ -590,10 +588,10 @@ const ForestPF2Graphics = `
 
 // PsuedoRandomValueIncTable
 //   .byte 115,13,91,213
-  
+
 //   BOUNDARY 0
 
-const ETSprites = `
+export const ETSprites = `
   .byte $FE ; |XXXXXXX.|
   .byte $FF ; |XXXXXXXX|
   .byte $C3 ; |XX....XX|
@@ -604,9 +602,10 @@ const ETSprites = `
   .byte $E7 ; |XXX..XXX|
   .byte $00 ; |........|
 `;
-const ETWalkSprite_A0 = ETSprites;
 
-const ETExtensionSprites_A = `
+export const ETWalkSprite_A0 = ETSprites;
+
+export const ETExtensionSprites_A = `
   .byte $FE ; |XXXXXXX.|
   .byte $FF ; |XXXXXXXX|
   .byte $C3 ; |XX....XX|
@@ -618,9 +617,10 @@ const ETExtensionSprites_A = `
   .byte $E7 ; |XXX..XXX|
   .byte $00 ; |........|
 `;
-const ETExtensionSprite_A0 = ETExtensionSprites_A;
 
-const ETExtensionSprite_A1 = `
+export const ETExtensionSprite_A0 = ETExtensionSprites_A;
+
+export const ETExtensionSprite_A1 = `
    .byte $FE ; |XXXXXXX.|
    .byte $FF ; |XXXXXXXX|
    .byte $C3 ; |XX....XX|
@@ -633,7 +633,8 @@ const ETExtensionSprite_A1 = `
    .byte $E7 ; |XXX..XXX|
    .byte $00 ; |........|
 `;
-const ETExtensionSprite_A2 = `
+
+export const ETExtensionSprite_A2 = `
    .byte $FE ; |XXXXXXX.|
    .byte $FF ; |XXXXXXXX|
    .byte $C3 ; |XX....XX|
@@ -648,7 +649,7 @@ const ETExtensionSprite_A2 = `
    .byte $00 ; |........|
 `;
 
-const ETExtensionSprite_A3 = `
+export const ETExtensionSprite_A3 = `
    .byte $FE ; |XXXXXXX.|
    .byte $FF ; |XXXXXXXX|
    .byte $03 ; |......XX|
@@ -664,7 +665,7 @@ const ETExtensionSprite_A3 = `
    .byte $00 ; |........|
 `;
 
-const ETWalkSprite_B0 = `
+export const ETWalkSprite_B0 = `
    .byte $BF ; |X.XXXXXX|
    .byte $FF ; |XXXXXXXX|
    .byte $03 ; |......XX|
@@ -676,7 +677,7 @@ const ETWalkSprite_B0 = `
    .byte $00 ; |........|
 `;
 
-const ETExtensionSprite_B0 = `
+export const ETExtensionSprite_B0 = `
    .byte $BF ; |X.XXXXXX|
    .byte $FF ; |XXXXXXXX|
    .byte $03 ; |......XX|
@@ -688,10 +689,10 @@ const ETExtensionSprite_B0 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
 `;
-const ETExtensionSprites_B = ETExtensionSprite_B0;
 
+export const ETExtensionSprites_B = ETExtensionSprite_B0;
 
-const ETExtensionSprite_B1 = `
+export const ETExtensionSprite_B1 = `
    .byte $BF ; |X.XXXXXX|
    .byte $FF ; |XXXXXXXX|
    .byte $03 ; |......XX|
@@ -705,25 +706,9 @@ const ETExtensionSprite_B1 = `
    .byte $00 ; |........|
 `;
 
-const ETExtensionSprite_B2 = `
+export const ETExtensionSprite_B2 = `
    .byte $BF ; |X.XXXXXX|
    .byte $FF ; |XXXXXXXX|
-   .byte $03 ; |......XX|
-   .byte $03 ; |......XX|
-   .byte $03 ; |......XX|
-   .byte $03 ; |......XX|
-   .byte $1F ; |...XXXXX|
-   .byte $BF ; |X.XXXXXX|
-   .byte $3F ; |..XXXXXX|
-   .byte $63 ; |.XX...XX|
-   .byte $00 ; |........|
-   .byte $00 ; |........|
-`;
-
-const ETExtensionSprite_B3 = `
-   .byte $BF ; |X.XXXXXX|
-   .byte $FF ; |XXXXXXXX|
-   .byte $03 ; |......XX|
    .byte $03 ; |......XX|
    .byte $03 ; |......XX|
    .byte $03 ; |......XX|
@@ -736,9 +721,23 @@ const ETExtensionSprite_B3 = `
    .byte $00 ; |........|
 `;
 
+export const ETExtensionSprite_B3 = `
+   .byte $BF ; |X.XXXXXX|
+   .byte $FF ; |XXXXXXXX|
+   .byte $03 ; |......XX|
+   .byte $03 ; |......XX|
+   .byte $03 ; |......XX|
+   .byte $03 ; |......XX|
+   .byte $03 ; |......XX|
+   .byte $1F ; |...XXXXX|
+   .byte $BF ; |X.XXXXXX|
+   .byte $3F ; |..XXXXXX|
+   .byte $63 ; |.XX...XX|
+   .byte $00 ; |........|
+   .byte $00 ; |........|
+`;
 
-
-const ETDead_0 = `
+export const ETDead_0 = `
    .byte $E0 ; |XXX.....|
    .byte $A2 ; |X.X...X.|
    .byte $E7 ; |XXX..XXX|
@@ -747,7 +746,7 @@ const ETDead_0 = `
    .byte $00 ; |........|
 `;
 
-const ETDead_1 = `
+export const ETDead_1 = `
    .byte $E0 ; |XXX.....|
    .byte $E3 ; |XXX...XX|
    .byte $EF ; |XXX.XXXX|
@@ -756,8 +755,7 @@ const ETDead_1 = `
    .byte $00 ; |........|
 `;
 
-
-const ETWalkSprite_A1 = `
+export const ETWalkSprite_A1 = `
    .byte $FE ; |XXXXXXX.|
    .byte $FF ; |XXXXXXXX|
    .byte $C3 ; |XX....XX|
@@ -769,7 +767,7 @@ const ETWalkSprite_A1 = `
    .byte $00 ; |........|
 `;
 
-const ETWalkSprite_B1 = `
+export const ETWalkSprite_B1 = `
    .byte $BF ; |X.XXXXXX|
    .byte $FF ; |XXXXXXXX|
    .byte $03 ; |......XX|
@@ -781,7 +779,7 @@ const ETWalkSprite_B1 = `
    .byte $00 ; |........|
 `;
 
-const ETWalkSprite_A2 = `
+export const ETWalkSprite_A2 = `
    .byte $FE ; |XXXXXXX.|
    .byte $FF ; |XXXXXXXX|
    .byte $C3 ; |XX....XX|
@@ -793,7 +791,7 @@ const ETWalkSprite_A2 = `
    .byte $00 ; |........|
 `;
 
-const ETWalkSprite_B2 = `
+export const ETWalkSprite_B2 = `
    .byte $BF ; |X.XXXXXX|
    .byte $FF ; |XXXXXXXX|
    .byte $03 ; |......XX|
@@ -805,7 +803,7 @@ const ETWalkSprite_B2 = `
    .byte $00 ; |........|
 `;
 
-const ETTitle_E = `
+export const ETTitle_E = `
    .byte $E0 ; |XXX.....|
    .byte $F0 ; |XXXX....|
    .byte $F8 ; |XXXXX...|
@@ -824,7 +822,7 @@ const ETTitle_E = `
    .byte $1E ; |...XXXX.|
 `;
 
-const ETTitle_T = `
+export const ETTitle_T = `
    .byte $10 ; |...X....|
    .byte $18 ; |...XX...|
    .byte $18 ; |...XX...|
@@ -844,12 +842,12 @@ const ETTitle_T = `
 `;
 
 // lda #$0F  ; 2 enable missiles for dots in E.T.
-// 
-const ETTitle_dot = '$0F'; 
+//
+export const ETTitle_dot = "$0F";
 
-const FlowerSpritesA = ``;
+export const FlowerSpritesA = ``;
 
-const Flower_A0 = `
+export const Flower_A0 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -859,7 +857,7 @@ const Flower_A0 = `
    .byte $3A ; |..XXX.X.|
 `;
 
-const Flower_A1 = `
+export const Flower_A1 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $1C ; |...XXX..|
@@ -869,7 +867,7 @@ const Flower_A1 = `
    .byte $38 ; |..XXX...|
 `;
 
-const Flower_A2 = `
+export const Flower_A2 = `
    .byte $00 ; |........|
    .byte $14 ; |...X.X..|
    .byte $1C ; |...XXX..|
@@ -879,7 +877,7 @@ const Flower_A2 = `
    .byte $18 ; |...XX...|
 `;
 
-const Flower_A3 = `
+export const Flower_A3 = `
    .byte $14 ; |...X.X..|
    .byte $1C ; |...XXX..|
    .byte $14 ; |...X.X..|
@@ -889,9 +887,9 @@ const Flower_A3 = `
    .byte $18 ; |...XX...|
 `;
 
-const FlowerSpritesB = ``;
+export const FlowerSpritesB = ``;
 
-const Flower_B0 = `
+export const Flower_B0 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -901,7 +899,7 @@ const Flower_B0 = `
    .byte $08 ; |....X...|
 `;
 
-const Flower_B1 = `
+export const Flower_B1 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $2A ; |..X.X.X.|
@@ -911,7 +909,7 @@ const Flower_B1 = `
    .byte $08 ; |....X...|
 `;
 
-const Flower_B2 = `
+export const Flower_B2 = `
    .byte $00 ; |........|
    .byte $2A ; |..X.X.X.|
    .byte $2A ; |..X.X.X.|
@@ -921,7 +919,7 @@ const Flower_B2 = `
    .byte $08 ; |....X...|
 `;
 
-const Flower_B3 = `
+export const Flower_B3 = `
    .byte $2A ; |..X.X.X.|
    .byte $2A ; |..X.X.X.|
    .byte $08 ; |....X...|
@@ -931,19 +929,18 @@ const Flower_B3 = `
    .byte $08 ; |....X...|
 `;
 
-// FlowerColors 
+// FlowerColors
 //    .byte BROWN+14,BROWN+14,BROWN+12,ORANGE+10
 //    .byte ORANGE+8,ORANGE+6,ORANGE+4
 
 // EasterEggSpriteValues
 //    .byte SHOW_YAR_SPRITE, SHOW_INDY_SPRITE
-   
+
 //    BOUNDARY 0
 
+export const NumberFonts = ``;
 
-const NumberFonts = ``;
-
-const zero = `
+export const zero = `
    .byte $FE ; |XXXXXXX.|
    .byte $86 ; |X....XX.|
    .byte $86 ; |X....XX.|
@@ -954,7 +951,7 @@ const zero = `
    .byte $00 ; |........|
 `;
 
-const one = `
+export const one = `
    .byte $18 ; |...XX...|
    .byte $18 ; |...XX...|
    .byte $18 ; |...XX...|
@@ -965,7 +962,7 @@ const one = `
    .byte $00 ; |........|
 `;
 
-const two = `
+export const two = `
    .byte $FE ; |XXXXXXX.|
    .byte $C0 ; |XX......|
    .byte $C0 ; |XX......|
@@ -976,7 +973,7 @@ const two = `
    .byte $00 ; |........|
 `;
 
-const three = `
+export const three = `
    .byte $FE ; |XXXXXXX.|
    .byte $86 ; |X....XX.|
    .byte $06 ; |.....XX.|
@@ -987,7 +984,7 @@ const three = `
    .byte $00 ; |........|
 `;
 
-const four = `
+export const four = `
    .byte $06 ; |.....XX.|
    .byte $06 ; |.....XX.|
    .byte $FE ; |XXXXXXX.|
@@ -998,7 +995,7 @@ const four = `
    .byte $00 ; |........|
 `;
 
-const five = `
+export const five = `
    .byte $FE ; |XXXXXXX.|
    .byte $86 ; |X....XX.|
    .byte $06 ; |.....XX.|
@@ -1009,7 +1006,7 @@ const five = `
    .byte $00 ; |........|
 `;
 
-const six = `
+export const six = `
    .byte $FE ; |XXXXXXX.|
    .byte $86 ; |X....XX.|
    .byte $86 ; |X....XX.|
@@ -1020,7 +1017,7 @@ const six = `
    .byte $00 ; |........|
 `;
 
-const seven = `
+export const seven = `
    .byte $06 ; |.....XX.|
    .byte $06 ; |.....XX.|
    .byte $06 ; |.....XX.|
@@ -1031,7 +1028,7 @@ const seven = `
    .byte $00 ; |........|
 `;
 
-const eight = `
+export const eight = `
    .byte $FE ; |XXXXXXX.|
    .byte $82 ; |X.....X.|
    .byte $82 ; |X.....X.|
@@ -1042,7 +1039,7 @@ const eight = `
    .byte $00 ; |........|
 `;
 
-const nine = `
+export const nine = `
    .byte $06 ; |.....XX.|
    .byte $06 ; |.....XX.|
    .byte $06 ; |.....XX.|
@@ -1053,7 +1050,7 @@ const nine = `
    .byte $00 ; |........|
 `;
 
-const Blank = `
+export const Blank = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1064,8 +1061,7 @@ const Blank = `
    .byte $00 ; |........|
 `;
 
-
-const HSWInitials = `
+export const HSWInitials = `
    .byte $07 ; |.....XXX|
    .byte $01 ; |.......X|
    .byte $57 ; |.X.X.XXX|
@@ -1085,9 +1081,9 @@ const HSWInitials = `
    .byte $00 ; |........|
 `;
 
-const ElliottSprites = ``;
+export const ElliottSprites = ``;
 
-const Elliott_0 = `
+export const Elliott_0 = `
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $18 ; |...XX...|
@@ -1101,7 +1097,7 @@ const Elliott_0 = `
    .byte $84 ; |X....X..|
 `;
 
-const Elliott_1 = `
+export const Elliott_1 = `
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $18 ; |...XX...|
@@ -1115,7 +1111,7 @@ const Elliott_1 = `
    .byte $06 ; |.....XX.|
 `;
 
-const Elliott_2 = `
+export const Elliott_2 = `
    .byte $00 ; |........|
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
@@ -1129,7 +1125,7 @@ const Elliott_2 = `
    .byte $38 ; |..XXX...|
 `;
 
-const Elliott_3 = `
+export const Elliott_3 = `
    .byte $00 ; |........|
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
@@ -1143,7 +1139,7 @@ const Elliott_3 = `
    .byte $00 ; |........|
 `;
 
-const Elliott_4 = `
+export const Elliott_4 = `
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $18 ; |...XX...|
@@ -1157,7 +1153,7 @@ const Elliott_4 = `
    .byte $00 ; |........|
 `;
 
-const Elliott_5 = `
+export const Elliott_5 = `
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $18 ; |...XX...|
@@ -1174,8 +1170,7 @@ const Elliott_5 = `
 //    .byte BLACK,BLACK,ORANGE_2+8,RED+10,RED+10,RED+10,LT_BLUE+10
 //    .byte LT_BLUE+10,LT_BLUE+10,DK_GREEN_2+14,DK_GREEN_2+14
 
-
-const Elliott_6 = `
+export const Elliott_6 = `
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
    .byte $00 ; |........|
@@ -1189,7 +1184,7 @@ const Elliott_6 = `
    .byte $00 ; |........|
 `;
 
-const Elliott_7 = `
+export const Elliott_7 = `
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
    .byte $00 ; |........|
@@ -1203,7 +1198,7 @@ const Elliott_7 = `
    .byte $00 ; |........|
 `;
 
-const Elliott_8 = `
+export const Elliott_8 = `
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $18 ; |...XX...|
@@ -1217,7 +1212,7 @@ const Elliott_8 = `
    .byte $00 ; |........|
 `;
 
-const Elliott_9 = `
+export const Elliott_9 = `
    .byte $10 ; |...X....|
    .byte $38 ; |..XXX...|
    .byte $18 ; |...XX...|
@@ -1231,7 +1226,7 @@ const Elliott_9 = `
    .byte $00 ; |........|
 `;
 
-const Elliott_10 = `
+export const Elliott_10 = `
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
    .byte $00 ; |........|
@@ -1245,7 +1240,7 @@ const Elliott_10 = `
    .byte $00 ; |........|
 `;
 
-const Elliott_11 = `
+export const Elliott_11 = `
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
    .byte $00 ; |........|
@@ -1262,10 +1257,9 @@ const Elliott_11 = `
 //    .byte BLACK,ORANGE_2+8,RED+4,RED+4,RED+4,LT_BLUE+10,LT_BLUE+10
 //    .byte LT_BLUE+10,LT_BLUE+10,DK_GREEN_2+14,DK_GREEN_2+14
 
+export const FourDiamondPitGraphics = ``;
 
-const FourDiamondPitGraphics = ``;
-
-const FourDiamondPitPF1Graphics = `
+export const FourDiamondPitPF1Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1324,7 +1318,7 @@ const FourDiamondPitPF1Graphics = `
    .byte $00 ; |........|
 `;
 
-const EightPitGraphics = `
+export const EightPitGraphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1383,9 +1377,9 @@ const EightPitGraphics = `
    .byte $C0 ; |XX......|
 `;
 
-const ArrowPitGraphics = ``;
+export const ArrowPitGraphics = ``;
 
-const ArrowPitPF1Graphics = `
+export const ArrowPitPF1Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1436,7 +1430,7 @@ const ArrowPitPF1Graphics = `
    .byte $01 ; |.......X|
 `;
 
-const ArrowPitPF2Graphics = `
+export const ArrowPitPF2Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1503,7 +1497,7 @@ const ArrowPitPF2Graphics = `
    .byte $00 ; |........|
 `;
 
-const Telephone = `
+export const Telephone = `
    .byte $3C ; |..XXXX..|
    .byte $20 ; |..X.....|
    .byte $3C ; |..XXXX..|
@@ -1517,10 +1511,9 @@ const Telephone = `
 // TelephoneIconLSBPtrs
 //    .byte <Telephone,<Telephone - 3,<Telephone - 5,<Telephone - 9
 
+export const YarSprites = ``;
 
-const YarSprites = ``;
-
-const Yar_0 = `
+export const Yar_0 = `
    .byte $24 ; |..X..X..|
    .byte $18 ; |...XX...|
    .byte $24 ; |..X..X..|
@@ -1531,7 +1524,7 @@ const Yar_0 = `
    .byte $3C ; |..XXXX..|
 `;
 
-const Yar_1 = `
+export const Yar_1 = `
    .byte $24 ; |..X..X..|
    .byte $99 ; |X..XX..X|
    .byte $A5 ; |X.X..X.X|
@@ -1542,12 +1535,11 @@ const Yar_1 = `
    .byte $3C ; |..XXXX..|
 `;
 
-   // BOUNDARY 0
+// BOUNDARY 0
 
+export const GameIcons = ``;
 
-const GameIcons = ``;
-
-const BlankIcon = `
+export const BlankIcon = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1558,7 +1550,7 @@ const BlankIcon = `
    .byte $00 ; |........|
 `;
 
-const WarpLeftIcon = `
+export const WarpLeftIcon = `
    .byte $18 ; |...XX...|
    .byte $30 ; |..XX....|
    .byte $60 ; |.XX.....|
@@ -1569,7 +1561,7 @@ const WarpLeftIcon = `
    .byte $18 ; |...XX...|
 `;
 
-const WarpRightIcon = `
+export const WarpRightIcon = `
    .byte $18 ; |...XX...|
    .byte $0C ; |....XX..|
    .byte $06 ; |.....XX.|
@@ -1579,7 +1571,7 @@ const WarpRightIcon = `
    .byte $0C ; |....XX..|
 `;
 
-const WarpUpIcon = `
+export const WarpUpIcon = `
    .byte $18 ; |...XX...|
    .byte $18 ; |...XX...|
    .byte $18 ; |...XX...|
@@ -1591,7 +1583,7 @@ const WarpUpIcon = `
    .byte $18 ; |...XX...|
 `;
 
-const WarpDownIcon = `
+export const WarpDownIcon = `
    .byte $18 ; |...XX...|
    .byte $3C ; |..XXXX..|
    .byte $7E ; |.XXXXXX.|
@@ -1602,7 +1594,7 @@ const WarpDownIcon = `
    .byte $18 ; |...XX...|
 `;
 
-const QuestionIcon = `
+export const QuestionIcon = `
    .byte $38 ; |..XXX...|
    .byte $00 ; |........|
    .byte $38 ; |..XXX...|
@@ -1613,7 +1605,7 @@ const QuestionIcon = `
    .byte $3C ; |..XXXX..|
 `;
 
-const EatCandyIcon_0 = `
+export const EatCandyIcon_0 = `
    .byte $00 ; |........|
    .byte $7E ; |.XXXXXX.|
    .byte $C3 ; |XX....XX|
@@ -1624,7 +1616,7 @@ const EatCandyIcon_0 = `
    .byte $3C ; |..XXXX..|
 `;
 
-const WashingtonIcon = `
+export const WashingtonIcon = `
    .byte $7F ; |.XXXXXXX|
    .byte $7F ; |.XXXXXXX|
    .byte $2A ; |..X.X.X.|
@@ -1635,7 +1627,7 @@ const WashingtonIcon = `
    .byte $7F ; |.XXXXXXX|
 `;
 
-const CallElliottIcon = `
+export const CallElliottIcon = `
    .byte $02 ; |......X.|
    .byte $74 ; |.XXX.X..|
    .byte $C0 ; |XX......|
@@ -1646,7 +1638,7 @@ const CallElliottIcon = `
    .byte $01 ; |.......X|
 `;
 
-const CallShipIcon = `
+export const CallShipIcon = `
    .byte $42 ; |.X....X.|
    .byte $24 ; |..X..X..|
    .byte $7E ; |.XXXXXX.|
@@ -1657,7 +1649,7 @@ const CallShipIcon = `
    .byte $24 ; |..X..X..|
 `;
 
-const LandingZoneIcon = `
+export const LandingZoneIcon = `
    .byte $00 ; |........|
    .byte $7F ; |.XXXXXXX|
    .byte $49 ; |.X..X..X|
@@ -1668,7 +1660,7 @@ const LandingZoneIcon = `
    .byte $7F ; |.XXXXXXX|
 `;
 
-const LevitateIcon = `
+export const LevitateIcon = `
    .byte $FF ; |XXXXXXXX|
    .byte $00 ; |........|
    .byte $18 ; |...XX...|
@@ -1679,7 +1671,7 @@ const LevitateIcon = `
    .byte $18 ; |...XX...|
 `;
 
-const ReviveFlowerIcon = `
+export const ReviveFlowerIcon = `
    .byte $00 ; |........|
    .byte $3E ; |..XXXXX.|
    .byte $63 ; |.XX...XX|
@@ -1690,9 +1682,9 @@ const ReviveFlowerIcon = `
    .byte $22 ; |..X...X.|
 `;
 
-const CountdownClockIcons = ``;
+export const CountdownClockIcons = ``;
 
-const CountdownClock_0 = `
+export const CountdownClock_0 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1703,7 +1695,7 @@ const CountdownClock_0 = `
    .byte $70 ; |.XXX....|
 `;
 
-const CountdownClock_1 = `
+export const CountdownClock_1 = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1714,7 +1706,7 @@ const CountdownClock_1 = `
    .byte $70 ; |.XXX....|
 `;
 
-const CountdownClock_2 = `
+export const CountdownClock_2 = `
    .byte $00 ; |........|
    .byte $80 ; |X.......|
    .byte $C0 ; |XX......|
@@ -1725,7 +1717,7 @@ const CountdownClock_2 = `
    .byte $70 ; |.XXX....|
 `;
 
-const CountdownClock_3 = `
+export const CountdownClock_3 = `
    .byte $70 ; |.XXX....|
    .byte $B0 ; |X.XX....|
    .byte $D0 ; |XX.X....|
@@ -1736,7 +1728,7 @@ const CountdownClock_3 = `
    .byte $70 ; |.XXX....|
 `;
 
-const CountdownClock_4 = `   
+export const CountdownClock_4 = `   
    .byte $7E ; |.XXXXXX.|
    .byte $BC ; |X.XXXX..|
    .byte $D8 ; |XX.XX...|
@@ -1747,7 +1739,7 @@ const CountdownClock_4 = `
    .byte $70 ; |.XXX....|
 `;
 
-const CountdownClock_5 = `   
+export const CountdownClock_5 = `   
    .byte $7E ; |.XXXXXX.|
    .byte $BD ; |X.XXXX.X|
    .byte $DB ; |XX.XX.XX|
@@ -1758,7 +1750,7 @@ const CountdownClock_5 = `
    .byte $70 ; |.XXX....|
 `;
 
-const CountdownClock_6 = `   
+export const CountdownClock_6 = `   
    .byte $7E ; |.XXXXXX.|
    .byte $BD ; |X.XXXX.X|
    .byte $DB ; |XX.XX.XX|
@@ -1769,7 +1761,7 @@ const CountdownClock_6 = `
    .byte $70 ; |.XXX....|
 `;
 
-const CountdownClock_7 = `
+export const CountdownClock_7 = `
    .byte $7E ; |.XXXXXX.|
    .byte $BD ; |X.XXXX.X|
    .byte $DB ; |XX.XX.XX|
@@ -1780,7 +1772,7 @@ const CountdownClock_7 = `
    .byte $7E ; |.XXXXXX.|
 `;
 
-const EatCandyIcon_1 = `
+export const EatCandyIcon_1 = `
    .byte $00 ; |........|
    .byte $3C ; |..XXXX..|
    .byte $7E ; |.XXXXXX.|
@@ -1791,8 +1783,7 @@ const EatCandyIcon_1 = `
    .byte $00 ; |........|
 `;
 
-
-const Copyright_0 = `
+export const Copyright_0 = `
    .byte $79 ; |.XXXX..X|
    .byte $85 ; |X....X.X|
    .byte $B5 ; |X.XX.X.X|
@@ -1803,7 +1794,7 @@ const Copyright_0 = `
    .byte $00 ; |........|
 `;
 
-const Copyright_1 = `
+export const Copyright_1 = `
    .byte $17 ; |...X.XXX|
    .byte $15 ; |...X.X.X|
    .byte $15 ; |...X.X.X|
@@ -1814,7 +1805,7 @@ const Copyright_1 = `
    .byte $00 ; |........|
 `;
 
-const Copyright_2 = `
+export const Copyright_2 = `
    .byte $71 ; |.XXX...X|
    .byte $41 ; |.X.....X|
    .byte $41 ; |.X.....X|
@@ -1825,7 +1816,7 @@ const Copyright_2 = `
    .byte $00 ; |........|
 `;
 
-const Copyright_3 = `
+export const Copyright_3 = `
    .byte $49 ; |.X..X..X|
    .byte $49 ; |.X..X..X|
    .byte $49 ; |.X..X..X|
@@ -1836,7 +1827,7 @@ const Copyright_3 = `
    .byte $00 ; |........|
 `;
 
-const Copyright_4 = `
+export const Copyright_4 = `
    .byte $55 ; |.X.X.X.X|
    .byte $55 ; |.X.X.X.X|
    .byte $55 ; |.X.X.X.X|
@@ -1847,7 +1838,7 @@ const Copyright_4 = `
    .byte $00 ; |........|
 `;
 
-const ArtistInitials = `
+export const ArtistInitials = `
    .byte $1E ; |...XXXX.|
    .byte $1B ; |...XX.XX|
    .byte $7B ; |.XXXX.XX|
@@ -1858,9 +1849,9 @@ const ArtistInitials = `
    .byte $18 ; |...XX...|
 `;
 
-const PitGraphics = ``;
+export const PitGraphics = ``;
 
-const PitPF1Graphics = `
+export const PitPF1Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1911,20 +1902,18 @@ const PitPF1Graphics = `
    .byte $F8 ; |XXXXX...|
 `;
 
-   
 // IndyColors
 
 //    ENDIF
-   
+
 //    .byte NTSC_BROWN+8,NTSC_BROWN+8,NTSC_BROWN+8,NTSC_BROWN+12
 //    .byte NTSC_BROWN+12,NTSC_BROWN+14,NTSC_BROWN+15,NTSC_BROWN+15
 //    .byte NTSC_BROWN+15,NTSC_BROWN+15,NTSC_BROWN+15,NTSC_BROWN+15
 //    .byte NTSC_BROWN+15,NTSC_BROWN+15,NTSC_BROWN+15,NTSC_BROWN+15
 
+export const WashingtonDCGraphics = ``;
 
-const WashingtonDCGraphics = ``;
-
-const WashingtonPF2Graphics = `
+export const WashingtonPF2Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -1984,7 +1973,7 @@ const WashingtonPF2Graphics = `
    .byte $F0 ; |XXXX....|
 `;
 
-const WashingtonPF1Graphics = `
+export const WashingtonPF1Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -2019,7 +2008,7 @@ const WashingtonPF1Graphics = `
    .byte $00 ; |........|
 `;
 
-const PitPF2Graphics = `
+export const PitPF2Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -2078,9 +2067,9 @@ const PitPF2Graphics = `
    .byte $00 ; |........|
 `;
 
-const ScientistSprites = ``;
+export const ScientistSprites = ``;
 
-const Scientist_0 = `
+export const Scientist_0 = `
    .byte $1A ; |...XX.X.|
    .byte $00 ; |........|
    .byte $1C ; |...XXX..|
@@ -2097,7 +2086,7 @@ const Scientist_0 = `
    .byte $E7 ; |XXX..XXX|
 `;
 
-const Scientist_1 = `
+export const Scientist_1 = `
    .byte $1A ; |...XX.X.|
    .byte $00 ; |........|
    .byte $1C ; |...XXX..|
@@ -2114,7 +2103,7 @@ const Scientist_1 = `
    .byte $7C ; |.XXXXX..|
 `;
 
-const Scientist_2 = `
+export const Scientist_2 = `
    .byte $1A ; |...XX.X.|
    .byte $00 ; |........|
    .byte $1C ; |...XXX..|
@@ -2131,7 +2120,7 @@ const Scientist_2 = `
    .byte $3C ; |..XXXX..|
 `;
 
-const Scientist_3 = `
+export const Scientist_3 = `
    .byte $1A ; |...XX.X.|
    .byte $00 ; |........|
    .byte $1C ; |...XXX..|
@@ -2148,7 +2137,7 @@ const Scientist_3 = `
    .byte $76 ; |.XXX.XX.|
 `;
 
-const Scientist_4 = `
+export const Scientist_4 = `
    .byte $1A ; |...XX.X.|
    .byte $00 ; |........|
    .byte $1C ; |...XXX..|
@@ -2165,7 +2154,7 @@ const Scientist_4 = `
    .byte $EE ; |XXX.XXX.|
 `;
 
-const Scientist_5 = `
+export const Scientist_5 = `
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
    .byte $1C ; |...XXX..|
@@ -2182,7 +2171,7 @@ const Scientist_5 = `
    .byte $C7 ; |XX...XXX|
 `;
 
-const Scientist_6 = `
+export const Scientist_6 = `
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
    .byte $1C ; |...XXX..|
@@ -2199,7 +2188,7 @@ const Scientist_6 = `
    .byte $1C ; |...XXX..|
 `;
 
-const Scientist_7 = `
+export const Scientist_7 = `
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
    .byte $1C ; |...XXX..|
@@ -2216,7 +2205,7 @@ const Scientist_7 = `
    .byte $38 ; |..XXX...|
 `;
 
-const Scientist_8 = `
+export const Scientist_8 = `
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
    .byte $1C ; |...XXX..|
@@ -2233,7 +2222,7 @@ const Scientist_8 = `
    .byte $70 ; |.XXX....|
 `;
 
-const Scientist_9 = `
+export const Scientist_9 = `
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
    .byte $1C ; |...XXX..|
@@ -2257,8 +2246,7 @@ const Scientist_9 = `
 //    .byte LT_BLUE+8,RED_2+6,RED_2+6,WHITE,WHITE-2,WHITE-4,WHITE-4
 //    .byte WHITE-4,WHITE-4,WHITE-4,BLACK+8,BLACK+8,ORANGE+8,ORANGE+8
 
-
-const H_PhonePiece_0 = `
+export const H_PhonePiece_0 = `
    .byte $90 ; |X..X....|
    .byte $64 ; |.XX..X..|
    .byte $3F ; |..XXXXXX|
@@ -2266,7 +2254,7 @@ const H_PhonePiece_0 = `
    .byte $90 ; |X..X....|
 `;
 
-const H_PhonePiece_1 = `
+export const H_PhonePiece_1 = `
    .byte $C8 ; |XX..X...|
    .byte $32 ; |..XX..X.|
    .byte $32 ; |..XX..X.|
@@ -2274,8 +2262,7 @@ const H_PhonePiece_1 = `
    .byte $00 ; |........|
 `;
 
-
-const S_PhonePiece_0 = `
+export const S_PhonePiece_0 = `
    .byte $1F ; |...XXXXX|
    .byte $54 ; |.X.X.X..|
    .byte $54 ; |.X.X.X..|
@@ -2283,7 +2270,7 @@ const S_PhonePiece_0 = `
    .byte $7C ; |.XXXXX..|
 `;
 
-const S_PhonePiece_1 = `
+export const S_PhonePiece_1 = `
    .byte $3E ; |..XXXXX.|
    .byte $A8 ; |X.X.X...|
    .byte $2A ; |..X.X.X.|
@@ -2291,8 +2278,7 @@ const S_PhonePiece_1 = `
    .byte $F8 ; |XXXXX...|
 `;
 
-
-const W_PhonePiece_0 = `
+export const W_PhonePiece_0 = `
    .byte $3C ; |..XXXX..|
    .byte $C0 ; |XX......|
    .byte $AA ; |X.X.X.X.|
@@ -2300,7 +2286,7 @@ const W_PhonePiece_0 = `
    .byte $E0 ; |XXX.....|
 `;
 
-const W_PhonePiece_1 = `
+export const W_PhonePiece_1 = `
    .byte $60 ; |.XX.....|
    .byte $FE ; |XXXXXXX.|
    .byte $FE ; |XXXXXXX.|
@@ -2313,8 +2299,7 @@ const W_PhonePiece_1 = `
 // PhonePieceColors_B
 //    .byte BROWN+12,BROWN+8,LT_BROWN_2+6,LT_BROWN_2+4,LT_BROWN_2+2
 
-
-const MotherShip = `
+export const MotherShip = `
    .byte $18 ; |...XX...|
    .byte $3C ; |..XXXX..|
    .byte $7E ; |.XXXXXX.|
@@ -2338,22 +2323,21 @@ const MotherShip = `
 //    .byte DK_PINK+6,DK_PINK+4,DK_PINK+2,DK_PINK+4,DK_PINK+6,DK_PINK+8,DK_PINK+6
 //    .byte DK_PINK+4,DK_PINK+2,DK_PINK+4,DK_PINK+6,DK_PINK+8,DK_PINK+6,DK_PINK+4
 //    .byte DK_PINK+2
-   
+
 //    IF COMPILE_VERSION = PAL
-   
+
 // YarColor
 // IndyColors
 //    .byte BROWN+12,BROWN+12,BROWN+12,BROWN+12,BROWN+12
 //    .byte BROWN+12,BROWN+12,BROWN+12,BROWN+12,BROWN+12
-   
+
 //    ENDIF
-   
+
 //    BOUNDARY 0
-   
 
-const ETHomePFGraphics = ``;
+export const ETHomePFGraphics = ``;
 
-const ETHomePF2Graphics = `
+export const ETHomePF2Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -2381,7 +2365,7 @@ const ETHomePF2Graphics = `
    .byte $F0 ; |XXXX....|
 `;
 
-const ETHomePF1Graphics = `
+export const ETHomePF1Graphics = `
    .byte $00 ; |........|
    .byte $00 ; |........|
    .byte $00 ; |........|
@@ -2449,9 +2433,9 @@ const ETHomePF1Graphics = `
    .byte $00 ; |........|
 `;
 
-const FBIAgentSprites = ``;
+export const FBIAgentSprites = ``;
 
-const FBIAgent_0 = `
+export const FBIAgent_0 = `
    .byte $1C ; |...XXX..|
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
@@ -2468,7 +2452,7 @@ const FBIAgent_0 = `
    .byte $E7 ; |XXX..XXX|
 `;
 
-const FBIAgent_1 = `
+export const FBIAgent_1 = `
    .byte $38 ; |..XXX...|
    .byte $7C ; |.XXXXX..|
    .byte $78 ; |.XXXX...|
@@ -2485,7 +2469,7 @@ const FBIAgent_1 = `
    .byte $3E ; |..XXXXX.|
 `;
 
-const FBIAgent_2 = `
+export const FBIAgent_2 = `
    .byte $38 ; |..XXX...|
    .byte $7C ; |.XXXXX..|
    .byte $78 ; |.XXXX...|
@@ -2502,7 +2486,7 @@ const FBIAgent_2 = `
    .byte $3C ; |..XXXX..|
 `;
 
-const FBIAgent_3 = `
+export const FBIAgent_3 = `
    .byte $1C ; |...XXX..|
    .byte $3E ; |..XXXXX.|
    .byte $3C ; |..XXXX..|
@@ -2519,7 +2503,7 @@ const FBIAgent_3 = `
    .byte $6E ; |.XX.XXX.|
 `;
 
-const FBIAgent_4 = `
+export const FBIAgent_4 = `
    .byte $1C ; |...XXX..|
    .byte $1C ; |...XXX..|
    .byte $1C ; |...XXX..|
@@ -2536,7 +2520,7 @@ const FBIAgent_4 = `
    .byte $E7 ; |XXX..XXX|
 `;
 
-const FBIAgent_5 = `
+export const FBIAgent_5 = `
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
@@ -2553,7 +2537,7 @@ const FBIAgent_5 = `
    .byte $3E ; |..XXXXX.|
 `;
 
-const FBIAgent_6 = `
+export const FBIAgent_6 = `
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
    .byte $38 ; |..XXX...|
@@ -2570,7 +2554,7 @@ const FBIAgent_6 = `
    .byte $3C ; |..XXXX..|
 `;
 
-const FBIAgent_7 = `
+export const FBIAgent_7 = `
    .byte $1C ; |...XXX..|
    .byte $1C ; |...XXX..|
    .byte $1C ; |...XXX..|
@@ -2597,8 +2581,7 @@ const FBIAgent_7 = `
 // HumanHorizReflectionTable
 //    .byte 28,60,94
 
-
-const IndySprite = `
+export const IndySprite = `
    .byte $18 ; |...XX...|
    .byte $3C ; |..XXXX..|
    .byte $00 ; |........|

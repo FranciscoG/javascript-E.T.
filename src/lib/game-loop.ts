@@ -1,4 +1,4 @@
-type OnLoop = (ts: number) => void
+type OnLoop = (ts: number) => void;
 
 /*
 first step, load assets
@@ -6,14 +6,12 @@ second step, create scene
 third step, start game loop
 */
 
-export class Game {
+export class GameLoop {
   perFrameCallback: OnLoop = () => {};
 
-  constructor() {
-    this.frame = this.frame.bind(this);
-  }
+  constructor() {}
 
-  perFrame(cb: OnLoop) { 
+  perFrame(cb: OnLoop) {
     this.perFrameCallback = cb;
   }
 
@@ -21,8 +19,8 @@ export class Game {
     requestAnimationFrame(this.frame);
   }
 
-  frame(timestamp: number) {
+  frame = (timestamp: number) => {
     this.perFrameCallback(timestamp);
     requestAnimationFrame(this.frame);
-  }
+  };
 }

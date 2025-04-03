@@ -1,6 +1,11 @@
-import { Display } from "./Display";
-import { Sprite } from "./Sprite";
+import { TIA } from "./lib/TIA";
+import { DIRECTIONS, OneBitSprite, Sprite } from "./lib/Sprite";
 import {
+  ET_COLORS,
+  ETExtensionSprite_A1,
+  ETExtensionSprite_A2,
+  ETExtensionSprite_A3,
+  ETExtensionSprites_A,
   ETTitle_E,
   ETTitle_T,
   ETWalkSprite_A0,
@@ -15,38 +20,23 @@ import {
   TitleETGraphics_3,
   TitleETGraphics_4,
   TitleETGraphics_5,
-} from "./assets/sprites";
+} from "./assets/visual";
+import { byteToBinaryString } from "./lib/utils";
+import { NTSC_COLORS } from "./lib/colors";
 
 ///////////////////////////////////////////////////////////////////////////////
-// Setup canvas
+// Setup
 
-const display = new Display();
-const { canvas, ctx } = display;
-const { width, height } = canvas;
-const spriteScale = 2;
-display.scale(spriteScale, spriteScale);
-canvas.id = "canvas";
-document.getElementById("game")?.appendChild(canvas);
+const cpu = new TIA(document.getElementById("game")!);
 
 ///////////////////////////////////////////////////////////////////////////////
 // constants
 
 const color = "#fce08c";
 
-const DIRS = {
-  UP: 0,
-  DOWN: 1,
-  LEFT: 2,
-  RIGHT: 3,
-  OPPOSITE: [1, 0, 3, 2],
-  STOPPED: 5,
-};
-
 const walkspeed = 3;
 const nx = 44;
 const ny = 33;
-const dx = width / nx;
-const dy = height / ny;
 
 const worldMap = {
   stage1: {
@@ -117,129 +107,140 @@ const sides = {
 
 let framesToSkip = 5;
 let counter = 0;
-let currentX = DIRS.STOPPED;
-let currentY = DIRS.STOPPED;
+
+
+// setup static bg
+cpu.backgroundSprite = [
+  { color: NTSC_COLORS["54"], start: 2, stop: 12},
+  { color: "#b4b4fc", start: 180, stop: 190},
+]
+
+const playfield = new Sprite();
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Title screen
 
-var ET_Head = [
+const bigE = byteToBinaryString(ETTitle_E, true);
+const bigT = byteToBinaryString(ETTitle_T, true);
+
+
+const ET_Head = [
   TitleETGraphics_1,
   TitleETGraphics_2,
   TitleETGraphics_3,
   TitleETGraphics_4,
   TitleETGraphics_5,
   TitleETGraphics_0,
-];
+].map((asset) => {
+  return byteToBinaryString(asset, true);
+});
 
-const titleE = new Sprite();
-titleE.load(ETTitle_E, true);
+let showTitleScreen = true;
 
-const titleT = new Sprite();
-titleT.load(ETTitle_T, true);
+function setupTitleScreen() {
+  const etTitle1 = new Sprite();
+  etTitle1.update(bigE);
+  etTitle1.clockSize = 4;
+  etTitle1.x = 32;
+  etTitle1.y = 16;
+  etTitle1.color = NTSC_COLORS["28"]
+  cpu.addSprite("player1", etTitle1);
 
-const headET = new Sprite();
-headET.loadGroup(ET_Head, true);
+  const etTitle2 = new Sprite();
+  etTitle2.update(bigT);
+  etTitle2.clockSize = 4;
+  etTitle2.x = etTitle1.x + 16 * 3;
+  etTitle2.y = 16;
+  etTitle2.color = NTSC_COLORS["28"]
+  cpu.addSprite("player2", etTitle2);
 
-function showTitle() {
-  titleE.draw(ctx2, 45, 0, color);
-  titleT.draw(ctx2, 75, 0, color);
-  headET.drawGroup(ctx2, 0, 30, color);
-  headET.drawGroup(ctx, 0, 30, color);
+  const dot = new OneBitSprite();
+  dot.x = etTitle1.x + 30;
+  dot.y = etTitle1.y + 14;
+  dot.color = NTSC_COLORS["28"]
+  cpu.addSprite("missile1", dot);
+  
+  const dot2 = new OneBitSprite();
+  dot2.x = etTitle2.x + 30;
+  dot2.y = etTitle2.y + 14;
+  dot2.color = NTSC_COLORS["28"]
+  cpu.addSprite("missile2", dot2);
 }
 
 /****************************************
  * ET Character animation
  */
 
-var ET_walkA = [ETWalkSprite_A0, ETWalkSprite_A1, ETWalkSprite_A2];
-const etWalkA = new Sprite();
-etWalkA.loadGroup(ET_walkA, true);
+const ET_walkA = [ETWalkSprite_A0, ETWalkSprite_A1, ETWalkSprite_A2].map((asset) => {
+  return byteToBinaryString(asset);
+});
 
-var ET_walkB = [ETWalkSprite_B0, ETWalkSprite_B1, ETWalkSprite_B2];
-const etWalkB = new Sprite();
-etWalkB.loadGroup(ET_walkB, true);
+const et = new Sprite();
+et.update(ET_walkA[0]);
+
+function setupMain() {
+  cpu.addSprite("player1", et);
+}
 
 // this loops through each walk image and puts it on the screen
-let _i = 0;
-let playerX = 20;
-let playerY = 20;
+let etWalkFrame = 0;
+
 function walkAnim() {
-  if (currentX === DIRS.RIGHT) {
-    ctx.save();
-    ctx.scale(-1, 1);
-    etWalkA.drawGroup(ctx, playerX * -1, playerY, color);
-    ctx.restore();
-  } else {
-    etWalkA.drawGroup(ctx, playerX, playerY, color);
+  et.update(ET_walkA[etWalkFrame]);
+  if (cpu.player1?.xDir === DIRECTIONS.RIGHT) {
+    et.byteArray.forEach((row) => {
+      row.reverse();
+    });
   }
 
-  _i++;
-  if (_i > 2) {
-    _i = 0;
+  etWalkFrame++;
+  if (etWalkFrame > ET_walkA.length - 1) {
+    etWalkFrame = 0;
   }
 }
 
 function stand() {
-  if (currentX === DIRS.RIGHT) {
-    ctx.save();
-    ctx.scale(-1, 1);
-    etWalkA.draw(ctx, playerX * -1, playerY, color);
-    ctx.restore();
-  } else {
-    etWalkA.draw(ctx, playerX, playerY, color);
+  et.update(ET_walkA[0]);
+  if (cpu.player1?.xDir === DIRECTIONS.RIGHT) {
+    et.byteArray.forEach((row) => {
+      row.reverse();
+    });
   }
 }
 
-function move(inputState) {
-  let walking = false;
+setupTitleScreen();
 
-  switch (inputState.vert) {
-    case 2:
-      playerY = playerY - walkspeed;
-      walking = true;
-      currentY = DIRS.UP;
-      break;
-    case 1:
-      playerY = playerY + walkspeed;
-      walking = true;
-      currentY = DIRS.DOWN;
-      break;
-  }
-
-  switch (inputState.horz) {
-    case 2:
-      playerX = playerX - walkspeed;
-      walking = true;
-      currentX = DIRS.LEFT;
-      break;
-    case 1:
-      playerX = playerX + walkspeed;
-      walking = true;
-      currentX = DIRS.RIGHT;
-      break;
-  }
-
-  if (walking) {
-    walkAnim();
-  } else {
-    stand();
-  }
-}
-
-/* global vcs */
-const start = loop.registerLoop(function (ts) {
+cpu.perFrame(function () {
+  // why am I skipping frames? I don't remember
   if (counter < framesToSkip) {
     counter++;
     return;
   }
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  move(input.read());
+
+  const inputState = cpu.input.read();
+  if (inputState.bttn) {
+    showTitleScreen = false;
+  }
+
+  if (showTitleScreen) {
+    return;
+  } else {
+    setupMain();
+  }
+
+  // draw
+  cpu.updateSprite("player1", cpu.input.read(), walkspeed);
+
+  if (cpu.player1?.moving) {
+    walkAnim();
+  } else {
+    stand();
+  }
+
   counter = 0;
 });
 
-input.setup();
-
-document.getElementById("startGame").addEventListener("click", function () {
-  start();
+cpu.start();
+document.getElementById("startGame")?.addEventListener("click", function () {
 });

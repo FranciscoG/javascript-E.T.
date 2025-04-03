@@ -1,17 +1,24 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext", "DOM"],
-    "removeComments": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noImplicitReturns": true,
-    "strictNullChecks": true,
-    "sourceMap": false,
-    "module": "esnext",
     "target": "ES2020",
-    "outDir": "dist",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "demo", "assets"],
+  "include": ["src"]
 }

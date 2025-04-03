@@ -1,26 +1,15 @@
 {
-  "name": "vcs-js",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "javascript-et",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "build": "tsc",
-    "start": "tsc --watch",
-    "dev": "serve .",
-    "demo": "npm run build && rm -rf demo/dist && rm -rf demo/assets && cp -r dist demo && cp -r assets demo && serve demo"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/FranciscoG/javascript-E.T..git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/FranciscoG/javascript-E.T./issues"
-  },
-  "homepage": "https://github.com/FranciscoG/javascript-E.T.#readme",
   "devDependencies": {
-    "serve": "^14.2.4",
-    "typescript": "^5.8.2"
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0"
   }
 }

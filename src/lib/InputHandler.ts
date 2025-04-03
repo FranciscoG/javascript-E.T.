@@ -21,42 +21,45 @@ export interface InputStates {
   bttn: boolean
 }
 
-enum DIRECTIONS {
+enum ACTIONS {
   UP,
   DOWN,
   LEFT,
-  RIGHT
+  RIGHT,
+  BUTTON
 }
 
 interface KeyMap {
-  [key: string]: DIRECTIONS
+  [key: string]: ACTIONS
 }
 
 
 const KEY_MAP: KeyMap = {
   // event.code and event.key
-  "ArrowUp": DIRECTIONS.UP,
-  "ArrowDown": DIRECTIONS.DOWN,
-  "ArrowLeft": DIRECTIONS.LEFT,
-  "ArrowRight": DIRECTIONS.RIGHT,
+  "ArrowUp": ACTIONS.UP,
+  "ArrowDown": ACTIONS.DOWN,
+  "ArrowLeft": ACTIONS.LEFT,
+  "ArrowRight": ACTIONS.RIGHT,
 
   // IE Edge event.key
-  "Up": DIRECTIONS.UP,
-  "Down": DIRECTIONS.DOWN,
-  "Left": DIRECTIONS.LEFT,
-  "Right": DIRECTIONS.RIGHT,
+  "Up": ACTIONS.UP,
+  "Down": ACTIONS.DOWN,
+  "Left": ACTIONS.LEFT,
+  "Right": ACTIONS.RIGHT,
 
   // WASD event.key
-  "w": DIRECTIONS.UP,
-  "s": DIRECTIONS.DOWN,
-  "a": DIRECTIONS.LEFT,
-  "d": DIRECTIONS.RIGHT,
+  "w": ACTIONS.UP,
+  "s": ACTIONS.DOWN,
+  "a": ACTIONS.LEFT,
+  "d": ACTIONS.RIGHT,
 
   // WASD event.code
-  "KeyW": DIRECTIONS.UP,
-  "KeyS": DIRECTIONS.DOWN,
-  "KeyA": DIRECTIONS.LEFT,
-  "KeyD": DIRECTIONS.RIGHT
+  "KeyW": ACTIONS.UP,
+  "KeyS": ACTIONS.DOWN,
+  "KeyA": ACTIONS.LEFT,
+  "KeyD": ACTIONS.RIGHT,
+
+  "Space": ACTIONS.BUTTON
 };
 
 
@@ -94,19 +97,19 @@ export class InputHandler {
     let handled: boolean = false;
 
     switch (KEY_MAP[key]) {
-      case DIRECTIONS.UP:
+      case ACTIONS.UP:
         handled = true;
         this.inputState.vert = 0b10;
         break;
-      case DIRECTIONS.DOWN:
+      case ACTIONS.DOWN:
         handled = true;
         this.inputState.vert = 0b01;
         break;
-      case DIRECTIONS.LEFT:
+      case ACTIONS.LEFT:
         handled = true;
         this.inputState.horz = 0b10;
         break;
-      case DIRECTIONS.RIGHT:
+      case ACTIONS.RIGHT:
         handled = true;
         this.inputState.horz = 0b01;
         break;
@@ -125,19 +128,19 @@ export class InputHandler {
     let handled: boolean = false;
 
     switch (KEY_MAP[key]) {
-      case DIRECTIONS.UP:
+      case ACTIONS.UP:
         handled = true;
         this.inputState.vert = 0b00;
         break;
-      case DIRECTIONS.DOWN:
+      case ACTIONS.DOWN:
         handled = true;
         this.inputState.vert = 0b00;
         break;
-      case DIRECTIONS.LEFT:
+      case ACTIONS.LEFT:
         handled = true;
         this.inputState.horz = 0b00;
         break;
-      case DIRECTIONS.RIGHT:
+      case ACTIONS.RIGHT:
         handled = true;
         this.inputState.horz = 0b00;
         break;
