@@ -5,7 +5,7 @@ import { InputHandler, InputStates } from "./InputHandler";
 type MoveableObjects = "player1" | "player2" | "missile1" | "missile2" | "ball" | "playfield";
 type OnLoop = (ts: number) => void;
 
-export class TIA {
+export class GameEngine {
   // background
   backgroundColor: string = "#000000"; // background color
 
