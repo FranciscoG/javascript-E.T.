@@ -1,5 +1,6 @@
 import { GameEngine } from "./lib/GameEngine";
-import { DIRECTIONS, OneBitSprite, Sprite } from "./lib/Sprite";
+import { InputStates } from "./lib/InputHandler";
+import { OneBitSprite, Sprite } from "./lib/Sprite";
 import {
   ET_COLORS,
   ETExtensionSprite_A1,
@@ -22,8 +23,6 @@ import {
   TitleETGraphics_5,
 } from "./assets/visual";
 import { byteToBinaryString } from "./lib/utils";
-import { NTSC_COLORS } from "./lib/colors";
-
 ///////////////////////////////////////////////////////////////////////////////
 // Setup
 
@@ -123,13 +122,10 @@ const sides = {
 let framesToSkip = 5;
 let counter = 0;
 
-// setup static bg
+// setup static bg — score area at bottom uses LT_BLUE+10 ($9A) per ASM
 cpu.backgroundSprite = [
-  { color: NTSC_COLORS["54"], start: 2, stop: 12 },
-  { color: "#b4b4fc", start: 180, stop: 190 },
+  { color: 0x9A, start: 180, stop: 210 },
 ];
-
-const playfield = new Sprite();
 
 ///////////////////////////////////////////////////////////////////////////////
 // Title screen
@@ -148,44 +144,56 @@ const ET_Head = [
   return byteToBinaryString(asset, true);
 });
 
+// Combine the 6 head slices into one wide sprite (the Atari used
+// the SixDigitKernel to draw 6 × 8-pixel sprites side by side)
+const ET_HeadCombined: string[][] = ET_Head[0].map((_, row) => {
+  return ET_Head.reduce((acc: string[], slice) => acc.concat(slice[row]), []);
+});
+
 let showTitleScreen = true;
 
 function setupTitleScreen() {
+  // Title screen colors via TIA color registers
+  cpu.colup0 = 0x24;  // COLUP0: player0 (E) + missile0 (dot)
+  cpu.colup1 = 0x24;  // COLUP1: player1 (T) + missile1 (dot)
+  cpu.colupf = 0xEA;  // COLUPF: playfield + ball (ET head)
+
   const etTitle1 = new Sprite();
   etTitle1.update(bigE);
-  etTitle1.clockSize = 2;
+  etTitle1.clockSize = 4;
+  etTitle1.scanLinesPerRow = 2;
   etTitle1.x = 32;
   etTitle1.y = 16;
-  etTitle1.color = NTSC_COLORS["28"];
   cpu.addSprite("player1", etTitle1);
 
   const etTitle2 = new Sprite();
   etTitle2.update(bigT);
-  etTitle2.clockSize = 2;
-  etTitle2.x = etTitle1.x + 16 * 3;
+  etTitle2.clockSize = 4;
+  etTitle2.scanLinesPerRow = 2;
+  etTitle2.x = etTitle1.x + 16 * 5;
   etTitle2.y = 16;
-  etTitle2.color = NTSC_COLORS["28"];
   cpu.addSprite("player2", etTitle2);
 
   const dot = new OneBitSprite();
-  dot.x = etTitle1.x + 30;
-  dot.y = etTitle1.y + 14;
-  dot.color = NTSC_COLORS["28"];
+  dot.clockSize = 2;
+  dot.x = etTitle1.x + 66;
+  dot.y = etTitle1.y + 28;
+  dot.scanLines = 4;
   cpu.addSprite("missile1", dot);
 
   const dot2 = new OneBitSprite();
-  dot2.x = etTitle2.x + 30;
-  dot2.y = etTitle2.y + 14;
-  dot2.color = NTSC_COLORS["28"];
+  dot2.clockSize = 2;
+  dot2.x = etTitle2.x + 66;
+  dot2.y = etTitle2.y + 28;
+  dot2.scanLines = 4;
   cpu.addSprite("missile2", dot2);
 
   const etHead = new Sprite();
-  etHead.update(ET_Head[0]);
-  etHead.clockSize = 2;
-  etHead.x = etTitle1.x + 16 * 2;
-  etHead.y = etTitle1.y + 16;
-  etHead.color = NTSC_COLORS["28"];
-  cpu.addSprite("", etHead);
+  etHead.update(ET_HeadCombined);
+  etHead.clockSize = 1;
+  etHead.x = etTitle1.x + 16;
+  etHead.y = etTitle1.y + 49;
+  cpu.addSprite("ball", etHead);
 }
 
 /****************************************
@@ -205,14 +213,11 @@ function setupMain() {
 
 // this loops through each walk image and puts it on the screen
 let etWalkFrame = 0;
+let lastXDir = -1; // facing left initially
 
 function walkAnim() {
   et.update(ET_walkA[etWalkFrame]);
-  if (cpu.player1?.xDir === DIRECTIONS.RIGHT) {
-    et.byteArray.forEach((row) => {
-      row.reverse();
-    });
-  }
+  et.reflected = lastXDir > 0;
 
   etWalkFrame++;
   if (etWalkFrame > ET_walkA.length - 1) {
@@ -222,14 +227,25 @@ function walkAnim() {
 
 function stand() {
   et.update(ET_walkA[0]);
-  if (cpu.player1?.xDir === DIRECTIONS.RIGHT) {
-    et.byteArray.forEach((row) => {
-      row.reverse();
-    });
-  }
+  et.reflected = lastXDir > 0;
 }
 
 setupTitleScreen();
+
+// Game-layer movement helper — mirrors the joystick input to sprite position.
+// Returns what direction the sprite moved (for animation logic).
+function moveSprite(sprite: Sprite, input: InputStates, speed: number) {
+  let moving = false;
+  let xDir = 0;
+  let yDir = 0;
+
+  if (input.vert === 2) { sprite.y -= speed; moving = true; yDir = -1; }
+  if (input.vert === 1) { sprite.y += speed; moving = true; yDir = 1; }
+  if (input.horz === 2) { sprite.x -= speed; moving = true; xDir = -1; }
+  if (input.horz === 1) { sprite.x += speed; moving = true; xDir = 1; }
+
+  return { moving, xDir, yDir };
+}
 
 cpu.perFrame(function () {
   // why am I skipping frames? I don't remember
@@ -249,10 +265,11 @@ cpu.perFrame(function () {
     setupMain();
   }
 
-  // draw
-  cpu.updateSprite("player1", cpu.input.read(), walkspeed);
+  // move E.T. based on input
+  const moveResult = moveSprite(et, cpu.input.read(), walkspeed);
+  if (moveResult.xDir !== 0) lastXDir = moveResult.xDir;
 
-  if (cpu.player1?.moving) {
+  if (moveResult.moving) {
     walkAnim();
   } else {
     stand();

@@ -1,29 +1,36 @@
 import { Display } from "./Display";
-import { DIRECTIONS, Sprite } from "./Sprite";
-import { InputHandler, InputStates } from "./InputHandler";
+import { Sprite, Playfield } from "./Sprite";
+import { Audio } from "./Audio";
+import { InputHandler } from "./InputHandler";
+import { ntscColor } from "./ntsc-colors";
 
-type MoveableObjects = "player1" | "player2" | "missile1" | "missile2" | "ball" | "playfield";
+export type TIAObject = "player1" | "player2" | "missile1" | "missile2" | "ball";
 type OnLoop = (ts: number) => void;
 
 export class GameEngine {
-  // background
-  backgroundColor: string = "#000000"; // background color
+  /**
+   * TIA Color Registers
+   *
+   * The TIA has 4 color registers that control all on-screen colors:
+   *   COLUP0 — Player 0 and Missile 0
+   *   COLUP1 — Player 1 and Missile 1
+   *   COLUPF — Playfield and Ball
+   *   COLUBK — Background
+   *
+   * Individual sprite .color properties can still be set to override
+   * the register color (for convenience in non-strict mode).
+   */
+  colup0: number = 0x00;  // player 0 + missile 0 color
+  colup1: number = 0x00;  // player 1 + missile 1 color
+  colupf: number = 0x00;  // playfield + ball color
+  colubk: number = 0x00;  // background color
 
-  // the bg is a special sprite that is drawn first.
-  // it contains instructions to draw a specific color for a specific
-  // number of full width lines. In the actual atari this is done by using
-  // the time to set specific colors for a specific number of lines.
-  backgroundSprite: Array<{ color: string; start: number; stop: number }> = [];
+  // Per-scanline color bands. The TIA sets COLUBK at specific scanlines
+  // to create colored horizontal bands.
+  backgroundSprite: Array<{ color: number; start: number; stop: number }> = [];
 
-  // static object, can be moved but requires a full redraw of the playfield
-  playfield: Sprite | null = null;
-
-  // 5 moveable objects:
-  player1: Sprite | null = null; // player 1 sprite
-  player2: Sprite | null = null; // player 2 sprite
-  missile1: Sprite | null = null; // player 1's missile
-  missile2: Sprite | null = null; // player 2's missile
-  ball: Sprite | null = null; // ball sprite
+  // TIA Playfield — PF0/PF1/PF2 registers with reflect/score mode
+  playfield: Playfield = new Playfield();
 
   // The TIA detects collisions between any of the 6 objects it generates (the
   // playfield and 5 moveable objects). There are 15 possible two-object
@@ -42,7 +49,7 @@ export class GameEngine {
 
     0, // 9. missile 1 with playfield
     0, // 10. missile 1 with ball
-    0, // 11. missing 1 with missile 2
+    0, // 11. missile 1 with missile 2
 
     0, // 12. missile 2 with playfield
     0, // 13. missile 2 with ball
@@ -52,12 +59,27 @@ export class GameEngine {
 
   display = new Display();
   input = new InputHandler();
+  audio = new Audio();
+
+  private sprites: Record<TIAObject, Sprite | null> = {
+    player1: null,
+    player2: null,
+    missile1: null,
+    missile2: null,
+    ball: null,
+  };
 
   constructor(target: HTMLElement) {
     this.display.scale(3, 3);
     target.appendChild(this.display.canvas);
-    this.display.ctx.fillStyle = this.backgroundColor;
   }
+
+  // Accessors for the 5 moveable TIA objects
+  get player1() { return this.sprites.player1; }
+  get player2() { return this.sprites.player2; }
+  get missile1() { return this.sprites.missile1; }
+  get missile2() { return this.sprites.missile2; }
+  get ball() { return this.sprites.ball; }
 
   // Helper function to check for collision
   checkCollision(spriteA: Sprite | null, spriteB: Sprite | null, index: number) {
@@ -77,176 +99,67 @@ export class GameEngine {
   }
 
   detectCollisions(): void {
-    // Check all combinations of collisions
-    this.checkCollision(this.playfield, this.player1, 0);
-    this.checkCollision(this.player1, this.player2, 1);
-    this.checkCollision(this.player1, this.missile1, 2);
-    this.checkCollision(this.player1, this.missile2, 3);
-    this.checkCollision(this.player1, this.ball, 4);
+    const s = this.sprites;
+    // TODO: playfield collision needs scanline-level detection
+    this.checkCollision(s.player1, s.player2, 1);
+    this.checkCollision(s.player1, s.missile1, 2);
+    this.checkCollision(s.player1, s.missile2, 3);
+    this.checkCollision(s.player1, s.ball, 4);
 
-    this.checkCollision(this.player2, this.playfield, 5);
-    this.checkCollision(this.player2, this.missile1, 6);
-    this.checkCollision(this.player2, this.missile2, 7);
-    this.checkCollision(this.player2, this.ball, 8);
+    this.checkCollision(s.player2, s.missile1, 6);
+    this.checkCollision(s.player2, s.missile2, 7);
+    this.checkCollision(s.player2, s.ball, 8);
 
-    this.checkCollision(this.missile1, this.playfield, 9);
-    this.checkCollision(this.missile1, this.ball, 10);
-    this.checkCollision(this.missile1, this.missile2, 11);
+    this.checkCollision(s.missile1, s.ball, 10);
+    this.checkCollision(s.missile1, s.missile2, 11);
 
-    this.checkCollision(this.missile2, this.playfield, 12);
-    this.checkCollision(this.missile2, this.ball, 13);
-
-    this.checkCollision(this.ball, this.playfield, 14);
+    this.checkCollision(s.missile2, s.ball, 13);
   }
 
-  addSprite(name: MoveableObjects, sprite: Sprite): void {
-    switch (name) {
-      case "player1":
-        this.player1 = sprite;
-        break;
-      case "player2":
-        this.player2 = sprite;
-        break;
-      case "missile1":
-        this.missile1 = sprite;
-        break;
-      case "missile2":
-        this.missile2 = sprite;
-        break;
-      case "ball":
-        this.ball = sprite;
-        break;
-      case "playfield":
-        this.playfield = sprite;
-        break;
-    }
+  addSprite(name: TIAObject, sprite: Sprite): void {
+    this.sprites[name] = sprite;
   }
 
-  removeSprite(name: MoveableObjects): void {
-    switch (name) {
-      case "player1":
-        this.player1 = null;
-        break;
-      case "player2":
-        this.player2 = null;
-        break;
-      case "missile1":
-        this.missile1 = null;
-        break;
-      case "missile2":
-        this.missile2 = null;
-        break;
-      case "ball":
-        this.ball = null;
-        break;
-      case "playfield":
-        this.playfield = null;
-        break;
-    }
+  removeSprite(name: TIAObject): void {
+    this.sprites[name] = null;
   }
 
-  move(sprite: Sprite, inputState: InputStates, speed: number) {
-    let x = sprite.x;
-    let y = sprite.y;
-
-    switch (inputState.vert) {
-      case 2:
-        y = y - speed;
-        sprite.moving = true;
-        sprite.yDir = DIRECTIONS.UP;
-        break;
-      case 1:
-        y = y + speed;
-        sprite.moving = true;
-        sprite.yDir = DIRECTIONS.DOWN;
-        break;
-    }
-
-    switch (inputState.horz) {
-      case 2:
-        x = x - speed;
-        sprite.moving = true;
-        sprite.xDir = DIRECTIONS.LEFT;
-        break;
-      case 1:
-        x = x + speed;
-        sprite.moving = true;
-        sprite.xDir = DIRECTIONS.RIGHT;
-        break;
-    }
-
-    if (inputState.horz === 0 && inputState.vert === 0) {
-      sprite.moving = false; // not moving
-    }
-
-    sprite.x = x;
-    sprite.y = y;
-  }
-
-  updateSprite(whichSprite: MoveableObjects, inputState: InputStates, speed: number = 3) {
-    switch (whichSprite) {
-      case "player1":
-        if (this.player1) {
-          this.move(this.player1, inputState, speed);
-        }
-        break;
-      case "player2":
-        if (this.player2) {
-          this.move(this.player2, inputState, speed);
-        }
-        break;
-      case "missile1":
-        if (this.missile1) {
-          this.move(this.missile1, inputState, speed);
-        }
-        break;
-      case "missile2":
-        if (this.missile2) {
-          this.move(this.missile2, inputState, speed);
-        }
-        break;
-      case "ball":
-        if (this.ball) {
-          this.move(this.ball, inputState, speed);
-        }
-        break;
-    }
+  /**
+   * Apply TIA color register values to sprites before drawing.
+   * Missiles inherit their player's color, ball inherits playfield color.
+   */
+  private applyColorRegisters(): void {
+    if (this.sprites.player1) this.sprites.player1.color = this.colup0;
+    if (this.sprites.missile1) this.sprites.missile1.color = this.colup0;
+    if (this.sprites.player2) this.sprites.player2.color = this.colup1;
+    if (this.sprites.missile2) this.sprites.missile2.color = this.colup1;
+    if (this.sprites.ball) this.sprites.ball.color = this.colupf;
+    this.playfield.color = this.colupf;
   }
 
   drawBackground() {
     this.backgroundSprite.forEach((bg) => {
-      this.display.ctx.fillStyle = bg.color;
-      this.display.ctx.fillRect(0, bg.start, this.display.canvas.width, bg.stop - bg.start);
+      this.display.ctx.fillStyle = ntscColor(bg.color);
+      this.display.ctx.fillRect(0, bg.start, this.display.w, bg.stop - bg.start);
     });
   }
 
   draw() {
-    // clear the canvas
-    
-    // start with the background color
-    this.display.ctx.fillStyle = this.backgroundColor;
+    // Apply TIA color registers to all objects
+    this.applyColorRegisters();
 
+    // Fill with COLUBK background color
+    this.display.ctx.fillStyle = ntscColor(this.colubk);
     this.display.clear();
-    
     this.drawBackground();
 
-    if (this.playfield) {
-      this.playfield.draw(this.display.ctx);
-    }
-    if (this.player1) {
-      this.player1.draw(this.display.ctx);
-    }
-    if (this.player2) {
-      this.player2.draw(this.display.ctx);
-    }
-    if (this.missile1) {
-      this.missile1.draw(this.display.ctx);
-    }
-    if (this.missile2) {
-      this.missile2.draw(this.display.ctx);
-    }
-    if (this.ball) {
-      this.ball.draw(this.display.ctx);
+    // Draw playfield (with score mode support)
+    this.playfield.draw(this.display.ctx, this.colup0, this.colup1);
+
+    // Draw moveable objects in TIA priority order: players, missiles, ball
+    const order: TIAObject[] = ["player1", "player2", "missile1", "missile2", "ball"];
+    for (const name of order) {
+      this.sprites[name]?.draw(this.display.ctx);
     }
   }
 

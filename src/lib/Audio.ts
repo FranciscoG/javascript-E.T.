@@ -1,316 +1,236 @@
-/*
-http://www.qotile.net/files/2600_music_guide.txt
-http://www.popular-musicology-online.com/issues/01/collins-01.html
-http://www.igorski.nl/application/slocum-tracker/
-===================================================================
-2 TIA Sound Overview
-===================================================================
-
-The TIA is the chip in the Atari 2600 that produces audio and video.  The audio 
-portion has two independent voices, each of which has a 4 bit volume control 
-(16 values), 5 bit pitch (32 values), and a 4 bit control register which selects 
-the type of sound you will hear.  When writing software for the Atari, the 
-standard labels for these registers are AUDV0 and AUDV1 for the volume registers, 
-AUDF0 and AUDF1 for the pitch registers, and AUDC0 and AUDC1 for the control 
-registers.  The 5 bit pitch is very limited and the frequency values are simply 
-divided down from the system clock, so many of the pitch values are not in-tune 
-with others.  Note that setting the pitch register to a lower value results in 
-a higher pitch.
-
-2 independent voices
-- 4 bit volume (16 values)
-- 5 bit pitch (32 values)
-- 4 bit rcontrol egister: 
--- AUDV0 and AUDV1 for the volume registers
--- AUDF0 and AUDF1 for the pitch registers
--- AUDC0 and AUDC1 for the control registers
-
-;============================================================================
-; T I A - M U S I C  C O N S T A N T S
-;============================================================================
- 
-SOUND_CHANNEL_SAW       = 1         ; sounds similar to a saw waveform
-SOUND_CHANNEL_ENGINE    = 3         ; many games use this for an engine sound
-SOUND_CHANNEL_SQUARE    = 4         ; a high pitched square waveform
-SOUND_CHANNEL_BASS      = 6         ; fat bass sound
-SOUND_CHANNEL_PITFALL   = 7         ; log sound in pitfall, low and buzzy
-SOUND_CHANNEL_NOISE     = 8         ; white noise
-SOUND_CHANNEL_LEAD      = 12        ; lower pitch square wave sound
-SOUND_CHANNEL_BUZZ      = 15        ; atonal buzz, good for percussion
- 
-LEAD_F4_SHARP           = 13
-LEAD_E4                 = 15
-LEAD_D4_SHARP           = 16
-LEAD_D4                 = 17
-LEAD_C4_SHARP           = 18
-LEAD_H3                 = 20
-LEAD_A3                 = 23
-LEAD_G3_SHARP           = 24
-LEAD_F3_SHARP           = 27
-LEAD_E3_2               = 31
-
-themeMusicNoteDelay     = $EE
-themeMusicFreqIndex     = $EF
-
-
-ThemeMusicFrequencyTable
-   .byte LEAD_A3,LEAD_A3,LEAD_A3,LEAD_A3,LEAD_E4,LEAD_E4,LEAD_E4,LEAD_E4
-   .byte LEAD_D4,LEAD_C4_SHARP,LEAD_H3,LEAD_C4_SHARP,LEAD_A3,LEAD_A3,LEAD_A3
-   .byte LEAD_A3,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2
-   .byte LEAD_E3_2,LEAD_E3_2,LEAD_F3_SHARP,LEAD_F3_SHARP,LEAD_F3_SHARP
-   .byte LEAD_F3_SHARP,LEAD_F4_SHARP,LEAD_F4_SHARP,LEAD_F4_SHARP,LEAD_F4_SHARP
-   .byte LEAD_E4,LEAD_D4_SHARP,LEAD_C4_SHARP,LEAD_D4_SHARP,LEAD_H3,LEAD_H3
-   .byte LEAD_H3,LEAD_H3,LEAD_F3_SHARP,LEAD_F3_SHARP,LEAD_F3_SHARP
-   .byte LEAD_F3_SHARP,LEAD_G3_SHARP,LEAD_G3_SHARP,LEAD_G3_SHARP,LEAD_H3
-   .byte LEAD_C4_SHARP,LEAD_A3,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2,LEAD_E3_2
-   .byte LEAD_E3_2
-
-PlayETWalkingSound
-   lda SWCHA                        ; read joystick values
-   cmp #P0_NO_MOVE
-   bcs .turnOffETWalkingSound
-   bit etMotionValues               ; check E.T. motion values
-   bpl .playETWalkingSound          ; branch if E.T. not running
-   lda frameCount                   ; get the current frame count
-   lsr                              ; divide value by 4
-   lsr
-   and #7
-   sta AUDF1
-   lda #SOUND_CHANNEL_SQUARE + 1
-   sta AUDC1
-   lda #7
-   sta AUDV1
-   bne .donePlayingSoundChannel1    ; unconditional branch
-
-.playETWalkingSound
-   lda frameCount                   ; get the current frame count
-   and #7
-   bne .turnOffETWalkingSound
-   lda frameCount                   ; get the current frame count
-   lsr                              ; divide value by 8
-   lsr
-   lsr
-   and #3
-   beq .turnOffETWalkingSound
-   ldx #7
-   stx AUDV1
-   adc #$16
-   bne .setSoundChannel1AndFrequency
-
-
-	WebAudio API help:
-	http://modernweb.com/2014/03/31/creating-sound-with-the-web-audio-api-and-oscillators/
+/**
+ * TIA Audio Emulation
+ *
+ * The TIA produces audio through 2 independent channels. Each channel has:
+ * - AUDC (4-bit): Control register — selects waveform type (0–15)
+ * - AUDF (5-bit): Frequency divider (0–31). Lower values = higher pitch.
+ * - AUDV (4-bit): Volume (0–15)
+ *
+ * Frequency formula (NTSC):
+ *   output_freq = TIA_CLOCK / (AUDF + 1) / poly_divisor
+ *
+ * The TIA clock is ~31440 Hz (NTSC system clock 3.579545 MHz / 114).
+ *
+ * AUDC waveform types and their polynomial counter divisors:
+ *   0  = silent (set as 1 / no output)
+ *   1  = 4-bit poly (buzzy saw-like)
+ *   2  = 4-bit poly / 31 (rumble)
+ *   3  = 5-bit poly / 31 (engine)
+ *   4  = pure tone / 2 (square wave, div 2)
+ *   5  = pure tone / 2 (same as 4)
+ *   6  = pure tone / 31 (bass)
+ *   7  = 5-bit poly / 2 (buzzy, Pitfall log)
+ *   8  = 9-bit poly (white noise)
+ *   9  = 5-bit poly (metallic buzz)
+ *   10 = pure tone / 31 (same as 6)
+ *   11 = set last 4 bits (same as 0 in practice)
+ *   12 = pure tone / 6 (lead, lower square)
+ *   13 = pure tone / 6 (same as 12)
+ *   14 = pure tone / 93 (very low)
+ *   15 = 5-bit poly / 6 (atonal buzz)
+ *
+ * References:
+ *   http://www.qotile.net/files/2600_music_guide.txt
+ *   https://www.randomterrain.com/atari-2600-memories-music-and-sound.html
  */
 
-interface Notes {
-  [key: string]: number
-}
+const TIA_CLOCK = 31440; // NTSC TIA audio clock in Hz
 
-export const notes: Notes = {
-  'C0': 16.35,
-  'C#0': 17.32,
-  'Db0': 17.32,
-  'D0': 18.35,
-  'D#0': 19.45,
-  'Eb0': 19.45,
-  'E0': 20.60,
-  'F0': 21.83,
-  'F#0': 23.12,
-  'Gb0': 23.12,
-  'G0': 24.50,
-  'G#0': 25.96,
-  'Ab0': 25.96,
-  'A0': 27.50,
-  'A#0': 29.14,
-  'Bb0': 29.14,
-  'B0': 30.87,
-  'C1': 32.70,
-  'C#1': 34.65,
-  'Db1': 34.65,
-  'D1': 36.71,
-  'D#1': 38.89,
-  'Eb1': 38.89,
-  'E1': 41.20,
-  'F1': 43.65,
-  'F#1': 46.25,
-  'Gb1': 46.25,
-  'G1': 49.00,
-  'G#1': 51.91,
-  'Ab1': 51.91,
-  'A1': 55.00,
-  'A#1': 58.27,
-  'Bb1': 58.27,
-  'B1': 61.74,
-  'C2': 65.41,
-  'C#2': 69.30,
-  'Db2': 69.30,
-  'D2': 73.42,
-  'D#2': 77.78,
-  'Eb2': 77.78,
-  'E2': 82.41,
-  'F2': 87.31,
-  'F#2': 92.50,
-  'Gb2': 92.50,
-  'G2': 98.00,
-  'G#2': 103.83,
-  'Ab2': 103.83,
-  'A2': 110.00,
-  'A#2': 116.54,
-  'Bb2': 116.54,
-  'B2': 123.47,
-  'C3': 130.81,
-  'C#3': 138.59,
-  'Db3': 138.59,
-  'D3': 146.83,
-  'D#3': 155.56,
-  'Eb3': 155.56,
-  'E3': 164.81,
-  'F3': 174.61,
-  'F#3': 185.00,
-  'Gb3': 185.00,
-  'G3': 196.00,
-  'G#3': 207.65,
-  'Ab3': 207.65,
-  'A3': 220.00,
-  'A#3': 233.08,
-  'Bb3': 233.08,
-  'B3': 246.94,
-  'C4': 261.63,
-  'C#4': 277.18,
-  'Db4': 277.18,
-  'D4': 293.66,
-  'D#4': 311.13,
-  'Eb4': 311.13,
-  'E4': 329.63,
-  'F4': 349.23,
-  'F#4': 369.99,
-  'Gb4': 369.99,
-  'G4': 392.00,
-  'G#4': 415.30,
-  'Ab4': 415.30,
-  'A4': 440.00,
-  'A#4': 466.16,
-  'Bb4': 466.16,
-  'B4': 493.88,
-  'C5': 523.25,
-  'C#5': 554.37,
-  'Db5': 554.37,
-  'D5': 587.33,
-  'D#5': 622.25,
-  'Eb5': 622.25,
-  'E5': 659.26,
-  'F5': 698.46,
-  'F#5': 739.99,
-  'Gb5': 739.99,
-  'G5': 783.99,
-  'G#5': 830.61,
-  'Ab5': 830.61,
-  'A5': 880.00,
-  'A#5': 932.33,
-  'Bb5': 932.33,
-  'B5': 987.77,
-  'C6': 1046.50,
-  'C#6': 1108.73,
-  'Db6': 1108.73,
-  'D6': 1174.66,
-  'D#6': 1244.51,
-  'Eb6': 1244.51,
-  'E6': 1318.51,
-  'F6': 1396.91,
-  'F#6': 1479.98,
-  'Gb6': 1479.98,
-  'G6': 1567.98,
-  'G#6': 1661.22,
-  'Ab6': 1661.22,
-  'A6': 1760.00,
-  'A#6': 1864.66,
-  'Bb6': 1864.66,
-  'B6': 1975.53,
-  'C7': 2093.00,
-  'C#7': 2217.46,
-  'Db7': 2217.46,
-  'D7': 2349.32,
-  'D#7': 2489.02,
-  'Eb7': 2489.02,
-  'E7': 2637.02,
-  'F7': 2793.83,
-  'F#7': 2959.96,
-  'Gb7': 2959.96,
-  'G7': 3135.96,
-  'G#7': 3322.44,
-  'Ab7': 3322.44,
-  'A7': 3520.00,
-  'A#7': 3729.31,
-  'Bb7': 3729.31,
-  'B7': 3951.07,
-  'C8': 4186.01
+// Pure-tone divisors for each AUDC value.
+// 0 means use polynomial counter (noise), handled separately.
+const AUDC_DIVISOR: Record<number, number> = {
+  0: 0,   // silent
+  1: 0,   // 4-bit poly
+  2: 0,   // 4-bit poly / 31
+  3: 0,   // 5-bit poly / 31
+  4: 2,   // pure square / 2
+  5: 2,   // pure square / 2
+  6: 31,  // pure tone / 31
+  7: 0,   // 5-bit poly / 2
+  8: 0,   // 9-bit poly (noise)
+  9: 0,   // 5-bit poly
+  10: 31, // pure tone / 31
+  11: 0,  // silent
+  12: 6,  // pure tone / 6
+  13: 6,  // pure tone / 6
+  14: 93, // pure tone / 93
+  15: 0,  // 5-bit poly / 6
 };
 
-//playNote("A3", 1, "square", 0.3);
-
-interface SequenceOptions {
-  bpm?: number,
-  wave? : OscillatorType,
-  vol? : number
-}
-
-interface SequenceData {
-  notelength: number,
-  frq: number
-}
-
-const sequenceOptsDefault: SequenceOptions = {
-  bpm: 300,
-  wave: "square",
-  vol: 0.1
+// Map AUDC to the closest Web Audio OscillatorType for tonal approximation.
+// Noise types (1,2,3,7,8,9,15) are rendered via a noise buffer instead.
+const AUDC_WAVE: Record<number, OscillatorType> = {
+  4: "square",
+  5: "square",
+  6: "square",
+  10: "square",
+  12: "square",
+  13: "square",
+  14: "square",
 };
+
+function isNoiseType(audc: number): boolean {
+  return AUDC_DIVISOR[audc] === 0 && audc !== 0 && audc !== 11;
+}
+
+// Approximate divisor for noise types to get roughly correct pitch
+function noiseDivisor(audc: number): number {
+  switch (audc) {
+    case 1: return 1;    // 4-bit poly, fast
+    case 2: return 31;   // 4-bit poly / 31
+    case 3: return 31;   // 5-bit poly / 31
+    case 7: return 2;    // 5-bit poly / 2
+    case 8: return 1;    // 9-bit poly (white noise)
+    case 9: return 1;    // 5-bit poly
+    case 15: return 6;   // 5-bit poly / 6
+    default: return 1;
+  }
+}
+
+function calcFrequency(audf: number, divisor: number): number {
+  return TIA_CLOCK / (audf + 1) / divisor;
+}
+
+/**
+ * Represents one of the TIA's two audio channels.
+ */
+class TIAChannel {
+  audc: number = 0;
+  audf: number = 0;
+  audv: number = 0;
+
+  private ctx: AudioContext;
+  private gainNode: GainNode;
+  private oscillator: OscillatorNode | null = null;
+  private noiseSource: AudioBufferSourceNode | null = null;
+  private noiseBuffer: AudioBuffer;
+
+  constructor(ctx: AudioContext, destination: AudioNode) {
+    this.ctx = ctx;
+    this.gainNode = ctx.createGain();
+    this.gainNode.gain.value = 0;
+    this.gainNode.connect(destination);
+
+    // Pre-generate a noise buffer (1 second of white noise)
+    const sampleRate = ctx.sampleRate;
+    this.noiseBuffer = ctx.createBuffer(1, sampleRate, sampleRate);
+    const data = this.noiseBuffer.getChannelData(0);
+    for (let i = 0; i < sampleRate; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+  }
+
+  /**
+   * Apply current register values. Call after changing audc, audf, or audv.
+   */
+  apply(): void {
+    // Set volume (0–15 mapped to 0.0–1.0)
+    this.gainNode.gain.value = this.audv / 15;
+
+    // Stop previous sources
+    this.stopSources();
+
+    // Silent
+    if (this.audc === 0 || this.audc === 11 || this.audv === 0) {
+      return;
+    }
+
+    if (isNoiseType(this.audc)) {
+      // Noise-based sound: play noise buffer at a playback rate that
+      // approximates the TIA frequency
+      const divisor = noiseDivisor(this.audc);
+      const freq = calcFrequency(this.audf, divisor);
+      const source = this.ctx.createBufferSource();
+      source.buffer = this.noiseBuffer;
+      source.loop = true;
+      // Adjust playback rate to shift the noise spectrum toward the target freq
+      source.playbackRate.value = Math.max(0.01, freq / 1000);
+      source.connect(this.gainNode);
+      source.start();
+      this.noiseSource = source;
+    } else {
+      // Tonal sound
+      const divisor = AUDC_DIVISOR[this.audc];
+      const freq = calcFrequency(this.audf, divisor);
+      const osc = this.ctx.createOscillator();
+      osc.type = AUDC_WAVE[this.audc] || "square";
+      osc.frequency.value = freq;
+      osc.connect(this.gainNode);
+      osc.start();
+      this.oscillator = osc;
+    }
+  }
+
+  private stopSources(): void {
+    if (this.oscillator) {
+      this.oscillator.stop();
+      this.oscillator.disconnect();
+      this.oscillator = null;
+    }
+    if (this.noiseSource) {
+      this.noiseSource.stop();
+      this.noiseSource.disconnect();
+      this.noiseSource = null;
+    }
+  }
+
+  /** Silence this channel and release resources. */
+  stop(): void {
+    this.audv = 0;
+    this.gainNode.gain.value = 0;
+    this.stopSources();
+  }
+}
+
+/**
+ * TIA Audio — models the Atari 2600's two audio channels.
+ *
+ * Usage mirrors how the 2600 writes to TIA registers:
+ *   audio.write(0, AUDC, 12);  // channel 0 control = lead square
+ *   audio.write(0, AUDF, 23);  // channel 0 frequency divider = 23
+ *   audio.write(0, AUDV, 7);   // channel 0 volume = 7
+ */
+export const AUDC = 0;
+export const AUDF = 1;
+export const AUDV = 2;
 
 export class Audio {
-  ctx: AudioContext
-  
+  ctx: AudioContext;
+  channels: [TIAChannel, TIAChannel];
+
   constructor() {
     this.ctx = new AudioContext();
+    this.channels = [
+      new TIAChannel(this.ctx, this.ctx.destination),
+      new TIAChannel(this.ctx, this.ctx.destination),
+    ];
   }
 
-  playSequence(sequence: SequenceData[], opts: SequenceOptions = {}): void {
-    const options = Object.assign({}, sequenceOptsDefault, opts);
-  
-    const arrayLength = sequence.length;
-    let o: OscillatorNode;
-    let t:number = this.ctx.currentTime;
-    let playlength: number = 0;
-  
-    for (let i:number = 0; i < arrayLength; i++) {
-      if (!(o = this.ctx.createOscillator())) {
-        throw new Error(`AudioContext createOscillator not supported or failed`);
-      }
-      // 1 second / number of beats per second * number of beats (length of a note)
-      playlength = 1 / (options.bpm! / 60) * sequence[i].notelength;
-      o.type = options.wave!;
-      o.frequency.value = sequence[i].frq;
-      o.start(t);
-      o.stop(t + playlength);
-      t += playlength;
-      const g = this.ctx.createGain();
-      o.connect(g);
-      g.connect(this.ctx.destination);
-      g.gain.value = options.vol!;
+  /**
+   * Write a value to a TIA audio register.
+   * @param channel 0 or 1
+   * @param register AUDC (0), AUDF (1), or AUDV (2)
+   * @param value the register value (4-bit or 5-bit depending on register)
+   */
+  write(channel: 0 | 1, register: number, value: number): void {
+    const ch = this.channels[channel];
+    switch (register) {
+      case AUDC:
+        ch.audc = value & 0x0F;
+        break;
+      case AUDF:
+        ch.audf = value & 0x1F;
+        break;
+      case AUDV:
+        ch.audv = value & 0x0F;
+        break;
     }
+    ch.apply();
   }
 
-  playNote(pitch: string, length: number, wave: OscillatorType, vol: number) {
-    const frq: number = notes[pitch];
-    const o: OscillatorNode = this.ctx.createOscillator();
-    o.type = wave;
-    const g: GainNode = this.ctx.createGain();
-    o.connect(g);
-    g.connect(this.ctx.destination);
-    g.gain.value = (typeof vol === "undefined" || vol === null) ? 0.1 : vol;
-  
-    if (frq) {
-      o.frequency.value = frq;
-      o.start(0);
-      o.stop(length);
-    }
+  /** Silence both channels. */
+  reset(): void {
+    this.channels[0].stop();
+    this.channels[1].stop();
   }
 }

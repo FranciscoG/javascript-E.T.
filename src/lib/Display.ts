@@ -24,31 +24,29 @@
  * https://atariage.com/forums/topic/169128-what-is-the-atari-2600-screen-resolution/?tab=comments#comment-2092604
  */
 
-interface Context2D extends CanvasRenderingContext2D {
-  webkitImageSmoothingEnabled: boolean;
-  mozImageSmoothingEnabled: boolean;
-}
-
 export class Display {
   canvas: HTMLCanvasElement;
-  ctx: Context2D;
+  ctx: CanvasRenderingContext2D;
+  w: number;
+  h: number;
+
   constructor(w: number = 320, h: number = 210) {
+    this.w = w;
+    this.h = h;
     this.canvas = document.createElement("canvas");
     this.canvas.width = w;
     this.canvas.height = h;
-    this.ctx = <Context2D>this.canvas.getContext("2d");
+    this.ctx = this.canvas.getContext("2d")!;
   }
 
   scale(x: number, y: number) {
-    this.canvas.width = this.canvas.width * x;
-    this.canvas.height = this.canvas.height * y;
-    this.ctx.scale(x, y); // only scales what's placed on the canvas
-    this.ctx.webkitImageSmoothingEnabled = false;
-    this.ctx.mozImageSmoothingEnabled = false;
+    this.canvas.width = this.w * x;
+    this.canvas.height = this.h * y;
+    this.ctx.scale(x, y);
     this.ctx.imageSmoothingEnabled = false;
   }
 
   clear() {
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.fillRect(0, 0, this.w, this.h);
   }
 }
