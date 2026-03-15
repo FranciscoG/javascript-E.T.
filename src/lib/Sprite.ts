@@ -34,7 +34,7 @@ export class Sprite {
     return this.byteArray.length * pixelH * this.scanLinesPerRow;
   }
 
-  constructor() {}
+  constructor() { }
 
   update(newArr: string[][]) {
     this.byteArray = newArr;
@@ -67,7 +67,24 @@ export class Sprite {
  * them enabled for as many scan lines as needed.
  */
 export class OneBitSprite extends Sprite {
+  /**
+   * The TIA allows the Ball and Missiles to be drawn at 1×, 2×, 4×, or 8× width 
+   * by setting the appropriate clock size. The height is determined by how many
+   * scan lines the sprite is enabled for, which can be set via the `scanLines` 
+   * property. For example, a missile with `clockSize = 2` and `scanLines = 4` 
+   * would be drawn as a 2-pixel wide rectangle that is 4 scan lines tall.
+   */
   clockSize: 1 | 2 | 4 | 8 = 1;
+
+  /**
+   * The number of scan lines this sprite is active for. 
+   * 
+   * The TIA allows the Ball and Missiles to be drawn for as many scan lines as 
+   * needed, which determines their height on the screen. For example, if 
+   * `scanLines` is set to 4, the sprite will be drawn for 4 consecutive scan 
+   * lines, making it taller. This is how the Atari could create taller missiles
+   * and a ball that could span multiple lines.
+   */
   scanLines: number = 1;
 
   get width(): number {
@@ -88,7 +105,7 @@ export class OneBitSprite extends Sprite {
     let y = this.y;
 
     for (let i = 0; i < this.scanLines; i++) {
-      ctx.fillRect(x, y, pixelW * this.clockSize, pixelH); 
+      ctx.fillRect(x, y, pixelW * this.clockSize, pixelH);
       y += pixelH;
     }
   }

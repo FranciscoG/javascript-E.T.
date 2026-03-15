@@ -37,7 +37,8 @@ function extractToBinary(_: string, p1: string): string {
 
 /**
  * converts the sprite declaration in hex to a 2D array of binary strings
- * example:
+ * 
+ * @example
  * .byte $FE ; |XXXXXXX.|
  * .byte $FF ; |XXXXXXXX|
  * .byte $C3 ; |XX....XX|
@@ -48,7 +49,8 @@ function extractToBinary(_: string, p1: string): string {
  * .byte $E7 ; |XXX..XXX|
  * .byte $00 ; |........|
  * 
- * becomes this array: [
+ * // becomes this array: 
+ * [
  *  ["1","1","1","1","1","1","1","0"],
  *  ["1","1","1","1","1","1","1","1"],
  *  ["1","1","0","0","0","0","1","1"],
