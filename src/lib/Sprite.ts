@@ -11,6 +11,16 @@ import { ntscColor } from './ntsc-colors';
 const pixelW = 320 / 160;
 const pixelH = Math.floor(210 / 192);
 
+interface SpriteSettings {
+  clockSize?: 1 | 2 | 4 | 8
+  scanLines?: number
+  reflected?: boolean
+  x?: number
+  y?: number
+  color?: number
+  byteArray?: string[][]
+}
+
 export class Sprite {
   x: number = 0;
   y: number = 0;
@@ -18,7 +28,7 @@ export class Sprite {
   color: number = 0x00;
 
   clockSize: 1 | 2 | 4 | 8 = 1;
-  scanLinesPerRow: number = 1;
+  scanLines: number = 1;
 
   /** TIA REFP — when true, the sprite graphics are drawn mirrored horizontally */
   reflected: boolean = false;
@@ -31,10 +41,18 @@ export class Sprite {
   }
 
   get height(): number {
-    return this.byteArray.length * pixelH * this.scanLinesPerRow;
+    return this.byteArray.length * pixelH * this.scanLines;
   }
 
-  constructor() { }
+  constructor(settings: SpriteSettings = {}) {
+    if (settings.clockSize) this.clockSize = settings.clockSize;
+    if (settings.scanLines) this.scanLines = settings.scanLines;
+    if (settings.reflected) this.reflected = settings.reflected;
+    if (settings.x) this.x = settings.x;
+    if (settings.y) this.y = settings.y;
+    if (settings.color) this.color = settings.color;
+    if (settings.byteArray) this.byteArray = settings.byteArray;
+  }
 
   update(newArr: string[][]) {
     this.byteArray = newArr;
@@ -49,12 +67,12 @@ export class Sprite {
       const row = this.reflected ? [...byte].reverse() : byte;
       for (let bit of row) {
         if (bit === "1") {
-          ctx.fillRect(x, y, pixelW * this.clockSize, pixelH * this.scanLinesPerRow);
+          ctx.fillRect(x, y, pixelW * this.clockSize, pixelH * this.scanLines);
         }
         x += pixelW * this.clockSize;
       }
 
-      y += pixelH * this.scanLinesPerRow;
+      y += pixelH * this.scanLines;
       x = this.x;
     }
   }
@@ -67,25 +85,6 @@ export class Sprite {
  * them enabled for as many scan lines as needed.
  */
 export class OneBitSprite extends Sprite {
-  /**
-   * The TIA allows the Ball and Missiles to be drawn at 1×, 2×, 4×, or 8× width 
-   * by setting the appropriate clock size. The height is determined by how many
-   * scan lines the sprite is enabled for, which can be set via the `scanLines` 
-   * property. For example, a missile with `clockSize = 2` and `scanLines = 4` 
-   * would be drawn as a 2-pixel wide rectangle that is 4 scan lines tall.
-   */
-  clockSize: 1 | 2 | 4 | 8 = 1;
-
-  /**
-   * The number of scan lines this sprite is active for. 
-   * 
-   * The TIA allows the Ball and Missiles to be drawn for as many scan lines as 
-   * needed, which determines their height on the screen. For example, if 
-   * `scanLines` is set to 4, the sprite will be drawn for 4 consecutive scan 
-   * lines, making it taller. This is how the Atari could create taller missiles
-   * and a ball that could span multiple lines.
-   */
-  scanLines: number = 1;
 
   get width(): number {
     return pixelW * this.clockSize;
@@ -95,8 +94,8 @@ export class OneBitSprite extends Sprite {
     return this.scanLines * pixelH;
   }
 
-  constructor() {
-    super();
+  constructor(settings: SpriteSettings = {}) {
+    super(settings);
   }
 
   draw(ctx: CanvasRenderingContext2D) {

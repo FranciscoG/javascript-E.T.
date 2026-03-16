@@ -3,7 +3,9 @@ import {
   ETWalkSprite_A1,
   ETWalkSprite_A2,
 } from "../assets/visual";
+import { GameEngine } from "../lib/GameEngine";
 import { InputStates } from "../lib/InputHandler";
+import { Scene } from "../lib/SceneManager";
 import { Sprite } from "../lib/Sprite";
 
 import { byteToBinaryString } from "../lib/utils";
@@ -140,4 +142,28 @@ function moveSprite(sprite: Sprite, input: InputStates, speed: number) {
 	if (input.horz === 1) { sprite.x += speed; moving = true; xDir = 1; }
 
 	return { moving, xDir, yDir };
+}
+
+export class GameplayScene implements Scene {
+	name = "gameplay";
+
+	et: Sprite;
+
+	constructor() {
+		this.et = new Sprite({
+			byteArray: ET_walkA[0],
+			x: 22,
+			y: 150,
+		});
+	}
+
+	enter(cpu: GameEngine) {
+		cpu.addSprite("player1", this.et);
+	}
+
+	update(cpu: GameEngine): string | false {
+		return false;
+	}
+
+	exit(cpu: GameEngine) {}
 }

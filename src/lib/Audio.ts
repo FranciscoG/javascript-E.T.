@@ -36,6 +36,21 @@
 
 const TIA_CLOCK = 31440; // NTSC TIA audio clock in Hz
 
+type AudioSequenceStep = {
+  audf: number;
+  ticks: number;
+};
+
+type ActiveSequence = {
+  audc: number;
+  audv: number;
+  framesPerTick: number;
+  loop: boolean;
+  stepIndex: number;
+  framesRemaining: number;
+  steps: AudioSequenceStep[];
+};
+
 // Pure-tone divisors for each AUDC value.
 // 0 means use polynomial counter (noise), handled separately.
 const AUDC_DIVISOR: Record<number, number> = {
@@ -197,6 +212,7 @@ export const AUDV = 2;
 export class Audio {
   ctx: AudioContext;
   channels: [TIAChannel, TIAChannel];
+  private activeSequences: [ActiveSequence | null, ActiveSequence | null];
 
   constructor() {
     this.ctx = new AudioContext();
@@ -204,6 +220,32 @@ export class Audio {
       new TIAChannel(this.ctx, this.ctx.destination),
       new TIAChannel(this.ctx, this.ctx.destination),
     ];
+    this.activeSequences = [null, null];
+  }
+
+  resume(): Promise<void> {
+    if (this.ctx.state === "suspended") {
+      return this.ctx.resume();
+    }
+    return Promise.resolve();
+  }
+
+  private applyChannel(channel: 0 | 1): void {
+    this.channels[channel].apply();
+  }
+
+  setChannel(channel: 0 | 1, values: { audc?: number; audf?: number; audv?: number }): void {
+    const ch = this.channels[channel];
+    if (typeof values.audc === "number") {
+      ch.audc = values.audc & 0x0F;
+    }
+    if (typeof values.audf === "number") {
+      ch.audf = values.audf & 0x1F;
+    }
+    if (typeof values.audv === "number") {
+      ch.audv = values.audv & 0x0F;
+    }
+    this.applyChannel(channel);
   }
 
   /**
@@ -225,11 +267,76 @@ export class Audio {
         ch.audv = value & 0x0F;
         break;
     }
-    ch.apply();
+    this.applyChannel(channel);
+  }
+
+  private loadSequenceStep(channel: 0 | 1, sequence: ActiveSequence): void {
+    const step = sequence.steps[sequence.stepIndex];
+    sequence.framesRemaining = Math.max(1, step.ticks) * sequence.framesPerTick;
+    this.setChannel(channel, {
+      audc: sequence.audc,
+      audf: step.audf,
+      audv: sequence.audv,
+    });
+  }
+
+  playSequence(
+    channel: 0 | 1,
+    steps: AudioSequenceStep[],
+    options: { audc: number; audv: number; framesPerTick?: number; loop?: boolean }
+  ): void {
+    if (steps.length === 0) {
+      this.stopSequence(channel);
+      return;
+    }
+
+    this.activeSequences[channel] = {
+      audc: options.audc,
+      audv: options.audv,
+      framesPerTick: options.framesPerTick ?? 12,
+      loop: options.loop ?? false,
+      stepIndex: 0,
+      framesRemaining: 0,
+      steps,
+    };
+
+    this.loadSequenceStep(channel, this.activeSequences[channel]!);
+  }
+
+  stopSequence(channel: 0 | 1): void {
+    this.activeSequences[channel] = null;
+    this.channels[channel].stop();
+  }
+
+  updateFrame(): void {
+    this.activeSequences.forEach((sequence, channelIndex) => {
+      if (!sequence) {
+        return;
+      }
+
+      sequence.framesRemaining -= 1;
+      if (sequence.framesRemaining > 0) {
+        return;
+      }
+
+      const nextIndex = sequence.stepIndex + 1;
+      if (nextIndex >= sequence.steps.length) {
+        if (!sequence.loop) {
+          this.stopSequence(channelIndex as 0 | 1);
+          return;
+        }
+        sequence.stepIndex = 0;
+      } else {
+        sequence.stepIndex = nextIndex;
+      }
+
+      this.loadSequenceStep(channelIndex as 0 | 1, sequence);
+    });
   }
 
   /** Silence both channels. */
   reset(): void {
+    this.activeSequences = [null, null];
     this.channels[0].stop();
     this.channels[1].stop();
   }

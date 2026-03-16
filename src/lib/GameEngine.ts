@@ -176,6 +176,9 @@ export class GameEngine {
     // call user logic
     this.perFrameCallback(timestamp);
 
+    // advance any active TIA audio sequences once per frame
+    this.audio.updateFrame();
+
     // draw
     this.draw();
 

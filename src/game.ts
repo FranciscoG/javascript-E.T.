@@ -1,5 +1,7 @@
 import { GameEngine } from "./lib/GameEngine";
-import * as TitleScene from "./scenes/title.scene";
+import { SceneManager } from "./lib/SceneManager";
+import { TitleScene } from "./scenes/title.scene";
+import { GameplayScene } from "./scenes/game-play.scene";
 ///////////////////////////////////////////////////////////////////////////////
 // Setup
 
@@ -14,7 +16,7 @@ let counter = 0;
 
 cpu.backgroundSprite = [
   // Top bar "status" area, using LT_BLUE+2 ($52) per ASM
-  { color: 0x52, start: 0, stop: 15  },
+  { color: 0x52, start: 0, stop: 15 },
   // Score area at bottom, using LT_BLUE+10 ($9A) per ASM
   { color: 0x9A, start: 180, stop: 210 },
 ];
@@ -22,10 +24,17 @@ cpu.backgroundSprite = [
 ///////////////////////////////////////////////////////////////////////////////
 // Scene management
 
-let currentScene: "title" | "gameplay" | "ending" = "title";
+const titleScene = new TitleScene();
+const gameplayScene = new GameplayScene();
 
 
-TitleScene.enter(cpu);
+titleScene.enter(cpu);
+
+const sceneManager = new SceneManager();
+sceneManager.addScene(titleScene);
+sceneManager.addScene(gameplayScene);
+
+sceneManager.setCurrentScene(titleScene.name);
 
 cpu.perFrame(function () {
   // why am I skipping frames? I don't remember
@@ -34,19 +43,13 @@ cpu.perFrame(function () {
     return;
   }
 
-  if (currentScene === "title") {
-    const done = TitleScene.update(cpu);
-    if (done) {
-      TitleScene.exit(cpu);
-      currentScene = "gameplay";
-      
-    }
-    counter = 0;
-    return;
-  }
+  sceneManager.update(cpu);
 
   counter = 0;
 });
 
-cpu.start();
-document.getElementById("startGame")?.addEventListener("click", function () {});
+
+document.getElementById("startGame")?.addEventListener("click", () => {
+  cpu.start();
+  cpu.audio.resume();
+});
