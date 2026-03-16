@@ -69,8 +69,8 @@ export class GameEngine {
     ball: null,
   };
 
-  constructor(target: HTMLElement) {
-    this.display.scale(3, 3);
+  constructor(target: HTMLElement, scale = 3) {
+    this.display.scale(scale, scale);
     target.appendChild(this.display.canvas);
   }
 
@@ -187,5 +187,6 @@ export class GameEngine {
 
   start() {
     requestAnimationFrame(this.frame);
+    this.audio.resume();
   }
 }

@@ -5,7 +5,7 @@ import { GameplayScene } from "./scenes/game-play.scene";
 ///////////////////////////////////////////////////////////////////////////////
 // Setup
 
-const cpu = new GameEngine(document.getElementById("game")!);
+const cpu = new GameEngine(document.getElementById("game")!, 2);
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,13 +28,11 @@ const titleScene = new TitleScene();
 const gameplayScene = new GameplayScene();
 
 
-titleScene.enter(cpu);
-
 const sceneManager = new SceneManager();
 sceneManager.addScene(titleScene);
 sceneManager.addScene(gameplayScene);
 
-sceneManager.setCurrentScene(titleScene.name);
+sceneManager.setCurrentScene(gameplayScene.name, cpu);
 
 cpu.perFrame(function () {
   // why am I skipping frames? I don't remember
@@ -48,8 +46,9 @@ cpu.perFrame(function () {
   counter = 0;
 });
 
-
+cpu.draw();
+cpu.start();
+// this is needed to play audio in browsers, which block it until user interaction
 document.getElementById("startGame")?.addEventListener("click", () => {
   cpu.start();
-  cpu.audio.resume();
 });

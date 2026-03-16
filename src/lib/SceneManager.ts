@@ -29,16 +29,13 @@ export class SceneManager {
 		this.scenes[scene.name] = scene;
 	}
 
-	setCurrentScene(name: string) {
+	setCurrentScene(name: string, cpu: GameEngine) {
 		if (this.scenes[name]) {
 			this.currentSceneName = name;
+			this.scenes[name].enter(cpu);
 		} else {
 			throw new Error(`Scene "${name}" does not exist.`);
 		}
-	}
-
-	start(cpu: GameEngine) {
-		this.scenes[this.currentSceneName!].enter(cpu);
 	}
 
 	update(cpu: GameEngine) {
@@ -47,8 +44,7 @@ export class SceneManager {
 			const nextSceneName = currentScene.update(cpu);
 			if (typeof nextSceneName === "string" && nextSceneName !== this.currentSceneName && this.scenes[nextSceneName]) {
 				currentScene.exit(cpu);
-				this.setCurrentScene(nextSceneName);
-				this.scenes[nextSceneName].enter(cpu);
+				this.setCurrentScene(nextSceneName, cpu);
 			}
 		}
 	}
