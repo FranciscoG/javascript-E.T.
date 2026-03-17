@@ -1,7 +1,7 @@
 import { GameEngine } from "./lib/GameEngine";
 import { SceneManager } from "./lib/SceneManager";
 import { TitleScene } from "./scenes/title.scene";
-import { GameplayScene } from "./scenes/game-play.scene";
+import { LandingScene } from "./scenes/landing.scene";
 ///////////////////////////////////////////////////////////////////////////////
 // Setup
 
@@ -25,14 +25,14 @@ cpu.backgroundSprite = [
 // Scene management
 
 const titleScene = new TitleScene();
-const gameplayScene = new GameplayScene();
+const landingScene = new LandingScene();
 
 
 const sceneManager = new SceneManager();
 sceneManager.addScene(titleScene);
-sceneManager.addScene(gameplayScene);
+sceneManager.addScene(landingScene);
 
-sceneManager.setCurrentScene(gameplayScene.name, cpu);
+sceneManager.setCurrentScene(landingScene.name, cpu);
 
 cpu.perFrame(function () {
   // why am I skipping frames? I don't remember

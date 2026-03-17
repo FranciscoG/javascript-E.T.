@@ -119,6 +119,7 @@ class TIAChannel {
   private oscillator: OscillatorNode | null = null;
   private noiseSource: AudioBufferSourceNode | null = null;
   private noiseBuffer: AudioBuffer;
+  private sourceKind: "tone" | "noise" | null = null;
 
   constructor(ctx: AudioContext, destination: AudioNode) {
     this.ctx = ctx;
@@ -139,14 +140,14 @@ class TIAChannel {
    * Apply current register values. Call after changing audc, audf, or audv.
    */
   apply(): void {
-    // Set volume (0–15 mapped to 0.0–1.0)
-    this.gainNode.gain.value = this.audv / 15;
+    const now = this.ctx.currentTime;
 
-    // Stop previous sources
-    this.stopSources();
+    // Set volume (0–15 mapped to 0.0–1.0)
+    this.gainNode.gain.setValueAtTime(this.audv / 15, now);
 
     // Silent
     if (this.audc === 0 || this.audc === 11 || this.audv === 0) {
+      this.stopSources();
       return;
     }
 
@@ -155,24 +156,45 @@ class TIAChannel {
       // approximates the TIA frequency
       const divisor = noiseDivisor(this.audc);
       const freq = calcFrequency(this.audf, divisor);
-      const source = this.ctx.createBufferSource();
-      source.buffer = this.noiseBuffer;
-      source.loop = true;
-      // Adjust playback rate to shift the noise spectrum toward the target freq
-      source.playbackRate.value = Math.max(0.01, freq / 1000);
-      source.connect(this.gainNode);
-      source.start();
-      this.noiseSource = source;
+      const playbackRate = Math.max(0.01, freq / 1000);
+
+      if (this.sourceKind !== "noise" || !this.noiseSource) {
+        this.stopSources();
+
+        const source = this.ctx.createBufferSource();
+        source.buffer = this.noiseBuffer;
+        source.loop = true;
+        source.playbackRate.setValueAtTime(playbackRate, now);
+        source.connect(this.gainNode);
+        source.start();
+
+        this.noiseSource = source;
+        this.sourceKind = "noise";
+        return;
+      }
+
+      this.noiseSource.playbackRate.setValueAtTime(playbackRate, now);
     } else {
       // Tonal sound
       const divisor = AUDC_DIVISOR[this.audc];
       const freq = calcFrequency(this.audf, divisor);
-      const osc = this.ctx.createOscillator();
-      osc.type = AUDC_WAVE[this.audc] || "square";
-      osc.frequency.value = freq;
-      osc.connect(this.gainNode);
-      osc.start();
-      this.oscillator = osc;
+      const oscType = AUDC_WAVE[this.audc] || "square";
+
+      if (this.sourceKind !== "tone" || !this.oscillator || this.oscillator.type !== oscType) {
+        this.stopSources();
+
+        const osc = this.ctx.createOscillator();
+        osc.type = oscType;
+        osc.frequency.setValueAtTime(freq, now);
+        osc.connect(this.gainNode);
+        osc.start();
+
+        this.oscillator = osc;
+        this.sourceKind = "tone";
+        return;
+      }
+
+      this.oscillator.frequency.setValueAtTime(freq, now);
     }
   }
 
@@ -187,6 +209,8 @@ class TIAChannel {
       this.noiseSource.disconnect();
       this.noiseSource = null;
     }
+
+    this.sourceKind = null;
   }
 
   /** Silence this channel and release resources. */

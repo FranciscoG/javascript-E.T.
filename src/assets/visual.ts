@@ -1,26 +1,3 @@
-// NTSC color constants
-export const ET_COLORS: { [key: string]: string } = {
-  BLACK: "00",
-  WHITE: "0E",
-  LT_RED: "20",
-  RED: "30",
-  ORANGE: "40",
-  ORANGE_2: "40",
-  RED_2: "40",
-  DK_PINK: "50",
-  DK_BLUE: "70",
-  BLUE: "80",
-  LT_BLUE: "90",
-  GREEN: "C0",
-  GREEN_2: "C0",
-  DK_GREEN: "D0",
-  DK_GREEN_2: "D0",
-  LT_BROWN: "E0",
-  LT_BROWN_2: "E0",
-  BROWN: "F0",
-  NTSC_BROWN: "F0",
-};
-
 /*
 
    ETColors
